@@ -1,0 +1,201 @@
+// =============================================================================
+// AssetSelector
+// College Visit Platform - Jersey Builder
+// =============================================================================
+// Horizontal scrollable row of selectable jersey asset options (helmet, jersey,
+// or pants variants). Each option is a colored circle with a label. The
+// selected item shows a school-colored ring border and a checkmark overlay.
+// =============================================================================
+
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import { DARK_THEME } from '@/theme';
+import type { JerseyAsset, School } from '@/types';
+
+// -----------------------------------------------------------------------------
+// Props
+// -----------------------------------------------------------------------------
+
+interface AssetSelectorProps {
+  assets: JerseyAsset[];
+  selectedId: string;
+  onSelect: (asset: JerseyAsset) => void;
+  label: string;
+  school: School;
+}
+
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+/**
+ * Map a jersey asset's colorLabel to an actual rendered color, using the
+ * school's brand palette.
+ */
+function resolveAssetColor(colorLabel: string, school: School): string {
+  const normalized = colorLabel.toLowerCase();
+  if (normalized.includes('home')) return school.colors.primary;
+  if (normalized.includes('away')) return '#FFFFFF';
+  if (normalized.includes('alternate')) return school.colors.secondary;
+  // Fallback
+  return school.colors.primary;
+}
+
+/**
+ * Return a suitable border/text contrast color depending on the swatch
+ * brightness so that the checkmark and label remain visible.
+ */
+function swatchTextColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.55 ? '#000000' : '#FFFFFF';
+}
+
+// -----------------------------------------------------------------------------
+// Component
+// -----------------------------------------------------------------------------
+
+export function AssetSelector({
+  assets,
+  selectedId,
+  onSelect,
+  label,
+  school,
+}: AssetSelectorProps) {
+  return (
+    <View style={styles.container}>
+      {/* Section label */}
+      <Text style={styles.sectionLabel}>{label}</Text>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {assets.map((asset) => {
+          const isSelected = asset.id === selectedId;
+          const color = resolveAssetColor(asset.colorLabel, school);
+          const checkColor = swatchTextColor(color);
+
+          return (
+            <TouchableOpacity
+              key={asset.id}
+              style={styles.option}
+              onPress={() => onSelect(asset)}
+              activeOpacity={0.7}
+            >
+              {/* Outer ring (visible when selected) */}
+              <View
+                style={[
+                  styles.ring,
+                  isSelected && {
+                    borderColor: school.colors.primary,
+                    borderWidth: 3,
+                  },
+                ]}
+              >
+                {/* Color swatch */}
+                <View
+                  style={[
+                    styles.swatch,
+                    {
+                      backgroundColor: color,
+                      borderColor:
+                        color === '#FFFFFF' ? DARK_THEME.bg600 : 'transparent',
+                      borderWidth: color === '#FFFFFF' ? 1 : 0,
+                    },
+                  ]}
+                >
+                  {/* Checkmark overlay */}
+                  {isSelected && (
+                    <Text style={[styles.checkmark, { color: checkColor }]}>
+                      {'✓'}
+                    </Text>
+                  )}
+                </View>
+              </View>
+
+              {/* Label */}
+              <Text
+                style={[
+                  styles.optionLabel,
+                  isSelected && { color: DARK_THEME.white, fontWeight: '700' },
+                ]}
+                numberOfLines={1}
+              >
+                {asset.colorLabel}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Styles
+// -----------------------------------------------------------------------------
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 8,
+  },
+  sectionLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK_THEME.bg400,
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    gap: 16,
+  },
+  option: {
+    alignItems: 'center',
+    width: 72,
+  },
+  ring: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 3,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
+  swatch: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  checkmark: {
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  optionLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: DARK_THEME.bg300,
+    textAlign: 'center',
+  },
+});
