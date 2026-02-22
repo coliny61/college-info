@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
@@ -131,7 +130,7 @@ export default function LoginScreen() {
           {/* ------- Demo Accounts Hint ------- */}
           <View className="mt-6 items-center">
             <Text className="text-slate-500 text-xs">
-              Demo: recruit@demo.com | parent@demo.com | admin@demo.com
+              Demo: recruit@test.com | parent@test.com | admin@test.com
             </Text>
           </View>
         </View>

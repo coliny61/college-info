@@ -4,12 +4,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "College Visit",
   slug: "college-visit",
+  owner: "", // Set to your Expo account username
   version: "1.0.0",
+  runtimeVersion: {
+    policy: "appVersion",
+  },
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "dark",
   scheme: "college-visit",
   newArchEnabled: true,
+  updates: {
+    url: "https://u.expo.dev/your-project-id", // Replace with your EAS project URL
+  },
   splash: {
     image: "./assets/splash-icon.png",
     resizeMode: "contain",

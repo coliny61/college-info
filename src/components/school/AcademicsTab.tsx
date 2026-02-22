@@ -1,7 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { DARK_THEME } from '@/theme';
 import type { School, AcademicData, College, Major } from '@/types';
+import { useAcademicData } from '@/hooks/useAcademicData';
 import CollegeCard from './CollegeCard';
 import MajorCard from './MajorCard';
 
@@ -16,6 +24,12 @@ interface AcademicsTabProps {
   majors: Major[];
   /** Called when the user taps "View Degree Pathway" on a major. */
   onMajorPress?: (majorId: string) => void;
+  /**
+   * College Scorecard numeric ID (as a string). When provided the component
+   * fetches live academic data from the Scorecard API, falling back to the
+   * `academicData` prop on failure.
+   */
+  scorecardId?: string;
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +170,180 @@ const tuitionStyles = StyleSheet.create({
 });
 
 // -----------------------------------------------------------------------------
+// Loading Skeleton
+// -----------------------------------------------------------------------------
+
+/** Pulsing placeholder card shown while academic data is being fetched. */
+function SkeletonCard() {
+  return (
+    <View style={skeletonStyles.card}>
+      <View style={skeletonStyles.valuePlaceholder} />
+      <View style={skeletonStyles.labelPlaceholder} />
+    </View>
+  );
+}
+
+const skeletonStyles = StyleSheet.create({
+  card: {
+    backgroundColor: DARK_THEME.bg700,
+    borderRadius: 12,
+    padding: 14,
+    width: '48%',
+    marginBottom: 10,
+    opacity: 0.5,
+  },
+  valuePlaceholder: {
+    backgroundColor: DARK_THEME.bg600,
+    borderRadius: 6,
+    height: 24,
+    width: '60%',
+    marginBottom: 8,
+  },
+  labelPlaceholder: {
+    backgroundColor: DARK_THEME.bg600,
+    borderRadius: 4,
+    height: 12,
+    width: '80%',
+  },
+});
+
+/** Full loading skeleton matching the stat-card grid layout. */
+function LoadingSkeleton() {
+  return (
+    <View style={styles.statsGrid}>
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </View>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Data Source Indicator
+// -----------------------------------------------------------------------------
+
+/** Subtle badge showing whether the data is live or cached/offline. */
+function DataSourceBadge({ isLive }: { isLive: boolean }) {
+  return (
+    <View
+      style={[
+        badgeStyles.container,
+        { backgroundColor: isLive ? '#064E3B' : '#1E293B' },
+      ]}
+    >
+      <View
+        style={[
+          badgeStyles.dot,
+          { backgroundColor: isLive ? '#34D399' : '#94A3B8' },
+        ]}
+      />
+      <Text
+        style={[
+          badgeStyles.text,
+          { color: isLive ? '#6EE7B7' : '#94A3B8' },
+        ]}
+      >
+        {isLive ? 'Live data from College Scorecard' : 'Using cached data'}
+      </Text>
+    </View>
+  );
+}
+
+const badgeStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginBottom: 12,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 6,
+  },
+  text: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+});
+
+// -----------------------------------------------------------------------------
+// Error Banner
+// -----------------------------------------------------------------------------
+
+/** Small banner displayed when the API call failed, with a retry button. */
+function ErrorBanner({
+  onRetry,
+  schoolColor,
+}: {
+  onRetry: () => void;
+  schoolColor: string;
+}) {
+  return (
+    <View style={errorStyles.container}>
+      <View style={errorStyles.textContainer}>
+        <Text style={errorStyles.title}>Using offline data</Text>
+        <Text style={errorStyles.subtitle}>
+          Could not reach College Scorecard API
+        </Text>
+      </View>
+      <TouchableOpacity
+        onPress={onRetry}
+        style={[errorStyles.retryButton, { backgroundColor: schoolColor }]}
+        activeOpacity={0.7}
+      >
+        <Text style={errorStyles.retryText}>Retry</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const errorStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1C1917',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#78350F',
+    padding: 12,
+    marginBottom: 16,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    color: '#FBBF24',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  subtitle: {
+    color: '#A8A29E',
+    fontSize: 11,
+    fontWeight: '400',
+    marginTop: 2,
+  },
+  retryButton: {
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    marginLeft: 12,
+  },
+  retryText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+});
+
+// -----------------------------------------------------------------------------
 // Main Component
 // -----------------------------------------------------------------------------
 
@@ -165,14 +353,43 @@ const tuitionStyles = StyleSheet.create({
  * 2) Tuition comparison (in-state vs out-of-state)
  * 3) Colleges list (tappable to select)
  * 4) Majors for the selected college
+ *
+ * When a `scorecardId` is provided the component fetches live data from the
+ * College Scorecard API and falls back to the `academicData` prop on failure.
  */
 export default function AcademicsTab({
   school,
-  academicData,
+  academicData: academicDataProp,
   colleges,
   majors,
   onMajorPress,
+  scorecardId,
 }: AcademicsTabProps) {
+  // ---------------------------------------------------------------------------
+  // Live data hook (only active when scorecardId is provided)
+  // ---------------------------------------------------------------------------
+
+  const liveResult = scorecardId
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useAcademicData(school.id, scorecardId)
+    : null;
+
+  const loading = liveResult?.loading ?? false;
+  const error = liveResult?.error ?? null;
+  const refresh = liveResult?.refresh ?? (() => {});
+
+  // Use live data when available, otherwise fall back to the prop.
+  const academicData = liveResult?.academicData ?? academicDataProp;
+
+  // Determine whether the displayed data came from the live API or the prop
+  // fallback. If no scorecardId was provided we don't show a badge at all.
+  const isLiveData =
+    scorecardId != null && liveResult?.academicData != null && error == null;
+
+  // ---------------------------------------------------------------------------
+  // Local state
+  // ---------------------------------------------------------------------------
+
   const [selectedCollegeId, setSelectedCollegeId] = useState<string | null>(
     null,
   );
@@ -193,52 +410,74 @@ export default function AcademicsTab({
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      {/* ─── Data source indicator ─── */}
+      {scorecardId != null && !loading && (
+        <DataSourceBadge isLive={isLiveData} />
+      )}
+
+      {/* ─── Error banner with retry ─── */}
+      {error != null && !loading && (
+        <ErrorBanner onRetry={refresh} schoolColor={schoolColor} />
+      )}
+
       {/* ─── Section 1: Academic Overview ─── */}
       <Text style={[styles.sectionHeader, { color: schoolColor }]}>
         Academic Overview
       </Text>
-      <View style={styles.statsGrid}>
-        <StatCard
-          label="Enrollment"
-          value={formatNumber(academicData.enrollment)}
-          schoolColor={schoolColor}
-        />
-        <StatCard
-          label="Admission Rate"
-          value={formatPercent(academicData.admissionRate)}
-          schoolColor={schoolColor}
-        />
-        <StatCard
-          label="Avg SAT"
-          value={formatNumber(academicData.satAvg)}
-          schoolColor={schoolColor}
-        />
-        <StatCard
-          label="Avg ACT"
-          value={String(academicData.actAvg)}
-          schoolColor={schoolColor}
-        />
-        <StatCard
-          label="Graduation Rate"
-          value={formatPercent(academicData.graduationRate)}
-          schoolColor={schoolColor}
-        />
-        <StatCard
-          label="Median Earnings"
-          value={formatCurrency(academicData.medianEarnings)}
-          schoolColor={schoolColor}
-        />
-      </View>
+
+      {loading ? (
+        <LoadingSkeleton />
+      ) : (
+        <View style={styles.statsGrid}>
+          <StatCard
+            label="Enrollment"
+            value={formatNumber(academicData.enrollment)}
+            schoolColor={schoolColor}
+          />
+          <StatCard
+            label="Admission Rate"
+            value={formatPercent(academicData.admissionRate)}
+            schoolColor={schoolColor}
+          />
+          <StatCard
+            label="Avg SAT"
+            value={formatNumber(academicData.satAvg)}
+            schoolColor={schoolColor}
+          />
+          <StatCard
+            label="Avg ACT"
+            value={String(academicData.actAvg)}
+            schoolColor={schoolColor}
+          />
+          <StatCard
+            label="Graduation Rate"
+            value={formatPercent(academicData.graduationRate)}
+            schoolColor={schoolColor}
+          />
+          <StatCard
+            label="Median Earnings"
+            value={formatCurrency(academicData.medianEarnings)}
+            schoolColor={schoolColor}
+          />
+        </View>
+      )}
 
       {/* ─── Section 2: Tuition ─── */}
       <Text style={[styles.sectionHeader, { color: schoolColor }]}>
         Tuition
       </Text>
-      <TuitionSection
-        inState={academicData.tuitionInState}
-        outOfState={academicData.tuitionOutOfState}
-        schoolColor={schoolColor}
-      />
+      {loading ? (
+        <View style={skeletonStyles.card}>
+          <View style={[skeletonStyles.valuePlaceholder, { width: '100%' }]} />
+          <View style={[skeletonStyles.labelPlaceholder, { width: '50%', marginTop: 8 }]} />
+        </View>
+      ) : (
+        <TuitionSection
+          inState={academicData.tuitionInState}
+          outOfState={academicData.tuitionOutOfState}
+          schoolColor={schoolColor}
+        />
+      )}
 
       {/* ─── Section 3: Colleges ─── */}
       <Text style={[styles.sectionHeader, { color: schoolColor }]}>

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import { MOCK_USERS } from '@/data/mockUsers';
 
 // ---------------------------------------------------------------------------
 // Parent Profile Screen
@@ -16,6 +17,10 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function ParentProfileScreen() {
   const { user, logout } = useAuth();
+
+  const linkedRecruit = user?.linkedRecruitId
+    ? MOCK_USERS.find((u) => u.id === user.linkedRecruitId)
+    : null;
 
   const handleLogout = () => {
     Alert.alert('Log Out', 'Are you sure you want to log out?', [
@@ -66,12 +71,16 @@ export default function ParentProfileScreen() {
             {user?.linkedRecruitId ? (
               <View className="flex-row items-center">
                 <View className="w-10 h-10 rounded-full bg-blue-500 items-center justify-center mr-3">
-                  <Text className="text-white font-bold">M</Text>
+                  <Text className="text-white font-bold">
+                    {linkedRecruit?.displayName?.charAt(0)?.toUpperCase() ?? '?'}
+                  </Text>
                 </View>
                 <View>
-                  <Text className="text-white font-bold">Marcus Johnson</Text>
+                  <Text className="text-white font-bold">
+                    {linkedRecruit?.displayName ?? 'Unknown Recruit'}
+                  </Text>
                   <Text className="text-slate-400 text-xs">
-                    recruit@demo.com
+                    {linkedRecruit?.email ?? ''}
                   </Text>
                 </View>
               </View>

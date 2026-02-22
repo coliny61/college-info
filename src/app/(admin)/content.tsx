@@ -4,12 +4,12 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  FlatList,
   SafeAreaView,
 } from 'react-native';
 import { SCHOOLS } from '@/data/schools';
 import { COLLEGES } from '@/data/academics';
 import { SPORTS, FACILITIES } from '@/data/athletics';
+import { JERSEY_ASSETS } from '@/data/jerseyAssets';
 
 // ---------------------------------------------------------------------------
 // Content Section Data
@@ -61,7 +61,7 @@ const CONTENT_SECTIONS: ContentSection[] = [
     id: 'jersey-assets',
     title: 'Jersey Assets',
     emoji: '\uD83D\uDC55',
-    itemCount: 15, // placeholder count
+    itemCount: JERSEY_ASSETS.length,
     items: SCHOOLS.map((s) => ({
       id: `jersey-${s.id}`,
       name: `${s.shortName} Uniforms`,

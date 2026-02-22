@@ -115,7 +115,7 @@ export default function TrendLineChart({
       <View style={styles.chartArea}>
         {/* Y-axis labels */}
         <View style={styles.yAxis}>
-          {yLabels.reverse().map((val, i) => (
+          {[...yLabels].reverse().map((val, i) => (
             <Text key={`y-${i}`} style={styles.yLabel}>
               {val}
             </Text>

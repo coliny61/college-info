@@ -24,7 +24,7 @@ interface AuthContextValue {
     displayName: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
-  updateProfile: (data: Partial<Pick<User, 'displayName' | 'avatarUrl' | 'favorites'>>) => Promise<void>;
+  updateProfile: (data: Partial<Pick<User, 'displayName' | 'avatarUrl' | 'favorites' | 'linkedRecruitId'>>) => Promise<void>;
 }
 
 // ---------------------------------------------------------------------------
@@ -39,29 +39,29 @@ const STORAGE_KEY = 'college_visit_user';
  */
 const MOCK_USERS: User[] = [
   {
-    id: 'recruit-001',
-    email: 'recruit@demo.com',
+    id: 'recruit-1',
+    email: 'recruit@test.com',
     displayName: 'Marcus Johnson',
     role: 'recruit',
     favorites: [],
     createdAt: new Date().toISOString(),
   },
   {
-    id: 'parent-001',
-    email: 'parent@demo.com',
+    id: 'parent-1',
+    email: 'parent@test.com',
     displayName: 'Lisa Johnson',
     role: 'parent',
     favorites: [],
-    linkedRecruitId: 'recruit-001',
+    linkedRecruitId: 'recruit-1',
     createdAt: new Date().toISOString(),
   },
   {
-    id: 'admin-001',
-    email: 'admin@demo.com',
+    id: 'admin-1',
+    email: 'admin@test.com',
     displayName: 'Coach Williams',
     role: 'admin',
     favorites: [],
-    schoolId: 'oklahoma',
+    schoolId: 'alabama',
     createdAt: new Date().toISOString(),
   },
 ];
@@ -168,7 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateProfile = useCallback(
-    async (data: Partial<Pick<User, 'displayName' | 'avatarUrl' | 'favorites'>>) => {
+    async (data: Partial<Pick<User, 'displayName' | 'avatarUrl' | 'favorites' | 'linkedRecruitId'>>) => {
       setUser((prev) => {
         if (!prev) return prev;
         const updated: User = { ...prev, ...data };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,21 @@ import {
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
+  Animated,
+  type LayoutChangeEvent,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useSchoolTheme } from '@/context/SchoolThemeContext';
 import { useAnalytics } from '@/context/AnalyticsContext';
 import { useAuth } from '@/context/AuthContext';
 import { SCHOOLS } from '@/data/schools';
-import { ACADEMICS_DATA, COLLEGES, MAJORS } from '@/data/academics';
+import { ACADEMICS_DATA, COLLEGES } from '@/data/academics';
 import { SPORTS, COACHES, FACILITIES } from '@/data/athletics';
-import type { School } from '@/types';
+import { TourScreen } from '@/components/tour';
+import { JerseyBuilderScreen } from '@/components/jersey';
+import { JERSEY_ASSETS } from '@/data/jerseyAssets';
+import { useAcademicData } from '@/hooks/useAcademicData';
+import type { School, Facility } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Tab Definitions
@@ -35,6 +41,44 @@ export default function SchoolDetailScreen() {
   const { user, updateProfile } = useAuth();
 
   const [activeTab, setActiveTab] = useState<TabName>('Academics');
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+
+  // Animated tab underline
+  const tabLayouts = useRef<Record<string, { x: number; width: number }>>({}).current;
+  const underlineX = useRef(new Animated.Value(0)).current;
+  const underlineWidth = useRef(new Animated.Value(0)).current;
+
+  const handleTabLayout = useCallback(
+    (tab: string, e: LayoutChangeEvent) => {
+      const { x, width } = e.nativeEvent.layout;
+      tabLayouts[tab] = { x, width };
+      if (tab === activeTab) {
+        underlineX.setValue(x);
+        underlineWidth.setValue(width);
+      }
+    },
+    [activeTab, tabLayouts, underlineX, underlineWidth],
+  );
+
+  useEffect(() => {
+    const layout = tabLayouts[activeTab];
+    if (layout) {
+      Animated.parallel([
+        Animated.spring(underlineX, {
+          toValue: layout.x,
+          useNativeDriver: false,
+          tension: 200,
+          friction: 25,
+        }),
+        Animated.spring(underlineWidth, {
+          toValue: layout.width,
+          useNativeDriver: false,
+          tension: 200,
+          friction: 25,
+        }),
+      ]).start();
+    }
+  }, [activeTab, tabLayouts, underlineX, underlineWidth]);
 
   // Look up school data
   const school = useMemo(
@@ -158,30 +202,36 @@ export default function SchoolDetailScreen() {
         </View>
       </View>
 
-      {/* ------- Tab Selector ------- */}
-      <View className="flex-row bg-[#1E293B] border-b border-[#334155]">
-        {TABS.map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            className={`flex-1 py-3 items-center ${
-              activeTab === tab ? 'border-b-2' : ''
-            }`}
-            style={
-              activeTab === tab
-                ? { borderBottomColor: currentTheme.primary }
-                : undefined
-            }
-            onPress={() => setActiveTab(tab)}
-          >
-            <Text
-              className={`text-sm font-semibold ${
-                activeTab === tab ? 'text-white' : 'text-slate-500'
-              }`}
+      {/* ------- Tab Selector with Animated Underline ------- */}
+      <View className="bg-[#1E293B] border-b border-[#334155]">
+        <View style={styles.tabRow}>
+          {TABS.map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              className="flex-1 py-3 items-center"
+              onPress={() => setActiveTab(tab)}
+              onLayout={(e) => handleTabLayout(tab, e)}
             >
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                className={`text-sm font-semibold ${
+                  activeTab === tab ? 'text-white' : 'text-slate-500'
+                }`}
+              >
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <Animated.View
+            style={[
+              styles.tabUnderline,
+              {
+                backgroundColor: currentTheme.primary,
+                left: underlineX,
+                width: underlineWidth,
+              },
+            ]}
+          />
+        </View>
       </View>
 
       {/* ------- Tab Content ------- */}
@@ -195,6 +245,7 @@ export default function SchoolDetailScreen() {
             academics={academics}
             colleges={schoolColleges}
             schoolColors={currentTheme}
+            scorecardId={school.scorecardId}
           />
         )}
         {activeTab === 'Athletics' && (
@@ -203,16 +254,97 @@ export default function SchoolDetailScreen() {
             coaches={schoolCoaches}
             facilities={schoolFacilities}
             schoolColors={currentTheme}
+            onFacilityPress={(facilityId: string) => {
+              const facility = schoolFacilities.find((f) => f.id === facilityId);
+              if (facility) {
+                setSelectedFacility(facility);
+                setActiveTab('Tour');
+              }
+            }}
           />
         )}
         {activeTab === 'Tour' && (
-          <TourTab
-            facilities={schoolFacilities}
-            schoolColors={currentTheme}
-          />
+          selectedFacility ? (
+            <TourScreen
+              facility={selectedFacility}
+              schoolColor={school.colors.primary}
+              onBack={() => setSelectedFacility(null)}
+              onNavigate={(facilityId) => {
+                const f = schoolFacilities.find((fac) => fac.id === facilityId);
+                if (f) setSelectedFacility(f);
+              }}
+              userId={user?.id ?? ''}
+            />
+          ) : (
+            <View className="p-4">
+              <Text className="text-white text-lg font-bold mb-3">
+                Virtual Facility Tours
+              </Text>
+              <Text className="text-slate-400 text-sm mb-4">
+                Explore campus facilities in 360 degrees
+              </Text>
+              {schoolFacilities.length === 0 ? (
+                <View className="items-center py-16">
+                  <Text className="text-white text-lg font-bold">
+                    No facilities available
+                  </Text>
+                </View>
+              ) : (
+                schoolFacilities.map((facility) => (
+                  <TouchableOpacity
+                    key={facility.id}
+                    className="bg-[#1E293B] rounded-xl p-4 mb-3"
+                    activeOpacity={0.7}
+                    onPress={() => setSelectedFacility(facility)}
+                  >
+                    <View className="flex-row items-center">
+                      <View
+                        className="w-12 h-12 rounded-lg items-center justify-center mr-3"
+                        style={{ backgroundColor: currentTheme.primary + '20' }}
+                      >
+                        <Text className="text-lg">{'\uD83C\uDFDF\uFE0F'}</Text>
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-white font-bold">{facility.name}</Text>
+                        <Text className="text-slate-400 text-xs mt-0.5">
+                          {facility.type}
+                        </Text>
+                        {facility.panoramaUrl ? (
+                          <Text className="text-green-400 text-xs mt-1">
+                            360 Tour Available
+                          </Text>
+                        ) : (
+                          <Text className="text-slate-500 text-xs mt-1">
+                            Tour coming soon
+                          </Text>
+                        )}
+                      </View>
+                      <TouchableOpacity
+                        className="px-4 py-2 rounded-lg"
+                        style={{ backgroundColor: currentTheme.primary }}
+                        onPress={() => setSelectedFacility(facility)}
+                      >
+                        <Text
+                          className="text-xs font-bold"
+                          style={{ color: currentTheme.textOnPrimary }}
+                        >
+                          Start Tour
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )}
+            </View>
+          )
         )}
         {activeTab === 'Jersey' && (
-          <JerseyTab school={school} schoolColors={currentTheme} />
+          <JerseyBuilderScreen
+            school={school}
+            jerseyAssets={JERSEY_ASSETS.filter((a) => a.schoolId === school.id)}
+            onBack={() => setActiveTab('Athletics')}
+            schoolColor={school.colors.primary}
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -224,15 +356,30 @@ export default function SchoolDetailScreen() {
 // ---------------------------------------------------------------------------
 
 function AcademicsTab({
-  academics,
+  academics: academicsProp,
   colleges,
   schoolColors,
+  scorecardId,
 }: {
   academics: any;
   colleges: any[];
   schoolColors: any;
+  scorecardId?: string;
 }) {
-  if (!academics) {
+  // When a scorecardId is provided, fetch live data from the API.
+  const schoolId = academicsProp?.schoolId ?? '';
+  const liveResult = scorecardId
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useAcademicData(schoolId, scorecardId)
+    : null;
+
+  const loading = liveResult?.loading ?? false;
+  const error = liveResult?.error ?? null;
+  const refresh = liveResult?.refresh ?? (() => {});
+  const academics = liveResult?.academicData ?? academicsProp;
+  const isLive = scorecardId != null && liveResult?.academicData != null && error == null;
+
+  if (!academics && !loading) {
     return (
       <View className="p-4">
         <Text className="text-slate-400">No academic data available.</Text>
@@ -242,40 +389,92 @@ function AcademicsTab({
 
   return (
     <View className="p-4">
+      {/* Data source indicator */}
+      {scorecardId != null && !loading && (
+        <View
+          className="flex-row items-center self-start rounded-full px-2.5 py-1 mb-3"
+          style={{ backgroundColor: isLive ? '#064E3B' : '#1E293B' }}
+        >
+          <View
+            className="w-1.5 h-1.5 rounded-full mr-1.5"
+            style={{ backgroundColor: isLive ? '#34D399' : '#94A3B8' }}
+          />
+          <Text
+            className="text-xs font-semibold"
+            style={{ color: isLive ? '#6EE7B7' : '#94A3B8' }}
+          >
+            {isLive ? 'Live data from College Scorecard' : 'Using cached data'}
+          </Text>
+        </View>
+      )}
+
+      {/* Error banner */}
+      {error != null && !loading && (
+        <View className="flex-row items-center bg-[#1C1917] rounded-lg border border-[#78350F] p-3 mb-4">
+          <View className="flex-1">
+            <Text className="text-[#FBBF24] text-sm font-bold">Using offline data</Text>
+            <Text className="text-[#A8A29E] text-xs mt-0.5">
+              Could not reach College Scorecard API
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={refresh}
+            className="rounded-lg px-3.5 py-1.5 ml-3"
+            style={{ backgroundColor: schoolColors.primary }}
+          >
+            <Text className="text-white text-xs font-bold">Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Key Stats */}
       <Text className="text-white text-lg font-bold mb-3">Key Statistics</Text>
-      <View className="flex-row flex-wrap mb-4">
-        <StatCard
-          label="Enrollment"
-          value={academics.enrollment.toLocaleString()}
-          color={schoolColors.primary}
-        />
-        <StatCard
-          label="Admission Rate"
-          value={`${(academics.admissionRate * 100).toFixed(0)}%`}
-          color={schoolColors.primary}
-        />
-        <StatCard
-          label="Graduation Rate"
-          value={`${(academics.graduationRate * 100).toFixed(0)}%`}
-          color={schoolColors.primary}
-        />
-        <StatCard
-          label="SAT Average"
-          value={academics.satAvg.toString()}
-          color={schoolColors.primary}
-        />
-        <StatCard
-          label="In-State Tuition"
-          value={`$${academics.tuitionInState.toLocaleString()}`}
-          color={schoolColors.primary}
-        />
-        <StatCard
-          label="Median Earnings"
-          value={`$${academics.medianEarnings.toLocaleString()}`}
-          color={schoolColors.primary}
-        />
-      </View>
+
+      {loading ? (
+        <View className="flex-row flex-wrap mb-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <View key={i} className="w-1/3 p-1">
+              <View className="bg-[#1E293B] rounded-xl p-3 items-center opacity-50">
+                <View className="bg-[#334155] rounded h-5 w-12 mb-2" />
+                <View className="bg-[#334155] rounded h-3 w-16" />
+              </View>
+            </View>
+          ))}
+        </View>
+      ) : (
+        <View className="flex-row flex-wrap mb-4">
+          <StatCard
+            label="Enrollment"
+            value={academics.enrollment.toLocaleString()}
+            color={schoolColors.primary}
+          />
+          <StatCard
+            label="Admission Rate"
+            value={`${(academics.admissionRate * 100).toFixed(0)}%`}
+            color={schoolColors.primary}
+          />
+          <StatCard
+            label="Graduation Rate"
+            value={`${(academics.graduationRate * 100).toFixed(0)}%`}
+            color={schoolColors.primary}
+          />
+          <StatCard
+            label="SAT Average"
+            value={academics.satAvg.toString()}
+            color={schoolColors.primary}
+          />
+          <StatCard
+            label="In-State Tuition"
+            value={`$${academics.tuitionInState.toLocaleString()}`}
+            color={schoolColors.primary}
+          />
+          <StatCard
+            label="Median Earnings"
+            value={`$${academics.medianEarnings.toLocaleString()}`}
+            color={schoolColors.primary}
+          />
+        </View>
+      )}
 
       {/* Colleges */}
       <Text className="text-white text-lg font-bold mb-3 mt-2">
@@ -305,11 +504,13 @@ function AthleticsTab({
   coaches,
   facilities,
   schoolColors,
+  onFacilityPress,
 }: {
   sport: any;
   coaches: any[];
   facilities: any[];
   schoolColors: any;
+  onFacilityPress: (facilityId: string) => void;
 }) {
   if (!sport) {
     return (
@@ -374,9 +575,11 @@ function AthleticsTab({
         Facilities
       </Text>
       {facilities.map((facility) => (
-        <View
+        <TouchableOpacity
           key={facility.id}
           className="bg-[#1E293B] rounded-xl p-4 mb-3"
+          activeOpacity={0.7}
+          onPress={() => onFacilityPress(facility.id)}
         >
           <View className="flex-row items-center justify-between">
             <Text className="text-white font-bold flex-1">
@@ -397,104 +600,8 @@ function AthleticsTab({
           <Text className="text-slate-400 text-xs mt-2" numberOfLines={3}>
             {facility.description}
           </Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Tour Tab
-// ---------------------------------------------------------------------------
-
-function TourTab({
-  facilities,
-  schoolColors,
-}: {
-  facilities: any[];
-  schoolColors: any;
-}) {
-  const tourFacilities = facilities.filter((f) => f.panoramaUrl);
-
-  if (tourFacilities.length === 0) {
-    return (
-      <View className="p-4 items-center py-16">
-        <Text className="text-4xl mb-4">{'\uD83C\uDFDF\uFE0F'}</Text>
-        <Text className="text-white text-lg font-bold">
-          360 Tours Coming Soon
-        </Text>
-        <Text className="text-slate-400 text-sm mt-2 text-center">
-          Virtual facility tours will be available here
-        </Text>
-      </View>
-    );
-  }
-
-  return (
-    <View className="p-4">
-      <Text className="text-white text-lg font-bold mb-3">
-        Virtual Facility Tours
-      </Text>
-      <Text className="text-slate-400 text-sm mb-4">
-        Explore campus facilities in 360 degrees
-      </Text>
-      {tourFacilities.map((facility) => (
-        <TouchableOpacity
-          key={facility.id}
-          className="bg-[#1E293B] rounded-xl p-4 mb-3"
-          activeOpacity={0.7}
-        >
-          <View className="flex-row items-center">
-            <View
-              className="w-12 h-12 rounded-lg items-center justify-center mr-3"
-              style={{ backgroundColor: schoolColors.primary + '20' }}
-            >
-              <Text className="text-lg">{'\uD83C\uDFDF\uFE0F'}</Text>
-            </View>
-            <View className="flex-1">
-              <Text className="text-white font-bold">{facility.name}</Text>
-              <Text className="text-slate-400 text-xs mt-1">
-                {facility.hotspots.length} interactive points
-              </Text>
-            </View>
-            <Text className="text-slate-500">{'\u203A'}</Text>
-          </View>
         </TouchableOpacity>
       ))}
-    </View>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Jersey Tab
-// ---------------------------------------------------------------------------
-
-function JerseyTab({
-  school,
-  schoolColors,
-}: {
-  school: School;
-  schoolColors: any;
-}) {
-  return (
-    <View className="p-4 items-center py-16">
-      <Text className="text-4xl mb-4">{'\uD83D\uDC55'}</Text>
-      <Text className="text-white text-lg font-bold">Jersey Builder</Text>
-      <Text className="text-slate-400 text-sm mt-2 text-center">
-        Customize your {school.mascot} uniform
-      </Text>
-      <TouchableOpacity
-        className="mt-6 px-8 py-3 rounded-lg"
-        style={{ backgroundColor: schoolColors.primary }}
-        activeOpacity={0.8}
-      >
-        <Text
-          className="font-bold text-base"
-          style={{ color: schoolColors.textOnPrimary }}
-        >
-          Start Building
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -542,5 +649,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
     textAlign: 'center',
+  },
+  tabRow: {
+    flexDirection: 'row',
+    position: 'relative',
+  },
+  tabUnderline: {
+    position: 'absolute',
+    bottom: 0,
+    height: 3,
+    borderRadius: 1.5,
   },
 });

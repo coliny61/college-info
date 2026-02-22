@@ -50,7 +50,7 @@ const ROLE_OPTIONS: RoleOption[] = [
 // ---------------------------------------------------------------------------
 
 export default function RegisterScreen() {
-  const { register, loading } = useAuth();
+  const { register, updateProfile, loading } = useAuth();
 
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -86,6 +86,9 @@ export default function RegisterScreen() {
 
     try {
       await register(email.trim(), password, selectedRole, displayName.trim());
+      if (selectedRole === 'parent' && linkedRecruitCode.trim()) {
+        await updateProfile({ linkedRecruitId: linkedRecruitCode.trim() });
+      }
       router.replace('/');
     } catch (err: any) {
       setError(err?.message ?? 'Registration failed. Please try again.');

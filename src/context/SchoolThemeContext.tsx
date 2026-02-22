@@ -162,11 +162,11 @@ function getSchoolColors(schoolId: string): { primary: string; secondary: string
   // Inline fallback for the five launch schools (allows context to work before
   // the data layer is wired up).
   const fallback: Record<string, { primary: string; secondary: string }> = {
-    oklahoma:  { primary: '#841617', secondary: '#F0E8D0' },
-    texas:     { primary: '#BF5700', secondary: '#FFFFFF' },
-    alabama:   { primary: '#9E1B32', secondary: '#FFFFFF' },
-    georgia:   { primary: '#BA0C2F', secondary: '#000000' },
-    ohiostate:   { primary: '#BB0000', secondary: '#666666' },
+    texas:        { primary: '#BF5700', secondary: '#FFFFFF' },
+    alabama:      { primary: '#9E1B32', secondary: '#FFFFFF' },
+    'ohio-state': { primary: '#BB0000', secondary: '#666666' },
+    oregon:       { primary: '#154733', secondary: '#FEE123' },
+    lsu:          { primary: '#461D7C', secondary: '#FDD023' },
   };
   return fallback[schoolId] ?? null;
 }

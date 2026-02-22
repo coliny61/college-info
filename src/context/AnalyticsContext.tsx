@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { AnalyticsEvent } from '@/types';
+import { useAuth } from './AuthContext';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -80,6 +81,7 @@ const AnalyticsContext = createContext<AnalyticsContextValue | undefined>(undefi
 // ---------------------------------------------------------------------------
 
 export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const sessionIdRef = useRef<string>(generateSessionId());
   const eventQueueRef = useRef<AnalyticsEvent[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -137,8 +139,8 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     ) => {
       const event: AnalyticsEvent = {
         id: generateEventId(),
-        userId: '', // Populated by consumers if auth is available
-        userRole: 'recruit', // Default; consumers can override via metadata
+        userId: user?.id ?? '',
+        userRole: user?.role ?? 'recruit',
         schoolId: (metadata?.schoolId as string) ?? undefined,
         sessionId: sessionIdRef.current,
         section,
@@ -148,7 +150,7 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       };
       eventQueueRef.current.push(event);
     },
-    [],
+    [user],
   );
 
   const trackScreenTime = useCallback(
@@ -159,8 +161,8 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       const enterId = generateEventId();
       eventQueueRef.current.push({
         id: enterId,
-        userId: '',
-        userRole: 'recruit',
+        userId: user?.id ?? '',
+        userRole: user?.role ?? 'recruit',
         sessionId: sessionIdRef.current,
         section,
         action: 'screen_enter',
@@ -172,8 +174,8 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         const duration = Date.now() - startTime;
         eventQueueRef.current.push({
           id: generateEventId(),
-          userId: '',
-          userRole: 'recruit',
+          userId: user?.id ?? '',
+          userRole: user?.role ?? 'recruit',
           sessionId: sessionIdRef.current,
           section,
           action: 'screen_exit',
@@ -182,7 +184,7 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         });
       };
     },
-    [],
+    [user],
   );
 
   const getSessionId = useCallback(() => sessionIdRef.current, []);
