@@ -28,6 +28,7 @@ import { DARK_THEME } from '@/theme';
 import type { School, JerseyAsset } from '@/types';
 import { useJerseyBuilder } from '@/hooks/useJerseyBuilder';
 import { createEvent } from '@/services/analytics';
+import { exportJerseyImage, shareJerseyImage, saveToGallery } from '@/services/imageExport';
 
 import { JerseyCanvas } from './JerseyCanvas';
 import type { JerseyCanvasRef } from './JerseyCanvas';
@@ -119,7 +120,7 @@ export function JerseyBuilderScreen({
 
   // -- Share / Save handlers ------------------------------------------------
 
-  const handleShare = useCallback(() => {
+  const handleShare = useCallback(async () => {
     createEvent('current-user', 'recruit', 'jersey-builder', 'jersey_share', {
       schoolId: school.id,
       helmet: selectedHelmet?.colorLabel ?? '',
@@ -127,15 +128,21 @@ export function JerseyBuilderScreen({
       pants: selectedPants?.colorLabel ?? '',
     });
 
-    // Prototype: show confirmation alert
-    // MVP: capture canvas via viewRef → imageExport → share sheet
-    Alert.alert(
-      'Shared!',
-      `${school.name} jersey combo shared successfully.\n\nHelmet: ${selectedHelmet?.colorLabel}\nJersey: ${selectedJersey?.colorLabel}\nPants: ${selectedPants?.colorLabel}`,
-    );
+    const viewNode = canvasRef.current?.viewRef;
+    if (!viewNode) {
+      Alert.alert('Error', 'Unable to capture jersey canvas.');
+      return;
+    }
+
+    try {
+      const uri = await exportJerseyImage(viewNode);
+      await shareJerseyImage(uri);
+    } catch (e) {
+      Alert.alert('Error', 'Failed to share jersey design.');
+    }
   }, [school, selectedHelmet, selectedJersey, selectedPants]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     createEvent('current-user', 'recruit', 'jersey-builder', 'jersey_save', {
       schoolId: school.id,
       helmet: selectedHelmet?.colorLabel ?? '',
@@ -143,12 +150,18 @@ export function JerseyBuilderScreen({
       pants: selectedPants?.colorLabel ?? '',
     });
 
-    // Prototype: show confirmation alert
-    // MVP: capture canvas via viewRef → imageExport → save to gallery
-    Alert.alert(
-      'Saved!',
-      `${school.name} jersey combo saved to your device.`,
-    );
+    const viewNode = canvasRef.current?.viewRef;
+    if (!viewNode) {
+      Alert.alert('Error', 'Unable to capture jersey canvas.');
+      return;
+    }
+
+    try {
+      const uri = await exportJerseyImage(viewNode);
+      await saveToGallery(uri);
+    } catch (e) {
+      Alert.alert('Error', 'Failed to save jersey design.');
+    }
   }, [school, selectedHelmet, selectedJersey, selectedPants]);
 
   // Guard: if no assets are available, show fallback

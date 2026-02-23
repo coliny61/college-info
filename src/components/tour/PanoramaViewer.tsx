@@ -21,6 +21,7 @@ import {
   Platform,
 } from 'react-native';
 import { DARK_THEME } from '@/theme';
+import type { ImageSourcePropType } from 'react-native';
 import type { Hotspot } from '@/types';
 
 // -----------------------------------------------------------------------------
@@ -54,6 +55,8 @@ const MAX_FOV = 110;
 interface PanoramaViewerProps {
   /** URL of the equirectangular panoramic image. */
   panoramaUrl: string;
+  /** Local image source (from require()). Preferred over panoramaUrl when set. */
+  panoramaSource?: ImageSourcePropType;
   /** Interactive hotspots within this panorama. */
   hotspots?: Hotspot[];
   /** Callback when a hotspot is tapped. */
@@ -92,6 +95,7 @@ function clamp(value: number, min: number, max: number): number {
  */
 export default function PanoramaViewer({
   panoramaUrl,
+  panoramaSource,
   hotspots = [],
   onHotspotPress,
   schoolColor = DARK_THEME.accent,
@@ -250,7 +254,7 @@ export default function PanoramaViewer({
       >
         <Animated.Image
           key={error ? 'retry' : 'panorama'}
-          source={{ uri: panoramaUrl }}
+          source={panoramaSource ?? { uri: panoramaUrl }}
           style={[
             styles.panoramaImage,
             {

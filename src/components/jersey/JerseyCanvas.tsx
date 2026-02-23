@@ -2,20 +2,17 @@
 // JerseyCanvas
 // College Visit Platform - Jersey Builder
 // =============================================================================
-// Prototype uniform visualization using stacked React Native Views.
-// Renders a helmet (top), jersey (middle), and pants (bottom) as styled
-// colored rectangles with stitching details, stripe accents, numbers, and
-// school branding. Designed for screenshot capture via a viewRef.
-//
-// Later (MVP): Replace with @shopify/react-native-skia canvas compositing
-// real PNG assets.
+// Renders a helmet (top), jersey (middle), and pants (bottom) using
+// AI-generated PNG images from the asset registry. Falls back to styled
+// colored Views when images are unavailable.
 // =============================================================================
 
-import React, { useRef, useImperativeHandle, forwardRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import type { ViewStyle } from 'react-native';
+import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import type { ViewStyle, ImageSourcePropType } from 'react-native';
 import { DARK_THEME } from '@/theme';
 import type { JerseyAsset, School } from '@/types';
+import { getJerseyImage } from '@/data/jerseyAssetImages';
 
 // -----------------------------------------------------------------------------
 // Props & Ref
@@ -38,10 +35,6 @@ export interface JerseyCanvasRef {
 // Helpers
 // -----------------------------------------------------------------------------
 
-/**
- * Resolve a jersey asset's colorLabel into an actual hex color using the
- * school's brand palette.
- */
 function resolveColor(colorLabel: string, school: School): string {
   const normalized = colorLabel.toLowerCase();
   if (normalized.includes('home')) return school.colors.primary;
@@ -50,19 +43,12 @@ function resolveColor(colorLabel: string, school: School): string {
   return school.colors.primary;
 }
 
-/**
- * Derive a secondary/accent color for details like stripes and stitching.
- * If the main color is the primary, use secondary, and vice versa.
- */
 function accentColor(mainColor: string, school: School): string {
   if (mainColor === '#FFFFFF') return school.colors.primary;
   if (mainColor === school.colors.primary) return school.colors.secondary;
   return school.colors.primary;
 }
 
-/**
- * Compute a contrasting text color for the given background.
- */
 function contrastText(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -71,9 +57,6 @@ function contrastText(hex: string): string {
   return luminance > 0.55 ? '#000000' : '#FFFFFF';
 }
 
-/**
- * Create a slightly lighter or darker shade for gradient simulation.
- */
 function lightenColor(hex: string, amount: number): string {
   const r = Math.min(255, parseInt(hex.slice(1, 3), 16) + amount);
   const g = Math.min(255, parseInt(hex.slice(3, 5), 16) + amount);
@@ -86,6 +69,167 @@ function darkenColor(hex: string, amount: number): string {
   const g = Math.max(0, parseInt(hex.slice(3, 5), 16) - amount);
   const b = Math.max(0, parseInt(hex.slice(5, 7), 16) - amount);
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+// -----------------------------------------------------------------------------
+// Image Piece — renders AI image or falls back to View
+// -----------------------------------------------------------------------------
+
+function ImagePiece({
+  assetId,
+  width,
+  height,
+  fallback,
+}: {
+  assetId: string;
+  width: number;
+  height: number;
+  fallback: React.ReactNode;
+}) {
+  const source = getJerseyImage(assetId);
+  const [failed, setFailed] = useState(false);
+
+  if (!source || failed) {
+    return <>{fallback}</>;
+  }
+
+  return (
+    <Image
+      source={source}
+      style={{ width, height }}
+      resizeMode="contain"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Fallback Pieces (original View-based rendering)
+// -----------------------------------------------------------------------------
+
+function HelmetFallback({ color, accent, textColor, school }: {
+  color: string; accent: string; textColor: string; school: School;
+}) {
+  return (
+    <View style={fallbackStyles.helmetWrapper}>
+      <View
+        style={[
+          fallbackStyles.helmetShell,
+          {
+            backgroundColor: color,
+            borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 40),
+          },
+        ]}
+      >
+        <View style={[fallbackStyles.helmetGloss, { backgroundColor: lightenColor(color, 30) }]} />
+        <View style={[fallbackStyles.helmetStripe, { backgroundColor: accent }]} />
+        <Text style={[fallbackStyles.helmetLogoText, { color: textColor, opacity: 0.25 }]}>
+          {school.shortName}
+        </Text>
+      </View>
+      <View style={fallbackStyles.faceMaskContainer}>
+        <View style={[fallbackStyles.faceMaskBar, { backgroundColor: DARK_THEME.bg600 }]} />
+        <View style={[fallbackStyles.faceMaskBar, fallbackStyles.faceMaskBarLower, { backgroundColor: DARK_THEME.bg600 }]} />
+        <View style={[fallbackStyles.faceMaskVertical, { backgroundColor: DARK_THEME.bg600 }]} />
+      </View>
+    </View>
+  );
+}
+
+function JerseyFallback({ color, accent, textColor, school }: {
+  color: string; accent: string; textColor: string; school: School;
+}) {
+  return (
+    <View style={fallbackStyles.jerseyWrapper}>
+      <View
+        style={[
+          fallbackStyles.jerseyBody,
+          {
+            backgroundColor: color,
+            borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 30),
+          },
+        ]}
+      >
+        <View style={fallbackStyles.collarWrapper}>
+          <View style={[fallbackStyles.collar, { backgroundColor: accent }]} />
+        </View>
+        <View style={[fallbackStyles.shoulderStripeLeft, { backgroundColor: accent, opacity: 0.7 }]} />
+        <View style={[fallbackStyles.shoulderStripeRight, { backgroundColor: accent, opacity: 0.7 }]} />
+        <View style={[fallbackStyles.stitchLineLeft, { borderColor: accent, opacity: 0.2 }]} />
+        <View style={[fallbackStyles.stitchLineRight, { borderColor: accent, opacity: 0.2 }]} />
+        <Text style={[fallbackStyles.jerseyNumber, { color: textColor }]}>1</Text>
+        <Text
+          style={[fallbackStyles.schoolName, { color: textColor, opacity: 0.85 }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
+          {school.name.toUpperCase()}
+        </Text>
+        <View style={[fallbackStyles.hemStripe, { backgroundColor: accent, opacity: 0.5 }]} />
+      </View>
+      <View
+        style={[
+          fallbackStyles.sleeveLeft,
+          {
+            backgroundColor: color,
+            borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 30),
+          },
+        ]}
+      >
+        <View style={[fallbackStyles.sleeveStripe, { backgroundColor: accent, opacity: 0.6 }]} />
+      </View>
+      <View
+        style={[
+          fallbackStyles.sleeveRight,
+          {
+            backgroundColor: color,
+            borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 30),
+          },
+        ]}
+      >
+        <View style={[fallbackStyles.sleeveStripe, { backgroundColor: accent, opacity: 0.6 }]} />
+      </View>
+    </View>
+  );
+}
+
+function PantsFallback({ color, accent }: { color: string; accent: string }) {
+  return (
+    <View style={fallbackStyles.pantsWrapper}>
+      <View
+        style={[
+          fallbackStyles.waistband,
+          { backgroundColor: darkenColor(color === '#FFFFFF' ? '#E5E5E5' : color, 20) },
+        ]}
+      />
+      <View style={fallbackStyles.pantsLegsContainer}>
+        <View
+          style={[
+            fallbackStyles.pantsLeg,
+            fallbackStyles.pantsLegLeft,
+            {
+              backgroundColor: color,
+              borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 30),
+            },
+          ]}
+        >
+          <View style={[fallbackStyles.pantsSideStripe, fallbackStyles.pantsSideStripeLeft, { backgroundColor: accent, opacity: 0.5 }]} />
+        </View>
+        <View
+          style={[
+            fallbackStyles.pantsLeg,
+            fallbackStyles.pantsLegRight,
+            {
+              backgroundColor: color,
+              borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(color, 30),
+            },
+          ]}
+        >
+          <View style={[fallbackStyles.pantsSideStripe, fallbackStyles.pantsSideStripeRight, { backgroundColor: accent, opacity: 0.5 }]} />
+        </View>
+      </View>
+    </View>
+  );
 }
 
 // -----------------------------------------------------------------------------
@@ -119,250 +263,63 @@ export const JerseyCanvas = forwardRef<JerseyCanvasRef, JerseyCanvasProps>(
         style={[styles.canvas, style]}
         collapsable={false}
       >
-        {/* ================================================================= */}
-        {/* HELMET                                                             */}
-        {/* ================================================================= */}
-        <View style={styles.helmetWrapper}>
-          {/* Main helmet shell */}
-          <View
-            style={[
-              styles.helmetShell,
-              {
-                backgroundColor: helmetColor,
-                borderColor:
-                  helmetColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(helmetColor, 40),
-              },
-            ]}
-          >
-            {/* Highlight / gloss strip (simulated gradient) */}
-            <View
-              style={[
-                styles.helmetGloss,
-                { backgroundColor: lightenColor(helmetColor, 30) },
-              ]}
+        {/* Helmet */}
+        <ImagePiece
+          assetId={helmet.id}
+          width={IMAGE_WIDTH}
+          height={IMAGE_HELMET_HEIGHT}
+          fallback={
+            <HelmetFallback
+              color={helmetColor}
+              accent={helmetAccent}
+              textColor={helmetTextColor}
+              school={school}
             />
+          }
+        />
 
-            {/* Center stripe */}
-            <View
-              style={[styles.helmetStripe, { backgroundColor: helmetAccent }]}
+        {/* Jersey */}
+        <ImagePiece
+          assetId={jersey.id}
+          width={IMAGE_WIDTH}
+          height={IMAGE_JERSEY_HEIGHT}
+          fallback={
+            <JerseyFallback
+              color={jerseyColor}
+              accent={jerseyAccent}
+              textColor={jerseyTextColor}
+              school={school}
             />
+          }
+        />
 
-            {/* School logo text (abbreviation) */}
-            <Text
-              style={[
-                styles.helmetLogoText,
-                { color: helmetTextColor, opacity: 0.25 },
-              ]}
-            >
-              {school.shortName}
-            </Text>
-          </View>
-
-          {/* Face mask */}
-          <View style={styles.faceMaskContainer}>
-            <View style={[styles.faceMaskBar, { backgroundColor: DARK_THEME.bg600 }]} />
-            <View style={[styles.faceMaskBar, styles.faceMaskBarLower, { backgroundColor: DARK_THEME.bg600 }]} />
-            {/* Vertical mask connector */}
-            <View style={[styles.faceMaskVertical, { backgroundColor: DARK_THEME.bg600 }]} />
-          </View>
-        </View>
-
-        {/* ================================================================= */}
-        {/* JERSEY                                                             */}
-        {/* ================================================================= */}
-        <View style={styles.jerseyWrapper}>
-          {/* Main jersey body */}
-          <View
-            style={[
-              styles.jerseyBody,
-              {
-                backgroundColor: jerseyColor,
-                borderColor:
-                  jerseyColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(jerseyColor, 30),
-              },
-            ]}
-          >
-            {/* Collar / neckline */}
-            <View style={styles.collarWrapper}>
-              <View
-                style={[
-                  styles.collar,
-                  { backgroundColor: jerseyAccent },
-                ]}
-              />
-            </View>
-
-            {/* Left shoulder stripe */}
-            <View
-              style={[
-                styles.shoulderStripeLeft,
-                { backgroundColor: jerseyAccent, opacity: 0.7 },
-              ]}
-            />
-
-            {/* Right shoulder stripe */}
-            <View
-              style={[
-                styles.shoulderStripeRight,
-                { backgroundColor: jerseyAccent, opacity: 0.7 },
-              ]}
-            />
-
-            {/* Stitching line - left */}
-            <View
-              style={[
-                styles.stitchLineLeft,
-                { borderColor: jerseyAccent, opacity: 0.2 },
-              ]}
-            />
-
-            {/* Stitching line - right */}
-            <View
-              style={[
-                styles.stitchLineRight,
-                { borderColor: jerseyAccent, opacity: 0.2 },
-              ]}
-            />
-
-            {/* Number */}
-            <Text
-              style={[
-                styles.jerseyNumber,
-                { color: jerseyTextColor },
-              ]}
-            >
-              1
-            </Text>
-
-            {/* School name */}
-            <Text
-              style={[
-                styles.schoolName,
-                { color: jerseyTextColor, opacity: 0.85 },
-              ]}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-            >
-              {school.name.toUpperCase()}
-            </Text>
-
-            {/* Bottom hem stripe */}
-            <View
-              style={[
-                styles.hemStripe,
-                { backgroundColor: jerseyAccent, opacity: 0.5 },
-              ]}
-            />
-          </View>
-
-          {/* Left sleeve */}
-          <View
-            style={[
-              styles.sleeveLeft,
-              {
-                backgroundColor: jerseyColor,
-                borderColor:
-                  jerseyColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(jerseyColor, 30),
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.sleeveStripe,
-                { backgroundColor: jerseyAccent, opacity: 0.6 },
-              ]}
-            />
-          </View>
-
-          {/* Right sleeve */}
-          <View
-            style={[
-              styles.sleeveRight,
-              {
-                backgroundColor: jerseyColor,
-                borderColor:
-                  jerseyColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(jerseyColor, 30),
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.sleeveStripe,
-                { backgroundColor: jerseyAccent, opacity: 0.6 },
-              ]}
-            />
-          </View>
-        </View>
-
-        {/* ================================================================= */}
-        {/* PANTS                                                              */}
-        {/* ================================================================= */}
-        <View style={styles.pantsWrapper}>
-          {/* Waistband */}
-          <View
-            style={[
-              styles.waistband,
-              { backgroundColor: darkenColor(pantsColor === '#FFFFFF' ? '#E5E5E5' : pantsColor, 20) },
-            ]}
-          />
-
-          {/* Pants body - two legs with gap */}
-          <View style={styles.pantsLegsContainer}>
-            {/* Left leg */}
-            <View
-              style={[
-                styles.pantsLeg,
-                styles.pantsLegLeft,
-                {
-                  backgroundColor: pantsColor,
-                  borderColor:
-                    pantsColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(pantsColor, 30),
-                },
-              ]}
-            >
-              {/* Side stripe */}
-              <View
-                style={[
-                  styles.pantsSideStripe,
-                  styles.pantsSideStripeLeft,
-                  { backgroundColor: pantsAccent, opacity: 0.5 },
-                ]}
-              />
-            </View>
-
-            {/* Right leg */}
-            <View
-              style={[
-                styles.pantsLeg,
-                styles.pantsLegRight,
-                {
-                  backgroundColor: pantsColor,
-                  borderColor:
-                    pantsColor === '#FFFFFF' ? DARK_THEME.bg600 : darkenColor(pantsColor, 30),
-                },
-              ]}
-            >
-              {/* Side stripe */}
-              <View
-                style={[
-                  styles.pantsSideStripe,
-                  styles.pantsSideStripeRight,
-                  { backgroundColor: pantsAccent, opacity: 0.5 },
-                ]}
-              />
-            </View>
-          </View>
-        </View>
+        {/* Pants */}
+        <ImagePiece
+          assetId={pants.id}
+          width={IMAGE_WIDTH}
+          height={IMAGE_PANTS_HEIGHT}
+          fallback={
+            <PantsFallback color={pantsColor} accent={pantsAccent} />
+          }
+        />
       </View>
     );
   },
 );
 
 // -----------------------------------------------------------------------------
-// Styles
+// Dimensions
 // -----------------------------------------------------------------------------
 
 const CANVAS_WIDTH = 200;
+const IMAGE_WIDTH = 180;
+const IMAGE_HELMET_HEIGHT = 80;
+const IMAGE_JERSEY_HEIGHT = 140;
+const IMAGE_PANTS_HEIGHT = 120;
+
+// -----------------------------------------------------------------------------
+// Styles — Main canvas
+// -----------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
   canvas: {
@@ -371,8 +328,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 8,
   },
+});
 
-  // -- Helmet -----------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Fallback Styles (original View-based rendering)
+// -----------------------------------------------------------------------------
+
+const fallbackStyles = StyleSheet.create({
+  // -- Helmet
   helmetWrapper: {
     width: 80,
     height: 72,
@@ -448,7 +411,7 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
   },
 
-  // -- Jersey -----------------------------------------------------------------
+  // -- Jersey
   jerseyWrapper: {
     width: CANVAS_WIDTH,
     height: 140,
@@ -542,7 +505,7 @@ const styles = StyleSheet.create({
     height: 4,
   },
 
-  // -- Sleeves ----------------------------------------------------------------
+  // -- Sleeves
   sleeveLeft: {
     position: 'absolute',
     top: 10,
@@ -583,7 +546,7 @@ const styles = StyleSheet.create({
     height: 4,
   },
 
-  // -- Pants ------------------------------------------------------------------
+  // -- Pants
   pantsWrapper: {
     width: 130,
     marginTop: -6,

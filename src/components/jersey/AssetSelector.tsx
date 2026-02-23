@@ -2,21 +2,23 @@
 // AssetSelector
 // College Visit Platform - Jersey Builder
 // =============================================================================
-// Horizontal scrollable row of selectable jersey asset options (helmet, jersey,
-// or pants variants). Each option is a colored circle with a label. The
-// selected item shows a school-colored ring border and a checkmark overlay.
+// Horizontal scrollable row of selectable jersey asset options. Shows AI image
+// thumbnails when available, with color circle fallback. The selected item
+// shows a school-colored ring border and a checkmark overlay.
 // =============================================================================
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
 } from 'react-native';
 import { DARK_THEME } from '@/theme';
 import type { JerseyAsset, School } from '@/types';
+import { getJerseyImage } from '@/data/jerseyAssetImages';
 
 // -----------------------------------------------------------------------------
 // Props
@@ -34,29 +36,55 @@ interface AssetSelectorProps {
 // Helpers
 // -----------------------------------------------------------------------------
 
-/**
- * Map a jersey asset's colorLabel to an actual rendered color, using the
- * school's brand palette.
- */
 function resolveAssetColor(colorLabel: string, school: School): string {
   const normalized = colorLabel.toLowerCase();
   if (normalized.includes('home')) return school.colors.primary;
   if (normalized.includes('away')) return '#FFFFFF';
   if (normalized.includes('alternate')) return school.colors.secondary;
-  // Fallback
   return school.colors.primary;
 }
 
-/**
- * Return a suitable border/text contrast color depending on the swatch
- * brightness so that the checkmark and label remain visible.
- */
 function swatchTextColor(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.55 ? '#000000' : '#FFFFFF';
+}
+
+// -----------------------------------------------------------------------------
+// Thumbnail — AI image or color circle fallback
+// -----------------------------------------------------------------------------
+
+function AssetThumbnail({ asset, school }: { asset: JerseyAsset; school: School }) {
+  const source = getJerseyImage(asset.id);
+  const [failed, setFailed] = useState(false);
+
+  if (source && !failed) {
+    return (
+      <Image
+        source={source}
+        style={styles.thumbnailImage}
+        resizeMode="cover"
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+
+  // Fallback: color circle
+  const color = resolveAssetColor(asset.colorLabel, school);
+  return (
+    <View
+      style={[
+        styles.colorFallback,
+        {
+          backgroundColor: color,
+          borderColor: color === '#FFFFFF' ? DARK_THEME.bg600 : 'transparent',
+          borderWidth: color === '#FFFFFF' ? 1 : 0,
+        },
+      ]}
+    />
+  );
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +100,6 @@ export function AssetSelector({
 }: AssetSelectorProps) {
   return (
     <View style={styles.container}>
-      {/* Section label */}
       <Text style={styles.sectionLabel}>{label}</Text>
 
       <ScrollView
@@ -102,23 +129,15 @@ export function AssetSelector({
                   },
                 ]}
               >
-                {/* Color swatch */}
-                <View
-                  style={[
-                    styles.swatch,
-                    {
-                      backgroundColor: color,
-                      borderColor:
-                        color === '#FFFFFF' ? DARK_THEME.bg600 : 'transparent',
-                      borderWidth: color === '#FFFFFF' ? 1 : 0,
-                    },
-                  ]}
-                >
-                  {/* Checkmark overlay */}
+                {/* Thumbnail or color swatch */}
+                <View style={styles.swatchContainer}>
+                  <AssetThumbnail asset={asset} school={school} />
                   {isSelected && (
-                    <Text style={[styles.checkmark, { color: checkColor }]}>
-                      {'✓'}
-                    </Text>
+                    <View style={styles.checkOverlay}>
+                      <Text style={[styles.checkmark, { color: checkColor }]}>
+                        {'\u2713'}
+                      </Text>
+                    </View>
                   )}
                 </View>
               </View>
@@ -176,10 +195,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 6,
   },
-  swatch: {
+  swatchContainer: {
     width: 44,
     height: 44,
     borderRadius: 22,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -187,6 +207,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 4,
+  },
+  thumbnailImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  colorFallback: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  checkOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 22,
   },
   checkmark: {
     fontSize: 20,

@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import { DARK_THEME } from '@/theme';
 import { createEvent } from '@/services/analytics';
+import { getPanoramaImage } from '@/data/panoramaImages';
 import type { Facility, Hotspot } from '@/types';
 import PanoramaViewer from './PanoramaViewer';
 import HotspotOverlay from './HotspotOverlay';
@@ -245,6 +246,7 @@ export default function TourScreen({
       <View style={styles.panoramaContainer}>
         <PanoramaViewer
           panoramaUrl={facility.panoramaUrl}
+          panoramaSource={getPanoramaImage(facility.id)}
           hotspots={facility.hotspots}
           onHotspotPress={handleHotspotPress}
           schoolColor={schoolColor}

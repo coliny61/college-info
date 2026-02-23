@@ -3,45 +3,31 @@
 // College Visit Platform
 // =============================================================================
 // Handles exporting, sharing, and saving jersey/uniform builder images.
-// For the prototype, uses Alert-based feedback. Will integrate with
-// expo-file-system and expo-sharing for real export in MVP.
+// Uses react-native-view-shot for View-based capture, expo-sharing for
+// the native share sheet, and expo-file-system for saving.
 // =============================================================================
 
+import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+import { Paths, File as ExpoFile } from 'expo-file-system';
 import { Alert } from 'react-native';
-
-// -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
-
-/** Ref handle for a Skia canvas that supports snapshot. */
-export interface SkiaCanvasRef {
-  makeImageSnapshot: () => { encodeToBase64: () => string } | null;
-}
+import type { View } from 'react-native';
 
 // -----------------------------------------------------------------------------
 // Public API
 // -----------------------------------------------------------------------------
 
 /**
- * Capture a snapshot of a Skia canvas and write it to a temporary file.
- * Prototype: returns a placeholder URI.
+ * Capture a screenshot of a React Native View and save to a temporary file.
+ * Returns the file URI of the captured PNG.
  */
-export async function exportJerseyImage(
-  skiaRef: SkiaCanvasRef,
-): Promise<string> {
-  const image = skiaRef.makeImageSnapshot();
+export async function exportJerseyImage(viewRef: View): Promise<string> {
+  const uri = await captureRef(viewRef, {
+    format: 'png',
+    quality: 1,
+  });
 
-  if (!image) {
-    throw new Error('Failed to capture Skia canvas snapshot.');
-  }
-
-  // Prototype: return a placeholder URI
-  // MVP: Use expo-file-system to write base64 to cache
-  const filename = `jersey_${Date.now()}.png`;
-  const fileUri = `file:///tmp/${filename}`;
-
-  return fileUri;
+  return uri;
 }
 
 /**
@@ -63,17 +49,16 @@ export async function shareJerseyImage(uri: string): Promise<void> {
 }
 
 /**
- * Save a jersey image to the device's gallery.
- * Prototype: shows a success alert.
+ * Save a jersey image to the device's documents directory.
+ * Returns the saved file URI.
  */
 export async function saveToGallery(uri: string): Promise<string> {
-  // TODO: Replace with expo-media-library for real gallery save
-  // import * as MediaLibrary from 'expo-media-library';
-  // const permission = await MediaLibrary.requestPermissionsAsync();
-  // if (permission.granted) {
-  //   await MediaLibrary.saveToLibraryAsync(uri);
-  // }
+  const filename = `jersey_${Date.now()}.png`;
+  const source = new ExpoFile(uri);
+  const destination = new ExpoFile(Paths.document, filename);
 
-  Alert.alert('Saved!', 'Jersey design saved successfully.');
-  return uri;
+  source.copy(destination);
+
+  Alert.alert('Saved!', 'Jersey design saved to your device.');
+  return destination.uri;
 }
