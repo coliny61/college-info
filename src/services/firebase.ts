@@ -1,47 +1,56 @@
 // =============================================================================
-// Firebase Configuration
+// Firebase Configuration (Dual-Mode)
 // College Visit Platform
 // =============================================================================
-// Replace with real Firebase config for MVP
-//
-// For the prototype, all data operations use AsyncStorage instead of Firestore.
-// When ready to move to MVP, uncomment the Firebase initialization below and
-// swap the mock service implementations in auth.ts and firestore.ts.
+// When EXPO_PUBLIC_FIREBASE_API_KEY is set, uses real Firebase.
+// Otherwise, falls back to AsyncStorage mock (existing prototype behavior).
 // =============================================================================
 
-// import { initializeApp } from 'firebase/app';
-// import { getAuth } from 'firebase/auth';
-// import { getFirestore } from 'firebase/firestore';
-// import { getAnalytics } from 'firebase/analytics';
-//
-// const firebaseConfig = {
-//   apiKey: 'YOUR_API_KEY',
-//   authDomain: 'YOUR_PROJECT.firebaseapp.com',
-//   projectId: 'YOUR_PROJECT_ID',
-//   storageBucket: 'YOUR_PROJECT.appspot.com',
-//   messagingSenderId: 'YOUR_SENDER_ID',
-//   appId: 'YOUR_APP_ID',
-//   measurementId: 'YOUR_MEASUREMENT_ID',
-// };
-//
-// const app = initializeApp(firebaseConfig);
-// export const auth = getAuth(app);
-// export const db = getFirestore(app);
-// export const analytics = getAnalytics(app);
-// export default app;
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp, type FirebaseApp } from 'firebase/app';
+import {
+  initializeAuth,
+  getReactNativePersistence,
+  type Auth,
+} from 'firebase/auth';
+import { getFirestore, type Firestore } from 'firebase/firestore';
 
-/**
- * Mock Firebase object for prototype.
- * Provides stub references so service files can import without errors.
- * All actual data operations are routed through AsyncStorage.
- */
-export const firebase = {
-  app: null,
-  auth: null,
-  db: null,
-  analytics: null,
-  /** Indicates whether the app is using real Firebase or the mock layer. */
-  isPrototype: true,
-} as const;
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
 
-export default firebase;
+const firebaseConfig = {
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY ?? '',
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? '',
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID ?? '',
+};
+
+// ---------------------------------------------------------------------------
+// Dual-mode flag
+// ---------------------------------------------------------------------------
+
+/** True when real Firebase env vars are configured. */
+export const isFirebaseConfigured: boolean =
+  !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+
+// ---------------------------------------------------------------------------
+// Initialization (only when configured)
+// ---------------------------------------------------------------------------
+
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+
+if (isFirebaseConfigured) {
+  app = initializeApp(firebaseConfig);
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+  db = getFirestore(app);
+}
+
+export { app, auth, db };
+export default { app, auth, db, isFirebaseConfigured };

@@ -18,10 +18,13 @@ import {
   Platform,
   SafeAreaView,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { DARK_THEME } from '@/theme';
 import { createEvent } from '@/services/analytics';
 import { getPanoramaImage } from '@/data/panoramaImages';
+import { hapticFeedback } from '@/utils';
+import { scheduleVisitReminder } from '@/services/notifications';
 import type { Facility, Hotspot } from '@/types';
 import PanoramaViewer from './PanoramaViewer';
 import HotspotOverlay from './HotspotOverlay';
@@ -113,8 +116,27 @@ export default function TourScreen({
     setGyroscopeEnabled((prev) => !prev);
   }, []);
 
+  const handleBack = useCallback(() => {
+    Alert.alert(
+      'Set Visit Reminder?',
+      `Would you like a reminder to visit ${facility.name}?`,
+      [
+        { text: 'No Thanks', style: 'cancel', onPress: onBack },
+        {
+          text: 'Remind Me',
+          onPress: () => {
+            const oneWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+            scheduleVisitReminder(facility.name, oneWeek, facility.name);
+            onBack();
+          },
+        },
+      ],
+    );
+  }, [facility.name, onBack]);
+
   const handleHotspotPress = useCallback(
     (hotspot: Hotspot) => {
+      hapticFeedback.light();
       // Track hotspot tap
       createEvent(userId, 'recruit', 'facilities', 'hotspot_tap', {
         facilityId: facility.id,
@@ -224,7 +246,7 @@ export default function TourScreen({
       {/* Header */}
       <View style={[styles.header, { backgroundColor: schoolColor }]}>
         <TouchableOpacity
-          onPress={onBack}
+          onPress={handleBack}
           style={styles.backButton}
           accessibilityRole="button"
           accessibilityLabel="Go back"

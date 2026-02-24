@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router';
 import { SCHOOLS } from '@/data/schools';
 import { AnimatedEntry } from '@/components/common';
+import { hapticFeedback } from '@/utils';
 import type { School } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -128,7 +129,7 @@ export default function RecruitHomeScreen() {
                     ? 'bg-blue-500'
                     : 'bg-[#1E293B] border border-[#334155]'
                 }`}
-                onPress={() => setConference(item)}
+                onPress={() => { hapticFeedback.selection(); setConference(item); }}
               >
                 <Text
                   className={`text-sm font-semibold ${

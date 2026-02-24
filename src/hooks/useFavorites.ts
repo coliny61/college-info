@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '@/context/AuthContext';
+import { hapticFeedback } from '@/utils';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -74,6 +75,7 @@ export function useFavorites(): UseFavoritesResult {
 
   const toggleFavorite = useCallback(
     async (schoolId: string) => {
+      hapticFeedback.medium();
       const updatedFavorites = favorites.includes(schoolId)
         ? favorites.filter((id) => id !== schoolId)
         : [...favorites, schoolId];

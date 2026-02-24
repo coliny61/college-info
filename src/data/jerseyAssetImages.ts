@@ -1,4 +1,4 @@
-import type { ImageSourcePropType } from 'react-native';
+import { Image, type ImageSourcePropType } from 'react-native';
 
 /**
  * Static require() map for AI-generated jersey asset images.
@@ -62,9 +62,22 @@ export const JERSEY_IMAGES: Record<string, ImageSourcePropType> = {
 };
 
 /**
- * Look up an AI-generated jersey image by asset ID.
- * Returns undefined if the image isn't found (component should fall back to View rendering).
+ * Remote URL map for CDN-hosted jersey images (future use).
+ * When populated, getJerseyImage() will fall back to these if the local
+ * require() image is missing.
+ */
+export const JERSEY_IMAGE_URLS: Record<string, string> = {};
+
+/**
+ * Look up a jersey image by asset ID.
+ * Tries local require() first, then remote URL fallback.
  */
 export function getJerseyImage(assetId: string): ImageSourcePropType | undefined {
-  return JERSEY_IMAGES[assetId];
+  const local = JERSEY_IMAGES[assetId];
+  if (local) return local;
+
+  const remoteUrl = JERSEY_IMAGE_URLS[assetId];
+  if (remoteUrl) return { uri: remoteUrl };
+
+  return undefined;
 }

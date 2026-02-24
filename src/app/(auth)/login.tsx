@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import { hapticFeedback } from '@/utils';
+import { SocialSignInButtons } from '@/components/common/SocialSignInButtons';
 
 // ---------------------------------------------------------------------------
 // Login Screen
@@ -33,9 +35,11 @@ export default function LoginScreen() {
 
     try {
       await login(email.trim(), password);
+      hapticFeedback.success();
       // Redirect is handled by the root index.tsx after user state updates
       router.replace('/');
     } catch (err: any) {
+      hapticFeedback.error();
       setError(err?.message ?? 'Login failed. Please try again.');
     }
   };
@@ -114,6 +118,18 @@ export default function LoginScreen() {
               <Text className="text-white text-base font-bold">Log In</Text>
             )}
           </TouchableOpacity>
+
+          {/* ------- Social Sign-In ------- */}
+          <SocialSignInButtons
+            onSuccess={() => {
+              hapticFeedback.success();
+              router.replace('/');
+            }}
+            onError={(msg) => {
+              hapticFeedback.error();
+              setError(msg);
+            }}
+          />
 
           {/* ------- Register Link ------- */}
           <View className="mt-8 items-center">

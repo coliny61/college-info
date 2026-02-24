@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.coliny61.collegevisit"
+      "bundleIdentifier": "com.coliny61.collegevisit",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.coliny61.collegevisit",
@@ -31,7 +32,15 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#3B82F6"
+        }
+      ],
+      "expo-apple-authentication"
     ]
   }
 }

@@ -19,6 +19,7 @@ import {
 import { DARK_THEME } from '@/theme';
 import type { JerseyAsset, School } from '@/types';
 import { getJerseyImage } from '@/data/jerseyAssetImages';
+import { hapticFeedback } from '@/utils';
 
 // -----------------------------------------------------------------------------
 // Props
@@ -116,7 +117,7 @@ export function AssetSelector({
             <TouchableOpacity
               key={asset.id}
               style={styles.option}
-              onPress={() => onSelect(asset)}
+              onPress={() => { hapticFeedback.selection(); onSelect(asset); }}
               activeOpacity={0.7}
             >
               {/* Outer ring (visible when selected) */}

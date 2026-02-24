@@ -1,16 +1,25 @@
 // =============================================================================
-// Firestore Service (Mock – AsyncStorage backed)
+// Firestore Service (Dual-Mode: Firebase + AsyncStorage mock)
 // College Visit Platform
-// =============================================================================
-// In the prototype every read falls through to mock data and every write is
-// persisted via AsyncStorage. When migrating to MVP, swap each function body
-// to use the real Firestore SDK imported from ./firebase.ts.
 // =============================================================================
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  addDoc,
+  query,
+  where,
+  arrayUnion,
+  arrayRemove,
+} from 'firebase/firestore';
+import { isFirebaseConfigured, db } from './firebase';
 import type {
   School,
-  AcademicData,
   AnalyticsEvent,
   JerseySelection,
 } from '@/types';
@@ -24,29 +33,30 @@ const JERSEY_KEY = 'college_visit_jerseys';
 // Schools
 // -----------------------------------------------------------------------------
 
-/**
- * Get all schools.
- *
- * Reads from the mock data module. In MVP this will query the `schools`
- * Firestore collection.
- */
 export async function getSchools(): Promise<School[]> {
-  // Attempt to read any locally-overridden school data first
+  if (isFirebaseConfigured && db) {
+    const snap = await getDocs(collection(db, 'schools'));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as School));
+  }
+
   const raw = await AsyncStorage.getItem('college_visit_schools');
   if (raw) {
     try {
       return JSON.parse(raw) as School[];
     } catch {
-      // Fall through to empty array; mock data should be loaded by the data layer
+      // fall through
     }
   }
   return [];
 }
 
-/**
- * Get a single school by its ID.
- */
 export async function getSchool(id: string): Promise<School | null> {
+  if (isFirebaseConfigured && db) {
+    const snap = await getDoc(doc(db, 'schools', id));
+    if (snap.exists()) return { id: snap.id, ...snap.data() } as School;
+    return null;
+  }
+
   const schools = await getSchools();
   return schools.find((s) => s.id === id) ?? null;
 }
@@ -55,7 +65,6 @@ export async function getSchool(id: string): Promise<School | null> {
 // Favorites
 // -----------------------------------------------------------------------------
 
-/** Internal helper to load the favorites map from AsyncStorage. */
 async function loadFavoritesMap(): Promise<Record<string, string[]>> {
   const raw = await AsyncStorage.getItem(FAVORITES_KEY);
   if (!raw) return {};
@@ -66,40 +75,47 @@ async function loadFavoritesMap(): Promise<Record<string, string[]>> {
   }
 }
 
-/** Internal helper to persist the favorites map. */
-async function saveFavoritesMap(
-  map: Record<string, string[]>,
-): Promise<void> {
+async function saveFavoritesMap(map: Record<string, string[]>): Promise<void> {
   await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(map));
 }
 
-/**
- * Get the list of school IDs a user has favorited.
- */
 export async function getUserFavorites(userId: string): Promise<string[]> {
+  if (isFirebaseConfigured && db) {
+    const snap = await getDoc(doc(db, 'users', userId));
+    if (snap.exists()) return (snap.data().favorites as string[]) ?? [];
+    return [];
+  }
+
   const map = await loadFavoritesMap();
   return map[userId] ?? [];
 }
 
-/**
- * Toggle a school's favorite status for a user.
- *
- * Returns the updated list of favorite school IDs.
- */
 export async function toggleFavorite(
   userId: string,
   schoolId: string,
 ): Promise<string[]> {
+  if (isFirebaseConfigured && db) {
+    const userRef = doc(db, 'users', userId);
+    const snap = await getDoc(userRef);
+    const current: string[] = snap.exists() ? (snap.data().favorites ?? []) : [];
+    const isFav = current.includes(schoolId);
+
+    await updateDoc(userRef, {
+      favorites: isFav ? arrayRemove(schoolId) : arrayUnion(schoolId),
+    });
+
+    return isFav ? current.filter((id) => id !== schoolId) : [...current, schoolId];
+  }
+
+  // Mock mode
   const map = await loadFavoritesMap();
   const current = map[userId] ?? [];
-
   const index = current.indexOf(schoolId);
   if (index === -1) {
     current.push(schoolId);
   } else {
     current.splice(index, 1);
   }
-
   map[userId] = current;
   await saveFavoritesMap(map);
   return current;
@@ -109,15 +125,17 @@ export async function toggleFavorite(
 // Analytics
 // -----------------------------------------------------------------------------
 
-/**
- * Get all analytics events for a specific school.
- */
 export async function getAnalyticsForSchool(
   schoolId: string,
 ): Promise<AnalyticsEvent[]> {
+  if (isFirebaseConfigured && db) {
+    const q = query(collection(db, 'analytics'), where('schoolId', '==', schoolId));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as AnalyticsEvent));
+  }
+
   const raw = await AsyncStorage.getItem(ANALYTICS_KEY);
   if (!raw) return [];
-
   try {
     const events = JSON.parse(raw) as AnalyticsEvent[];
     return events.filter((e) => e.schoolId === schoolId);
@@ -126,15 +144,17 @@ export async function getAnalyticsForSchool(
   }
 }
 
-/**
- * Get all analytics events generated by a specific recruit/user.
- */
 export async function getAnalyticsForRecruit(
   userId: string,
 ): Promise<AnalyticsEvent[]> {
+  if (isFirebaseConfigured && db) {
+    const q = query(collection(db, 'analytics'), where('userId', '==', userId));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as AnalyticsEvent));
+  }
+
   const raw = await AsyncStorage.getItem(ANALYTICS_KEY);
   if (!raw) return [];
-
   try {
     const events = JSON.parse(raw) as AnalyticsEvent[];
     return events.filter((e) => e.userId === userId);
@@ -147,17 +167,20 @@ export async function getAnalyticsForRecruit(
 // Jersey Selections
 // -----------------------------------------------------------------------------
 
-/**
- * Save a jersey/uniform selection.
- *
- * Appends the selection to the stored array for the corresponding school.
- */
 export async function saveJerseySelection(
   selection: JerseySelection,
 ): Promise<void> {
+  if (isFirebaseConfigured && db) {
+    await addDoc(collection(db, 'jerseySelections'), {
+      ...selection,
+      timestamp: new Date().toISOString(),
+    });
+    return;
+  }
+
+  // Mock mode
   const raw = await AsyncStorage.getItem(JERSEY_KEY);
   let selections: JerseySelection[] = [];
-
   if (raw) {
     try {
       selections = JSON.parse(raw) as JerseySelection[];
@@ -166,7 +189,6 @@ export async function saveJerseySelection(
     }
   }
 
-  // Replace any existing selection by the same user for the same school
   const existingIndex = selections.findIndex(
     (s) => s.userId === selection.userId && s.schoolId === selection.schoolId,
   );
@@ -180,15 +202,17 @@ export async function saveJerseySelection(
   await AsyncStorage.setItem(JERSEY_KEY, JSON.stringify(selections));
 }
 
-/**
- * Get all jersey selections for a specific school.
- */
 export async function getJerseySelections(
   schoolId: string,
 ): Promise<JerseySelection[]> {
+  if (isFirebaseConfigured && db) {
+    const q = query(collection(db, 'jerseySelections'), where('schoolId', '==', schoolId));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => d.data() as JerseySelection);
+  }
+
   const raw = await AsyncStorage.getItem(JERSEY_KEY);
   if (!raw) return [];
-
   try {
     const selections = JSON.parse(raw) as JerseySelection[];
     return selections.filter((s) => s.schoolId === schoolId);

@@ -1,26 +1,29 @@
 // =============================================================================
 // Haptic Feedback Utility
 // =============================================================================
-// Stub implementation that can be enabled once expo-haptics is installed.
-// To activate, run: npx expo install expo-haptics
-// Then uncomment the import and implementations below.
-//
-// import * as Haptics from 'expo-haptics';
+
+import { Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
+
+const isNative = Platform.OS !== 'web';
 
 export const hapticFeedback = {
   light: () => {
-    /* TODO: Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) */
+    if (isNative) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   },
   medium: () => {
-    /* TODO: Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium) */
+    if (isNative) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   },
   heavy: () => {
-    /* TODO: Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy) */
+    if (isNative) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
   },
   success: () => {
-    /* TODO: Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success) */
+    if (isNative) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   },
   error: () => {
-    /* TODO: Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error) */
+    if (isNative) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+  },
+  selection: () => {
+    if (isNative) Haptics.selectionAsync();
   },
 };

@@ -19,6 +19,7 @@ import { ACADEMICS_DATA, COLLEGES } from '@/data/academics';
 import { SPORTS, COACHES, FACILITIES } from '@/data/athletics';
 import { TourScreen } from '@/components/tour';
 import { JerseyBuilderScreen } from '@/components/jersey';
+import { hapticFeedback } from '@/utils';
 import { JERSEY_ASSETS } from '@/data/jerseyAssets';
 import { useAcademicData } from '@/hooks/useAcademicData';
 import type { School, Facility } from '@/types';
@@ -115,6 +116,7 @@ export default function SchoolDetailScreen() {
   const isFavorite = user?.favorites?.includes(id ?? '') ?? false;
   const toggleFavorite = useCallback(async () => {
     if (!user || !id) return;
+    hapticFeedback.medium();
     const newFavorites = isFavorite
       ? user.favorites.filter((fId) => fId !== id)
       : [...user.favorites, id];
@@ -209,7 +211,7 @@ export default function SchoolDetailScreen() {
             <TouchableOpacity
               key={tab}
               className="flex-1 py-3 items-center"
-              onPress={() => setActiveTab(tab)}
+              onPress={() => { hapticFeedback.selection(); setActiveTab(tab); }}
               onLayout={(e) => handleTabLayout(tab, e)}
             >
               <Text

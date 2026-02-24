@@ -37,9 +37,20 @@ export const PANORAMA_IMAGES: Record<string, ImageSourcePropType> = {
 };
 
 /**
- * Look up a local panoramic image by facility ID.
- * Returns undefined if the image isn't found (component should fall back to remote URL).
+ * Remote URL map for CDN-hosted panoramic images (future use).
+ */
+export const PANORAMA_IMAGE_URLS: Record<string, string> = {};
+
+/**
+ * Look up a panoramic image by facility ID.
+ * Tries local require() first, then remote URL fallback.
  */
 export function getPanoramaImage(facilityId: string): ImageSourcePropType | undefined {
-  return PANORAMA_IMAGES[facilityId];
+  const local = PANORAMA_IMAGES[facilityId];
+  if (local) return local;
+
+  const remoteUrl = PANORAMA_IMAGE_URLS[facilityId];
+  if (remoteUrl) return { uri: remoteUrl };
+
+  return undefined;
 }

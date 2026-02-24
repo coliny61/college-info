@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import { hapticFeedback } from '@/utils';
+import { SocialSignInButtons } from '@/components/common/SocialSignInButtons';
 import type { UserRole } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -266,6 +268,18 @@ export default function RegisterScreen() {
               </Text>
             )}
           </TouchableOpacity>
+
+          {/* ------- Social Sign-In ------- */}
+          <SocialSignInButtons
+            onSuccess={() => {
+              hapticFeedback.success();
+              router.replace('/');
+            }}
+            onError={(msg) => {
+              hapticFeedback.error();
+              setError(msg);
+            }}
+          />
 
           {/* ------- Login Link ------- */}
           <View className="mt-6 items-center">

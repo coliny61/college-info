@@ -7,6 +7,14 @@ import React, {
   useMemo,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { isFirebaseConfigured } from '@/services/firebase';
+import {
+  signIn as authSignIn,
+  signUp as authSignUp,
+  signOut as authSignOut,
+  getCurrentUser,
+  onAuthChange,
+} from '@/services/auth';
 import type { User, UserRole } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -34,8 +42,8 @@ interface AuthContextValue {
 const STORAGE_KEY = 'college_visit_user';
 
 /**
- * Mock users for the prototype. login() will match against these first,
- * falling back to creating a new user when no match is found.
+ * Mock users for the prototype. login() will match against these first
+ * when not in Firebase mode.
  */
 const MOCK_USERS: User[] = [
   {
@@ -70,7 +78,6 @@ const MOCK_USERS: User[] = [
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Generate a simple unique ID for prototype purposes. */
 function generateId(): string {
   return `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
@@ -89,8 +96,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from AsyncStorage on mount
+  // Restore session — Firebase listener or AsyncStorage
   useEffect(() => {
+    if (isFirebaseConfigured) {
+      // Firebase auth state listener handles restore
+      const unsub = onAuthChange((fbUser) => {
+        setUser(fbUser);
+        setLoading(false);
+      });
+      return unsub;
+    }
+
+    // Mock mode: restore from AsyncStorage
     (async () => {
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
@@ -105,13 +122,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
-  const login = useCallback(async (email: string, _password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     setLoading(true);
     try {
-      // Simulate network delay
+      if (isFirebaseConfigured) {
+        const u = await authSignIn(email, password);
+        setUser(u);
+        return;
+      }
+
+      // Mock mode: simulate delay, match mock users
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Look up the email in mock users first
       const found = MOCK_USERS.find(
         (u) => u.email.toLowerCase() === email.toLowerCase(),
       );
@@ -135,13 +157,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = useCallback(
     async (
       email: string,
-      _password: string,
+      password: string,
       role: UserRole,
       displayName: string,
     ) => {
       setLoading(true);
       try {
-        // Simulate network delay
+        if (isFirebaseConfigured) {
+          const u = await authSignUp(email, password, role, displayName);
+          setUser(u);
+          return;
+        }
+
+        // Mock mode
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const newUser: User = {
@@ -163,6 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    await authSignOut();
     await AsyncStorage.removeItem(STORAGE_KEY);
     setUser(null);
   }, []);
@@ -194,10 +223,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 // Hook
 // ---------------------------------------------------------------------------
 
-/**
- * Access the current auth state and methods.
- * Must be used within an <AuthProvider>.
- */
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (ctx === undefined) {

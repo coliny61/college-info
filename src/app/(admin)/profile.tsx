@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,11 @@ import {
 import { router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { SCHOOLS } from '@/data/schools';
+import {
+  getNotificationPrefs,
+  setNotificationPrefs,
+  type NotificationPrefs,
+} from '@/services/notifications';
 
 // ---------------------------------------------------------------------------
 // Admin Profile Screen
@@ -18,11 +23,20 @@ import { SCHOOLS } from '@/data/schools';
 
 export default function AdminProfileScreen() {
   const { user, logout } = useAuth();
+  const [prefs, setPrefs] = useState<NotificationPrefs>({
+    visitReminders: true,
+    newSchoolAlerts: true,
+    favoriteUpdates: true,
+  });
 
-  // Notification preferences (local state for prototype)
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [emailEnabled, setEmailEnabled] = useState(true);
-  const [weeklyDigest, setWeeklyDigest] = useState(false);
+  useEffect(() => {
+    getNotificationPrefs().then(setPrefs);
+  }, []);
+
+  const togglePref = async (key: keyof NotificationPrefs) => {
+    const updated = await setNotificationPrefs({ [key]: !prefs[key] });
+    setPrefs(updated);
+  };
 
   const handleLogout = () => {
     Alert.alert('Log Out', 'Are you sure you want to log out?', [
@@ -42,7 +56,6 @@ export default function AdminProfileScreen() {
     ? user.displayName.charAt(0).toUpperCase()
     : '?';
 
-  // Find the school this admin manages
   const adminSchool = user?.schoolId
     ? SCHOOLS.find((s) => s.id === user.schoolId)
     : null;
@@ -52,7 +65,6 @@ export default function AdminProfileScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         {/* ------- Profile Header ------- */}
         <View className="items-center pt-8 pb-6">
-          {/* Avatar placeholder */}
           <View className="w-20 h-20 rounded-full bg-amber-600 items-center justify-center mb-4">
             <Text className="text-white text-3xl font-bold">{initials}</Text>
           </View>
@@ -104,32 +116,31 @@ export default function AdminProfileScreen() {
           </View>
         )}
 
-        {/* ------- Notification Settings ------- */}
+        {/* ------- Notification Preferences ------- */}
         <View className="px-4 mb-6">
           <Text className="text-slate-300 text-sm font-semibold mb-3 uppercase tracking-wider">
-            Notification Preferences
+            Notifications
           </Text>
-
           <View className="bg-[#1E293B] rounded-xl">
             <NotificationRow
-              label="Push Notifications"
-              description="Get notified when recruits view your school"
-              value={pushEnabled}
-              onToggle={setPushEnabled}
+              label="Visit Reminders"
+              description="Get reminded about upcoming recruit visits"
+              value={prefs.visitReminders}
+              onToggle={() => togglePref('visitReminders')}
             />
             <View className="h-px bg-[#334155]" />
             <NotificationRow
-              label="Email Notifications"
-              description="Receive engagement reports via email"
-              value={emailEnabled}
-              onToggle={setEmailEnabled}
+              label="New School Alerts"
+              description="Weekly platform activity updates"
+              value={prefs.newSchoolAlerts}
+              onToggle={() => togglePref('newSchoolAlerts')}
             />
             <View className="h-px bg-[#334155]" />
             <NotificationRow
-              label="Weekly Digest"
-              description="Summary of weekly analytics every Monday"
-              value={weeklyDigest}
-              onToggle={setWeeklyDigest}
+              label="Favorite Updates"
+              description="When recruits favorite your school"
+              value={prefs.favoriteUpdates}
+              onToggle={() => togglePref('favoriteUpdates')}
             />
           </View>
         </View>
@@ -191,7 +202,7 @@ function NotificationRow({
   label: string;
   description: string;
   value: boolean;
-  onToggle: (val: boolean) => void;
+  onToggle: () => void;
 }) {
   return (
     <View className="flex-row items-center justify-between p-4">

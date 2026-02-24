@@ -30,6 +30,7 @@ import { useJerseyBuilder } from '@/hooks/useJerseyBuilder';
 import { createEvent } from '@/services/analytics';
 import { exportJerseyImage, shareJerseyImage, saveToGallery } from '@/services/imageExport';
 
+import { hapticFeedback } from '@/utils';
 import { JerseyCanvas } from './JerseyCanvas';
 import type { JerseyCanvasRef } from './JerseyCanvas';
 import { AssetSelector } from './AssetSelector';
@@ -121,6 +122,7 @@ export function JerseyBuilderScreen({
   // -- Share / Save handlers ------------------------------------------------
 
   const handleShare = useCallback(async () => {
+    hapticFeedback.medium();
     createEvent('current-user', 'recruit', 'jersey-builder', 'jersey_share', {
       schoolId: school.id,
       helmet: selectedHelmet?.colorLabel ?? '',
@@ -143,6 +145,7 @@ export function JerseyBuilderScreen({
   }, [school, selectedHelmet, selectedJersey, selectedPants]);
 
   const handleSave = useCallback(async () => {
+    hapticFeedback.success();
     createEvent('current-user', 'recruit', 'jersey-builder', 'jersey_save', {
       schoolId: school.id,
       helmet: selectedHelmet?.colorLabel ?? '',
