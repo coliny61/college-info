@@ -1,0 +1,301 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth & Users ─────────────────────────────────────────────────────────────
+
+enum UserRole {
+  recruit
+  parent
+  coach_admin
+  super_admin
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  role            UserRole
+  displayName     String
+  avatarUrl       String?
+  linkedRecruitId String?
+  linkedRecruit   User?     @relation("ParentRecruit", fields: [linkedRecruitId], references: [id])
+  linkedParents   User[]    @relation("ParentRecruit")
+  schoolId        String?
+  school          School?   @relation("SchoolAdmin", fields: [schoolId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  favorites        Favorite[]
+  jerseySelections JerseySelection[]
+  analyticsEvents  AnalyticsEvent[]
+  createdInvites   InviteLink[]
+
+  @@map("users")
+}
+
+// ─── Schools ──────────────────────────────────────────────────────────────────
+
+model School {
+  id             String   @id @default(uuid())
+  name           String
+  slug           String   @unique
+  shortName      String
+  mascot         String
+  conference     String
+  city           String
+  state          String
+  scorecardId    String?
+  colorPrimary   String
+  colorSecondary String
+  colorAccent    String
+  logoUrl        String?
+  heroImageUrl   String?
+  description    String   @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  admins           User[]            @relation("SchoolAdmin")
+  academics        SchoolAcademics?
+  colleges         College[]
+  sports           Sport[]
+  facilities       Facility[]
+  jerseyAssets     JerseyAsset[]
+  favorites        Favorite[]
+  analyticsEvents  AnalyticsEvent[]
+  inviteLinks      InviteLink[]
+  media            Media[]
+  jerseySelections JerseySelection[]
+
+  @@map("schools")
+}
+
+model SchoolAcademics {
+  id                String @id @default(uuid())
+  schoolId          String @unique
+  school            School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  enrollment        Int
+  admissionRate     Float
+  satAvg            Int
+  actAvg            Int
+  tuitionInState    Int
+  tuitionOutOfState Int
+  graduationRate    Float
+  medianEarnings    Int
+  retentionRate     Float
+
+  @@map("school_academics")
+}
+
+// ─── Academics ────────────────────────────────────────────────────────────────
+
+model College {
+  id            String  @id @default(uuid())
+  schoolId      String
+  school        School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name          String
+  description   String  @db.Text
+  totalStudents Int
+  imageUrl      String?
+
+  majors Major[]
+
+  @@map("colleges")
+}
+
+model Major {
+  id          String  @id @default(uuid())
+  collegeId   String
+  college     College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  name        String
+  degreeType  String
+  description String  @db.Text
+
+  pathways       DegreePathway[]
+  careerOutcomes CareerOutcome[]
+
+  @@map("majors")
+}
+
+model DegreePathway {
+  id          String   @id @default(uuid())
+  majorId     String
+  major       Major    @relation(fields: [majorId], references: [id], onDelete: Cascade)
+  year        Int
+  title       String
+  courses     String[]
+  description String   @db.Text
+
+  @@map("degree_pathways")
+}
+
+model CareerOutcome {
+  id           String @id @default(uuid())
+  majorId      String
+  major        Major  @relation(fields: [majorId], references: [id], onDelete: Cascade)
+  title        String
+  medianSalary Int
+  growthRate   Float
+  description  String @db.Text
+
+  @@map("career_outcomes")
+}
+
+// ─── Athletics ────────────────────────────────────────────────────────────────
+
+model Sport {
+  id         String  @id @default(uuid())
+  schoolId   String
+  school     School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name       String
+  conference String
+  headCoach  String
+  record     String?
+  ranking    Int?
+
+  coaches    Coach[]
+  facilities Facility[]
+
+  @@map("sports")
+}
+
+model Coach {
+  id            String  @id @default(uuid())
+  sportId       String
+  sport         Sport   @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  name          String
+  title         String
+  imageUrl      String?
+  bio           String  @db.Text
+  yearsAtSchool Int
+
+  @@map("coaches")
+}
+
+// ─── Facilities & Tours ───────────────────────────────────────────────────────
+
+model Facility {
+  id          String  @id @default(uuid())
+  schoolId    String
+  school      School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  sportId     String?
+  sport       Sport?  @relation(fields: [sportId], references: [id])
+  name        String
+  type        String
+  description String  @db.Text
+  imageUrl    String?
+  panoramaUrl String?
+
+  hotspots Hotspot[]
+
+  @@map("facilities")
+}
+
+model Hotspot {
+  id               String   @id @default(uuid())
+  facilityId       String
+  facility         Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  x                Float
+  y                Float
+  z                Float    @default(0)
+  label            String
+  description      String   @db.Text
+  linkedFacilityId String?
+
+  @@map("hotspots")
+}
+
+// ─── Jersey Customization ─────────────────────────────────────────────────────
+
+model JerseyAsset {
+  id         String @id @default(uuid())
+  schoolId   String
+  school     School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  type       String
+  colorLabel String
+  imageUrl   String
+
+  @@map("jersey_assets")
+}
+
+model JerseySelection {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  helmetId  String
+  jerseyId  String
+  pantsId   String
+  createdAt DateTime @default(now())
+
+  @@map("jersey_selections")
+}
+
+// ─── Analytics ────────────────────────────────────────────────────────────────
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId  String?
+  school    School?  @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  sessionId String
+  section   String
+  action    String
+  metadata  Json?
+  duration  Int?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([schoolId])
+  @@index([createdAt])
+  @@index([userId, schoolId])
+  @@map("analytics_events")
+}
+
+// ─── SaaS Features ────────────────────────────────────────────────────────────
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, schoolId])
+  @@map("favorites")
+}
+
+model InviteLink {
+  id        String    @id @default(uuid())
+  schoolId  String
+  school    School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  createdBy String
+  creator   User      @relation(fields: [createdBy], references: [id])
+  code      String    @unique
+  expiresAt DateTime?
+  usedCount Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  @@map("invite_links")
+}
+
+model Media {
+  id           String   @id @default(uuid())
+  schoolId     String
+  school       School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  type         String
+  url          String
+  thumbnailUrl String?
+  caption      String?
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("media")
+}

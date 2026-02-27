@@ -1,0 +1,172 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Home,
+  Search,
+  Heart,
+  User,
+  BarChart3,
+  Edit3,
+  Image as ImageIcon,
+  MapPin,
+  Users,
+  Shirt,
+  Link2,
+  Shield,
+  Building,
+  CreditCard,
+  Menu,
+} from 'lucide-react'
+
+interface NavItem {
+  label: string
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+}
+
+const RECRUIT_NAV: NavItem[] = [
+  { label: 'Dashboard', href: '/recruit', icon: Home },
+  { label: 'Schools', href: '/recruit/schools', icon: Search },
+  { label: 'Favorites', href: '/recruit/favorites', icon: Heart },
+  { label: 'Profile', href: '/recruit/profile', icon: User },
+]
+
+const PARENT_NAV: NavItem[] = [
+  { label: 'Dashboard', href: '/parent', icon: Home },
+  { label: 'Profile', href: '/parent/profile', icon: User },
+]
+
+const ADMIN_NAV: NavItem[] = [
+  { label: 'Dashboard', href: '/admin', icon: Home },
+  { label: 'School Profile', href: '/admin/school', icon: Edit3 },
+  { label: 'Media', href: '/admin/media', icon: ImageIcon },
+  { label: 'Facilities', href: '/admin/facilities', icon: MapPin },
+  { label: 'Coaches', href: '/admin/coaches', icon: Users },
+  { label: 'Jerseys', href: '/admin/jerseys', icon: Shirt },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { label: 'Invites', href: '/admin/invites', icon: Link2 },
+]
+
+const SUPER_ADMIN_NAV: NavItem[] = [
+  { label: 'Overview', href: '/super-admin', icon: Shield },
+  { label: 'Schools', href: '/super-admin/schools', icon: Building },
+  { label: 'Users', href: '/super-admin/users', icon: Users },
+  { label: 'Billing', href: '/super-admin/billing', icon: CreditCard },
+]
+
+function getNavItems(pathname: string): NavItem[] {
+  if (pathname.startsWith('/super-admin')) return SUPER_ADMIN_NAV
+  if (pathname.startsWith('/admin')) return ADMIN_NAV
+  if (pathname.startsWith('/parent')) return PARENT_NAV
+  return RECRUIT_NAV
+}
+
+function getRoleLabel(pathname: string): string {
+  if (pathname.startsWith('/super-admin')) return 'Super Admin'
+  if (pathname.startsWith('/admin')) return 'Coach Admin'
+  if (pathname.startsWith('/parent')) return 'Parent'
+  return 'Recruit'
+}
+
+function SidebarContent({
+  navItems,
+  roleLabel,
+  pathname,
+  onNavigate,
+}: {
+  navItems: NavItem[]
+  roleLabel: string
+  pathname: string
+  onNavigate?: () => void
+}) {
+  return (
+    <>
+      <div className="flex h-16 items-center border-b border-border px-6">
+        <Link
+          href="/"
+          className="text-lg font-bold text-foreground"
+          onClick={onNavigate}
+        >
+          College Info
+        </Link>
+      </div>
+
+      <div className="px-4 py-3">
+        <span className="inline-block rounded-md bg-emerald/10 px-2 py-1 text-xs font-medium text-emerald">
+          {roleLabel}
+        </span>
+      </div>
+
+      <nav className="flex-1 space-y-1 px-3 py-2">
+        {navItems.map((item) => {
+          const isActive =
+            pathname === item.href ||
+            (item.href !== '/recruit' &&
+              item.href !== '/parent' &&
+              item.href !== '/admin' &&
+              item.href !== '/super-admin' &&
+              pathname.startsWith(item.href))
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onNavigate}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                isActive
+                  ? 'bg-emerald/10 text-emerald'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+              }`}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </Link>
+          )
+        })}
+      </nav>
+    </>
+  )
+}
+
+export function PlatformSidebar() {
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const navItems = getNavItems(pathname)
+  const roleLabel = getRoleLabel(pathname)
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-border bg-card lg:flex">
+        <SidebarContent
+          navItems={navItems}
+          roleLabel={roleLabel}
+          pathname={pathname}
+        />
+      </aside>
+
+      {/* Mobile hamburger */}
+      <div className="fixed left-4 top-4 z-50 lg:hidden">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <SidebarContent
+              navItems={navItems}
+              roleLabel={roleLabel}
+              pathname={pathname}
+              onNavigate={() => setOpen(false)}
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
+  )
+}

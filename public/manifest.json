@@ -1,0 +1,22 @@
+{
+  "name": "College Info",
+  "short_name": "CollegeInfo",
+  "description": "The recruiting platform for college athletics",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#10B981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
