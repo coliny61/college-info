@@ -7,10 +7,11 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  // Prefer direct connection, fall back to pooler
-  const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL
+  // Use DATABASE_URL for runtime (pooler works on all platforms)
+  // DIRECT_URL is only for migrations/seeding (local CLI)
+  const connectionString = process.env.DATABASE_URL
   if (!connectionString) {
-    throw new Error('DIRECT_URL or DATABASE_URL is not set')
+    throw new Error('DATABASE_URL is not set')
   }
   const pool = new Pool({ connectionString })
   const adapter = new PrismaPg(pool)
