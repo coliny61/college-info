@@ -15,11 +15,10 @@ import {
 } from 'lucide-react'
 
 const SCHOOL_COLORS = [
-  { name: 'Alabama', primary: '#9E1B32', secondary: '#828A8F' },
-  { name: 'Oregon', primary: '#154733', secondary: '#FEE123' },
-  { name: 'Ohio State', primary: '#BB0000', secondary: '#666666' },
-  { name: 'Texas', primary: '#BF5700', secondary: '#333F48' },
-  { name: 'LSU', primary: '#461D7C', secondary: '#FDD023' },
+  { name: 'Texas Tech', primary: '#CC0000', secondary: '#000000' },
+  { name: 'USC', primary: '#990000', secondary: '#FFC72C' },
+  { name: 'Baylor', primary: '#003015', secondary: '#FFB81C' },
+  { name: 'Oklahoma', primary: '#841617', secondary: '#FDF9D8' },
 ]
 
 export default function LandingPage() {

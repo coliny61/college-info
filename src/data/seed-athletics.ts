@@ -3,11 +3,10 @@
 export async function seedAthletics(prisma: any, schoolMap: Record<string, any>) {
   // ─── Sports ─────────────────────────────────────────────────────────────────
   const sportDefinitions = [
-    { slug: 'alabama', name: 'Football', conference: 'SEC', headCoach: 'Kalen DeBoer', record: '12-2', ranking: 5 },
-    { slug: 'oregon', name: 'Football', conference: 'Big Ten', headCoach: 'Dan Lanning', record: '12-1', ranking: 3 },
-    { slug: 'ohio-state', name: 'Football', conference: 'Big Ten', headCoach: 'Ryan Day', record: '11-2', ranking: 8 },
-    { slug: 'texas', name: 'Football', conference: 'SEC', headCoach: 'Steve Sarkisian', record: '12-2', ranking: 4 },
-    { slug: 'lsu', name: 'Football', conference: 'SEC', headCoach: 'Brian Kelly', record: '10-3', ranking: 12 },
+    { slug: 'texas-tech', name: 'Football', conference: 'Big 12', headCoach: 'Joey McGuire', record: '8-5', ranking: null },
+    { slug: 'usc', name: 'Football', conference: 'Big Ten', headCoach: 'Lincoln Riley', record: '7-6', ranking: null },
+    { slug: 'baylor', name: 'Football', conference: 'Big 12', headCoach: 'Dave Aranda', record: '4-8', ranking: null },
+    { slug: 'oklahoma', name: 'Football', conference: 'SEC', headCoach: 'Brent Venables', record: '6-7', ranking: null },
   ]
 
   const sportMap: Record<string, any> = {}
@@ -28,23 +27,22 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
 
   // ─── Coaches ────────────────────────────────────────────────────────────────
   const coachDefinitions = [
-    // Alabama
-    { slug: 'alabama', name: 'Kalen DeBoer', title: 'Head Coach', bio: 'Kalen DeBoer took over as head coach at Alabama in 2024 after a successful tenure at Washington, where he led the Huskies to the College Football Playoff National Championship Game.', yearsAtSchool: 1 },
-    { slug: 'alabama', name: 'Robert Gillespie', title: 'Running Backs Coach', bio: 'A veteran coach with over 15 years of experience developing NFL-caliber running backs across the SEC.', yearsAtSchool: 4 },
-    { slug: 'alabama', name: 'Coleman Hutzler', title: 'Defensive Coordinator', bio: 'A defensive specialist known for creating aggressive, turnover-forcing schemes.', yearsAtSchool: 1 },
-    // Oregon
-    { slug: 'oregon', name: 'Dan Lanning', title: 'Head Coach', bio: 'Dan Lanning, the former Georgia defensive coordinator, has quickly built Oregon into a national championship contender with elite recruiting and innovative game planning.', yearsAtSchool: 3 },
-    { slug: 'oregon', name: 'Will Stein', title: 'Offensive Coordinator', bio: 'An innovative play-caller who brings a modern spread offense with tempo and creativity.', yearsAtSchool: 2 },
-    // Ohio State
-    { slug: 'ohio-state', name: 'Ryan Day', title: 'Head Coach', bio: 'Ryan Day has maintained Ohio State as a perennial Big Ten champion and College Football Playoff contender since taking over from Urban Meyer in 2019.', yearsAtSchool: 7 },
-    { slug: 'ohio-state', name: 'Chip Kelly', title: 'Offensive Coordinator', bio: 'The legendary offensive mind who revolutionized college football with his spread-option attack at Oregon returns to the college game.', yearsAtSchool: 2 },
-    // Texas
-    { slug: 'texas', name: 'Steve Sarkisian', title: 'Head Coach', bio: 'Steve Sarkisian has revitalized Texas football, bringing the Longhorns back to national prominence with elite recruiting and a dynamic offensive system.', yearsAtSchool: 4 },
-    { slug: 'texas', name: 'Kyle Flood', title: 'Offensive Line Coach', bio: 'A veteran offensive line coach who has developed multiple NFL draft picks during his time in Austin.', yearsAtSchool: 4 },
-    { slug: 'texas', name: 'Pete Kwiatkowski', title: 'Defensive Coordinator', bio: 'A proven defensive coordinator who brings a physical, disciplined approach to Texas defense.', yearsAtSchool: 4 },
-    // LSU
-    { slug: 'lsu', name: 'Brian Kelly', title: 'Head Coach', bio: 'Brian Kelly, the winningest coach in Notre Dame history, brings his championship pedigree to Baton Rouge with a focus on program culture and elite talent development.', yearsAtSchool: 3 },
-    { slug: 'lsu', name: 'Joe Sloan', title: 'Offensive Coordinator', bio: 'An up-and-coming offensive mind known for adapting his scheme to player strengths.', yearsAtSchool: 2 },
+    // Texas Tech
+    { slug: 'texas-tech', name: 'Joey McGuire', title: 'Head Coach', bio: 'Joey McGuire, a former Texas high school coaching legend, took over at Texas Tech in 2022 and has quickly elevated the program\'s recruiting and culture. Known for his infectious energy and deep Texas recruiting ties, McGuire has brought new excitement to Red Raider football.', yearsAtSchool: 3 },
+    { slug: 'texas-tech', name: 'Zach Kittley', title: 'Offensive Coordinator', bio: 'A Texas Tech alum and the architect of the Air Raid 2.0, Kittley runs one of the most explosive passing offenses in college football with an emphasis on tempo and RPO concepts.', yearsAtSchool: 3 },
+    { slug: 'texas-tech', name: 'Tim DeRuyter', title: 'Defensive Coordinator', bio: 'A veteran defensive coordinator with head coaching experience at Fresno State, DeRuyter brings a multiple-front defense that emphasizes disruption and takeaways.', yearsAtSchool: 3 },
+    // USC
+    { slug: 'usc', name: 'Lincoln Riley', title: 'Head Coach', bio: 'Lincoln Riley, one of the most innovative offensive minds in football, left Oklahoma to lead USC in 2022. A proven quarterback developer who mentored two Heisman Trophy winners (Baker Mayfield and Kyler Murray), Riley is building the Trojans into a national championship contender in the Big Ten.', yearsAtSchool: 3 },
+    { slug: 'usc', name: 'Kirk Ciarrocca', title: 'Offensive Coordinator', bio: 'A veteran play-caller with experience at Penn State and Minnesota, Ciarrocca helps refine USC\'s West Coast passing attack with a physical running game complement.', yearsAtSchool: 1 },
+    { slug: 'usc', name: 'D\'Anton Lynn', title: 'Defensive Coordinator', bio: 'A rising star in the coaching world, Lynn transformed USC\'s defense with an aggressive, turnover-focused scheme that helped the Trojans compete in the Big Ten.', yearsAtSchool: 2 },
+    // Baylor
+    { slug: 'baylor', name: 'Dave Aranda', title: 'Head Coach', bio: 'Dave Aranda, one of the most respected defensive minds in college football, became Baylor\'s head coach in 2020. He led the Bears to a Big 12 Championship in 2021 and a Sugar Bowl victory, establishing Baylor as a consistent contender.', yearsAtSchool: 5 },
+    { slug: 'baylor', name: 'Jake Spavital', title: 'Offensive Coordinator', bio: 'A former head coach at Texas State and offensive coordinator at West Virginia, Spavital brings a creative spread offense that maximizes playmaker touches.', yearsAtSchool: 2 },
+    { slug: 'baylor', name: 'Matt Powledge', title: 'Defensive Coordinator', bio: 'A protégé of the Aranda defensive system, Powledge runs an aggressive 3-3-5 scheme that has become a signature of Baylor football.', yearsAtSchool: 4 },
+    // Oklahoma
+    { slug: 'oklahoma', name: 'Brent Venables', title: 'Head Coach', bio: 'Brent Venables, a two-time national championship-winning defensive coordinator at Clemson, returned to his alma mater as head coach in 2022. Now navigating OU\'s transition to the SEC, Venables is building a program rooted in defensive toughness and championship culture.', yearsAtSchool: 3 },
+    { slug: 'oklahoma', name: 'Ben Arbuckle', title: 'Offensive Coordinator', bio: 'The young play-caller from Washington State brings an innovative Air Raid system to Norman, giving the Sooners a high-tempo, explosive passing attack.', yearsAtSchool: 1 },
+    { slug: 'oklahoma', name: 'Zac Alley', title: 'Defensive Coordinator', bio: 'A defensive specialist who worked under Venables at Clemson, Alley runs a physical, multiple-front defense designed to compete in the SEC.', yearsAtSchool: 3 },
   ]
 
   for (const def of coachDefinitions) {
@@ -62,31 +60,26 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
 
   // ─── Facilities ─────────────────────────────────────────────────────────────
   const facilityDefinitions = [
-    // Alabama
-    { slug: 'alabama', key: 'alabama-stadium', name: 'Bryant-Denny Stadium', type: 'stadium', description: 'The iconic 101,821-seat home of Crimson Tide football. One of the largest stadiums in the country, the atmosphere on game day is unmatched.', panoramaUrl: '/panoramas/alabama-stadium.jpg' },
-    { slug: 'alabama', key: 'alabama-practice', name: 'Thomas-Drew Practice Facility', type: 'practice', description: 'A state-of-the-art indoor practice facility with a full-size synthetic turf field, meeting rooms, and recovery pools.', panoramaUrl: '/panoramas/alabama-practice.jpg' },
-    { slug: 'alabama', key: 'alabama-weight-room', name: 'Mal Moore Athletic Facility', type: 'weight-room', description: 'A massive training complex featuring Olympic platforms, recovery suites, and nutrition stations.', panoramaUrl: '/panoramas/alabama-weight-room.jpg' },
-    { slug: 'alabama', key: 'alabama-locker-room', name: 'Champions Locker Room', type: 'locker-room', description: 'Recently renovated players\' locker room with custom wood lockers, integrated charging stations, and 18 championship banners overhead.', panoramaUrl: '/panoramas/alabama-locker-room.jpg' },
-    // Oregon
-    { slug: 'oregon', key: 'oregon-stadium', name: 'Autzen Stadium', type: 'stadium', description: 'Known as one of the loudest stadiums in college football, Autzen\'s 54,000 fans create a wall of sound that opposing teams dread.', panoramaUrl: '/panoramas/oregon-stadium.jpg' },
-    { slug: 'oregon', key: 'oregon-practice', name: 'Hatfield-Dowlin Complex', type: 'practice', description: 'Nike co-founder Phil Knight helped fund this world-class facility featuring two full practice fields and cutting-edge training technology.', panoramaUrl: '/panoramas/oregon-practice.jpg' },
-    { slug: 'oregon', key: 'oregon-weight-room', name: 'Marcus Mariota Performance Center', type: 'weight-room', description: 'Named after the Heisman Trophy winner, this performance center features the latest in sports science and strength training equipment.', panoramaUrl: '/panoramas/oregon-weight-room.jpg' },
-    { slug: 'oregon', key: 'oregon-locker-room', name: 'Nike Innovation Locker Room', type: 'locker-room', description: 'A futuristic locker room designed in collaboration with Nike, featuring digital displays and customizable LED lighting.', panoramaUrl: '/panoramas/oregon-locker-room.jpg' },
-    // Ohio State
-    { slug: 'ohio-state', key: 'ohio-state-stadium', name: 'Ohio Stadium', type: 'stadium', description: 'The legendary "Horseshoe" — a 102,780-seat cathedral of college football that has been the home of the Buckeyes since 1922.', panoramaUrl: '/panoramas/ohio-state-stadium.jpg' },
-    { slug: 'ohio-state', key: 'ohio-state-practice', name: 'Woody Hayes Athletic Center', type: 'practice', description: 'An elite practice facility named after the legendary coach, featuring indoor and outdoor practice fields.', panoramaUrl: '/panoramas/ohio-state-practice.jpg' },
-    { slug: 'ohio-state', key: 'ohio-state-weight-room', name: 'Buckeye Performance Center', type: 'weight-room', description: 'A comprehensive strength and conditioning facility with cutting-edge equipment and sport science labs.', panoramaUrl: '/panoramas/ohio-state-weight-room.jpg' },
-    { slug: 'ohio-state', key: 'ohio-state-locker-room', name: 'Scarlet & Gray Locker Room', type: 'locker-room', description: 'A cathedral-like players\' locker room with vaulted ceilings, custom Ohio State branding, and Buckeye leaf history displays.', panoramaUrl: '/panoramas/ohio-state-locker-room.jpg' },
-    // Texas
-    { slug: 'texas', key: 'texas-stadium', name: 'Darrell K Royal–Texas Memorial Stadium', type: 'stadium', description: 'A 100,119-seat stadium in the heart of Austin. The south end zone features the iconic "TEXAS" scoreboard and Bevo\'s corral.', panoramaUrl: '/panoramas/texas-stadium.jpg' },
-    { slug: 'texas', key: 'texas-practice', name: 'Frank Denius Fields', type: 'practice', description: 'Outdoor practice fields with a state-of-the-art video tower for film study and drone-compatible airspace.', panoramaUrl: '/panoramas/texas-practice.jpg' },
-    { slug: 'texas', key: 'texas-weight-room', name: 'Longhorn Strength Center', type: 'weight-room', description: 'A recently renovated, 30,000 sq ft training facility with a Longhorn silhouette floor and burnt orange accents throughout.', panoramaUrl: '/panoramas/texas-weight-room.jpg' },
-    { slug: 'texas', key: 'texas-locker-room', name: 'Moncrief-Neuhaus Athletic Center', type: 'locker-room', description: 'The Longhorns\' home base with luxurious player amenities, a team auditorium, and a tunnel walk leading to the stadium.', panoramaUrl: '/panoramas/texas-locker-room.jpg' },
-    // LSU
-    { slug: 'lsu', key: 'lsu-stadium', name: 'Tiger Stadium (Death Valley)', type: 'stadium', description: 'The 102,321-seat "Death Valley" is the loudest stadium in America. Saturday Night in Death Valley is college football\'s greatest tradition.', panoramaUrl: '/panoramas/lsu-stadium.jpg' },
-    { slug: 'lsu', key: 'lsu-practice', name: 'Charles McClendon Practice Facility', type: 'practice', description: 'A fully enclosed indoor practice facility essential for year-round preparation in Louisiana\'s subtropical climate.', panoramaUrl: '/panoramas/lsu-practice.jpg' },
-    { slug: 'lsu', key: 'lsu-weight-room', name: 'Tiger Training Facility', type: 'weight-room', description: 'A modern strength and conditioning center with custom Tiger branding and recovery amenities.', panoramaUrl: '/panoramas/lsu-weight-room.jpg' },
-    { slug: 'lsu', key: 'lsu-locker-room', name: 'Champions Locker Room', type: 'locker-room', description: 'A showcase of LSU\'s four national championship seasons with custom lockers and a purple-and-gold LED ceiling.', panoramaUrl: '/panoramas/lsu-locker-room.jpg' },
+    // Texas Tech
+    { slug: 'texas-tech', key: 'texas-tech-stadium', name: 'Jones AT&T Stadium', type: 'stadium', description: 'A 60,454-seat stadium in the heart of Lubbock, known for its electric game-day atmosphere and the iconic Fearless Champion statue. The Double T scoreboard lights up red after every Red Raider victory.', panoramaUrl: '/panoramas/texas-tech-stadium.jpg' },
+    { slug: 'texas-tech', key: 'texas-tech-practice', name: 'Sports Performance Center', type: 'practice', description: 'A $46 million state-of-the-art indoor practice facility with a full-size synthetic turf field, coaches\' offices, meeting rooms, and sports science labs.', panoramaUrl: '/panoramas/texas-tech-practice.jpg' },
+    { slug: 'texas-tech', key: 'texas-tech-weight-room', name: 'Strength & Conditioning Center', type: 'weight-room', description: 'A massive 25,000 sq ft training facility with Olympic platforms, custom Red Raider branding, and comprehensive recovery amenities including cold plunge pools and cryotherapy chambers.', panoramaUrl: '/panoramas/texas-tech-weight-room.jpg' },
+    { slug: 'texas-tech', key: 'texas-tech-locker-room', name: 'Red Raider Locker Room', type: 'locker-room', description: 'A recently renovated players\' locker room with custom wood-and-leather lockers, LED lighting in scarlet and black, and displays honoring Red Raider legends.', panoramaUrl: '/panoramas/texas-tech-locker-room.jpg' },
+    // USC
+    { slug: 'usc', key: 'usc-stadium', name: 'Los Angeles Memorial Coliseum', type: 'stadium', description: 'The iconic 77,500-seat Coliseum, which has hosted two Olympic Games (1932, 1984) and two Super Bowls. The peristyle end and Olympic torch are among the most recognizable landmarks in sports.', panoramaUrl: '/panoramas/usc-stadium.jpg' },
+    { slug: 'usc', key: 'usc-practice', name: 'Howard Jones Field', type: 'practice', description: 'An outdoor practice complex adjacent to the Coliseum with natural grass and synthetic fields, overlooking the LA skyline. Named after USC\'s legendary 1920s-30s era coach.', panoramaUrl: '/panoramas/usc-practice.jpg' },
+    { slug: 'usc', key: 'usc-weight-room', name: 'McKay Center', type: 'weight-room', description: 'A $70 million athletics facility named after coaching legend John McKay, featuring a 30,000 sq ft strength center, hydrotherapy pools, a nutrition bar, and sport science labs.', panoramaUrl: '/panoramas/usc-weight-room.jpg' },
+    { slug: 'usc', key: 'usc-locker-room', name: 'Heritage Hall Locker Room', type: 'locker-room', description: 'The Trojans\' home base inside the renovated Heritage Hall, featuring 11 national championship trophies, seven Heisman Trophy displays, and custom cardinal-and-gold lockers for every player.', panoramaUrl: '/panoramas/usc-locker-room.jpg' },
+    // Baylor
+    { slug: 'baylor', key: 'baylor-stadium', name: 'McLane Stadium', type: 'stadium', description: 'A stunning 45,140-seat stadium opened in 2014 on the banks of the Brazos River. Its distinctive design features a boat dock for tailgating, a 125-foot video board, and panoramic views of the Waco skyline.', panoramaUrl: '/panoramas/baylor-stadium.jpg' },
+    { slug: 'baylor', key: 'baylor-practice', name: 'Allnex Indoor Practice Facility', type: 'practice', description: 'A 90,000 sq ft indoor practice facility with a full-size synthetic turf field, coaches\' viewing deck, and climate control for year-round preparation.', panoramaUrl: '/panoramas/baylor-practice.jpg' },
+    { slug: 'baylor', key: 'baylor-weight-room', name: 'Hurd Performance Center', type: 'weight-room', description: 'A comprehensive strength and conditioning center with custom Baylor branding, Olympic platforms, nutrition stations, and recovery suites for student-athletes.', panoramaUrl: '/panoramas/baylor-weight-room.jpg' },
+    { slug: 'baylor', key: 'baylor-locker-room', name: 'Bears Championship Locker Room', type: 'locker-room', description: 'A recently upgraded locker room featuring custom green-and-gold lockers, a team meeting area, and displays celebrating Baylor\'s 2021 Big 12 Championship and Sugar Bowl victory.', panoramaUrl: '/panoramas/baylor-locker-room.jpg' },
+    // Oklahoma
+    { slug: 'oklahoma', key: 'oklahoma-stadium', name: 'Gaylord Family Oklahoma Memorial Stadium', type: 'stadium', description: 'Known as "The Palace on the Prairie," this 80,126-seat stadium has been the home of Sooner football since 1923. The Sooner Schooner charges across the field after every OU score, one of college football\'s most beloved traditions.', panoramaUrl: '/panoramas/oklahoma-stadium.jpg' },
+    { slug: 'oklahoma', key: 'oklahoma-practice', name: 'Everest Training Center', type: 'practice', description: 'A world-class indoor practice facility with a full-size synthetic field, connected to the Switzer Center for seamless player preparation and game-planning.', panoramaUrl: '/panoramas/oklahoma-practice.jpg' },
+    { slug: 'oklahoma', key: 'oklahoma-weight-room', name: 'Headington Family Fitness Center', type: 'weight-room', description: 'A state-of-the-art 20,000 sq ft strength and conditioning facility with custom equipment, GPS performance tracking, and comprehensive recovery amenities.', panoramaUrl: '/panoramas/oklahoma-weight-room.jpg' },
+    { slug: 'oklahoma', key: 'oklahoma-locker-room', name: 'Sooner Legends Locker Room', type: 'locker-room', description: 'A cathedral-like players\' locker room with custom crimson-and-cream lockers, seven national championship displays, and a tunnel walk through the Barry Switzer Center to the field.', panoramaUrl: '/panoramas/oklahoma-locker-room.jpg' },
   ]
 
   const facilityMap: Record<string, any> = {}
@@ -107,51 +100,55 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
 
   // ─── Hotspots ───────────────────────────────────────────────────────────────
   const hotspotDefinitions = [
-    // Alabama Stadium
-    { facilityKey: 'alabama-stadium', x: 0.3, y: 0.6, label: 'Walk of Champions', description: 'The iconic pregame walk where the team enters through fans lining the path from the bus to the locker room.' },
-    { facilityKey: 'alabama-stadium', x: 0.7, y: 0.3, label: 'National Championship Displays', description: 'Bronze plaques and displays commemorating each of Alabama\'s 18 national championships.' },
-    // Alabama Practice
-    { facilityKey: 'alabama-practice', x: 0.5, y: 0.5, label: 'Indoor Turf Field', description: 'Full-size synthetic turf field for practice in all weather conditions.' },
-    // Alabama Weight Room
-    { facilityKey: 'alabama-weight-room', x: 0.4, y: 0.4, label: 'Olympic Platforms', description: 'Custom-built Olympic lifting platforms with Alabama branding and competition-grade equipment.' },
-    // Alabama Locker Room
-    { facilityKey: 'alabama-locker-room', x: 0.5, y: 0.5, label: 'Championship Banners', description: 'Eighteen championship banners hang overhead, a constant reminder of the standard at Alabama.' },
-    // Oregon Stadium
-    { facilityKey: 'oregon-stadium', x: 0.5, y: 0.7, label: 'The O', description: 'The massive illuminated Oregon "O" logo at midfield that glows during night games.' },
-    { facilityKey: 'oregon-stadium', x: 0.2, y: 0.4, label: 'Nike Skybox', description: 'Phil Knight\'s personal skybox featuring cutting-edge Nike displays and memorabilia.' },
-    // Oregon Practice
-    { facilityKey: 'oregon-practice', x: 0.5, y: 0.5, label: 'Film Tower', description: 'A state-of-the-art video tower for coaching analysis during outdoor practice sessions.' },
-    // Oregon Weight Room
-    { facilityKey: 'oregon-weight-room', x: 0.5, y: 0.5, label: 'Recovery Pods', description: 'Cryotherapy chambers, cold plunge pools, and compression boots for elite recovery.' },
-    // Oregon Locker Room
-    { facilityKey: 'oregon-locker-room', x: 0.5, y: 0.5, label: 'Digital Lockers', description: 'Each player\'s locker features an integrated digital display showing their stats, schedule, and personalized Nike gear.' },
-    // Ohio State Stadium
-    { facilityKey: 'ohio-state-stadium', x: 0.6, y: 0.5, label: 'Block O Section', description: 'The famous student section that creates the iconic card displays during big moments.' },
-    { facilityKey: 'ohio-state-stadium', x: 0.3, y: 0.3, label: 'Rotunda', description: 'The entrance rotunda featuring statues of Buckeye legends and Heisman Trophy winners.' },
-    // Ohio State Practice
-    { facilityKey: 'ohio-state-practice', x: 0.5, y: 0.5, label: 'Indoor Field', description: 'Climate-controlled indoor practice field with Ohio Stadium\'s exact dimensions.' },
-    // Ohio State Weight Room
-    { facilityKey: 'ohio-state-weight-room', x: 0.5, y: 0.5, label: 'Sport Science Lab', description: 'GPS tracking, force plates, and motion capture for performance analytics.' },
-    // Ohio State Locker Room
-    { facilityKey: 'ohio-state-locker-room', x: 0.5, y: 0.5, label: 'Buckeye Leaf Wall', description: 'A wall tracking every Buckeye leaf sticker earned during the season — a tradition dating back to Woody Hayes.' },
-    // Texas Stadium
-    { facilityKey: 'texas-stadium', x: 0.5, y: 0.8, label: 'Bevo\'s Corral', description: 'The home of Bevo, the live Longhorn steer mascot who presides over the south end zone.' },
-    { facilityKey: 'texas-stadium', x: 0.5, y: 0.2, label: 'TEXAS Scoreboard', description: 'The iconic giant TEXAS letters that light up orange after every Longhorn score.' },
-    // Texas Practice
-    { facilityKey: 'texas-practice', x: 0.5, y: 0.5, label: 'Video Tower', description: 'High-definition filming platform for practice analysis with drone-compatible airspace.' },
-    // Texas Weight Room
-    { facilityKey: 'texas-weight-room', x: 0.5, y: 0.5, label: 'Longhorn Floor', description: 'A massive burnt orange Longhorn silhouette embedded in the weight room floor.' },
-    // Texas Locker Room
-    { facilityKey: 'texas-locker-room', x: 0.5, y: 0.5, label: 'Eyes of Texas Mural', description: 'The iconic mural above the tunnel exit where players touch a Longhorn symbol before taking the field.' },
-    // LSU Stadium
-    { facilityKey: 'lsu-stadium', x: 0.4, y: 0.6, label: 'Mike the Tiger Habitat', description: 'The live tiger habitat right outside the stadium where Mike VII greets fans on game day.' },
-    { facilityKey: 'lsu-stadium', x: 0.8, y: 0.4, label: 'Championship Plaza', description: 'An outdoor display celebrating LSU\'s four national championships with bronze statues.' },
-    // LSU Practice
-    { facilityKey: 'lsu-practice', x: 0.5, y: 0.5, label: 'Indoor Turf', description: 'A fully enclosed indoor practice field for year-round preparation in Louisiana\'s humid climate.' },
-    // LSU Weight Room
-    { facilityKey: 'lsu-weight-room', x: 0.5, y: 0.5, label: 'Tiger Den', description: 'The central gathering area of the weight room with motivational displays and team records.' },
-    // LSU Locker Room
-    { facilityKey: 'lsu-locker-room', x: 0.5, y: 0.5, label: 'Championship Display', description: 'A floor-to-ceiling display showcasing game balls, trophies, and memorabilia from LSU\'s four championship seasons.' },
+    // Texas Tech Stadium
+    { facilityKey: 'texas-tech-stadium', x: 0.5, y: 0.8, label: 'Fearless Champion', description: 'The iconic masked rider statue — a symbol of Texas Tech\'s fearless spirit — stands guard at the stadium entrance.' },
+    { facilityKey: 'texas-tech-stadium', x: 0.7, y: 0.3, label: 'Double T Scoreboard', description: 'The massive Double T LED scoreboard lights up scarlet red after every Red Raider touchdown.' },
+    { facilityKey: 'texas-tech-stadium', x: 0.3, y: 0.5, label: 'Saddle Tramps Section', description: 'The rowdy student section where Texas Tech\'s Saddle Tramps spirit organization leads the crowd in cheers.' },
+    // Texas Tech Practice
+    { facilityKey: 'texas-tech-practice', x: 0.5, y: 0.5, label: 'Indoor Turf Field', description: 'A full-size synthetic turf field for year-round practice in Lubbock\'s variable weather conditions.' },
+    { facilityKey: 'texas-tech-practice', x: 0.2, y: 0.3, label: 'Sports Science Lab', description: 'GPS tracking, motion capture, and performance analytics for player development optimization.' },
+    // Texas Tech Weight Room
+    { facilityKey: 'texas-tech-weight-room', x: 0.4, y: 0.4, label: 'Olympic Platforms', description: 'Custom-built Olympic lifting platforms with Red Raider branding and competition-grade equipment.' },
+    { facilityKey: 'texas-tech-weight-room', x: 0.7, y: 0.6, label: 'Recovery Suite', description: 'Cold plunge pools, cryotherapy chambers, and NormaTec compression boots for elite recovery.' },
+    // Texas Tech Locker Room
+    { facilityKey: 'texas-tech-locker-room', x: 0.5, y: 0.5, label: 'Red Raider Legacy Wall', description: 'A wall honoring Texas Tech football legends with career highlights and NFL achievements.' },
+
+    // USC Stadium
+    { facilityKey: 'usc-stadium', x: 0.5, y: 0.2, label: 'Olympic Torch', description: 'The iconic Olympic torch from the 1932 and 1984 Games towers above the peristyle end of the Coliseum.' },
+    { facilityKey: 'usc-stadium', x: 0.3, y: 0.5, label: 'Peristyle', description: 'The famous columned peristyle with the Olympic rings, one of the most recognizable landmarks in American sports.' },
+    { facilityKey: 'usc-stadium', x: 0.7, y: 0.7, label: 'Trojan Tunnel', description: 'Where the team enters to "Conquest" — the iconic fight song — as Traveler the white horse leads them onto the field.' },
+    // USC Practice
+    { facilityKey: 'usc-practice', x: 0.5, y: 0.5, label: 'Practice Fields', description: 'Natural grass and synthetic practice fields with the LA skyline as a dramatic backdrop.' },
+    { facilityKey: 'usc-practice', x: 0.8, y: 0.3, label: 'Film Tower', description: 'A state-of-the-art video tower for coaching analysis with drone-compatible airspace.' },
+    // USC Weight Room
+    { facilityKey: 'usc-weight-room', x: 0.5, y: 0.5, label: 'Trojan Performance Center', description: 'The centerpiece of the McKay Center, with 30,000 sq ft of cutting-edge strength and conditioning equipment.' },
+    { facilityKey: 'usc-weight-room', x: 0.3, y: 0.7, label: 'Hydrotherapy Pools', description: 'Hot and cold therapy pools for recovery, plus an underwater treadmill for low-impact conditioning.' },
+    // USC Locker Room
+    { facilityKey: 'usc-locker-room', x: 0.5, y: 0.3, label: 'Heisman Trophy Display', description: 'Seven Heisman Trophy replicas on display — more than any other program in history.' },
+    { facilityKey: 'usc-locker-room', x: 0.5, y: 0.7, label: 'Championship Wall', description: 'Eleven national championship trophies and decades of Trojan football history.' },
+
+    // Baylor Stadium
+    { facilityKey: 'baylor-stadium', x: 0.5, y: 0.8, label: 'Brazos River Docks', description: 'McLane Stadium is one of the only stadiums in the country accessible by boat — fans dock on the Brazos River and walk straight to their seats.' },
+    { facilityKey: 'baylor-stadium', x: 0.7, y: 0.3, label: 'Brazos Video Board', description: 'A 125-foot-wide high-definition video board that dominates the south end zone.' },
+    { facilityKey: 'baylor-stadium', x: 0.3, y: 0.5, label: 'Bear Habitat', description: 'Joy and Lady, Baylor\'s live bear mascots, reside in a state-of-the-art habitat adjacent to the stadium.' },
+    // Baylor Practice
+    { facilityKey: 'baylor-practice', x: 0.5, y: 0.5, label: 'Indoor Turf Field', description: 'A 90,000 sq ft climate-controlled practice facility for year-round preparation in Central Texas heat.' },
+    // Baylor Weight Room
+    { facilityKey: 'baylor-weight-room', x: 0.5, y: 0.5, label: 'Nutrition Station', description: 'A fueling station with prepared meals, smoothie bar, and sports dietitian consultations for peak performance.' },
+    // Baylor Locker Room
+    { facilityKey: 'baylor-locker-room', x: 0.5, y: 0.5, label: 'Championship Display', description: 'Displays celebrating Baylor\'s 2021 Big 12 Championship season and Sugar Bowl victory over Ole Miss.' },
+
+    // Oklahoma Stadium
+    { facilityKey: 'oklahoma-stadium', x: 0.4, y: 0.7, label: 'Sooner Schooner', description: 'The iconic covered wagon pulled by ponies Boomer and Sooner, which charges across the field after every Oklahoma score.' },
+    { facilityKey: 'oklahoma-stadium', x: 0.7, y: 0.3, label: 'Barry Switzer Center', description: 'The state-of-the-art team facility named after legendary coach Barry Switzer, featuring a tunnel walk to the field.' },
+    { facilityKey: 'oklahoma-stadium', x: 0.2, y: 0.5, label: 'Championship Alley', description: 'A walkway displaying all seven of Oklahoma\'s national championship trophies and Heisman winners.' },
+    // Oklahoma Practice
+    { facilityKey: 'oklahoma-practice', x: 0.5, y: 0.5, label: 'Indoor Field', description: 'A full-size indoor synthetic turf field for all-weather practice with climate control.' },
+    { facilityKey: 'oklahoma-practice', x: 0.2, y: 0.3, label: 'QB Development Lab', description: 'A dedicated quarterback training area with video analysis stations and throwing lanes.' },
+    // Oklahoma Weight Room
+    { facilityKey: 'oklahoma-weight-room', x: 0.5, y: 0.5, label: 'Sooner Power', description: 'Custom Oklahoma-branded Olympic platforms and power racks in a 20,000 sq ft facility.' },
+    // Oklahoma Locker Room
+    { facilityKey: 'oklahoma-locker-room', x: 0.5, y: 0.5, label: 'Legends Gallery', description: 'A gallery honoring OU\'s football legends including Billy Sims, Adrian Peterson, and Baker Mayfield with jerseys and memorabilia.' },
   ]
 
   let hotspotCount = 0

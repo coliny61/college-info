@@ -31,8 +31,8 @@ const TEST_USERS = [
     password: 'test1234',
     role: 'coach_admin',
     displayName: 'Coach Williams',
-    // Will be linked to Alabama school
-    schoolSlug: 'alabama',
+    // Will be linked to Texas Tech school
+    schoolSlug: 'texas-tech',
   },
   {
     email: 'super@test.com',
@@ -124,16 +124,16 @@ async function main() {
     console.log(`  [synced] ${testUser.email} in Prisma users table`)
   }
 
-  // Link coach to Alabama school
+  // Link coach to Texas Tech school
   const coachId = createdUsers['coach@test.com']
   if (coachId) {
-    const alabama = await prisma.school.findUnique({ where: { slug: 'alabama' } })
-    if (alabama) {
+    const texasTech = await prisma.school.findUnique({ where: { slug: 'texas-tech' } })
+    if (texasTech) {
       await prisma.user.update({
         where: { id: coachId },
-        data: { schoolId: alabama.id },
+        data: { schoolId: texasTech.id },
       })
-      console.log(`\n  [linked] coach@test.com → Alabama`)
+      console.log(`\n  [linked] coach@test.com → Texas Tech`)
     }
   }
 
