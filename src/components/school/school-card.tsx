@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { MapPin } from 'lucide-react'
+import { MapPin, ChevronRight } from 'lucide-react'
 import { FavoriteButton } from './favorite-button'
 
 interface SchoolCardProps {
@@ -32,10 +32,10 @@ export function SchoolCard({
   showFavorite = true,
 }: SchoolCardProps) {
   return (
-    <Card className="group relative overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-black/20 hover:border-white/20">
       {/* School color accent strip */}
       <div
-        className="h-2"
+        className="h-1.5"
         style={{
           background: `linear-gradient(to right, ${colorPrimary}, ${colorSecondary})`,
         }}
@@ -46,7 +46,7 @@ export function SchoolCard({
           <div className="min-w-0 flex-1">
             <Link href={`/recruit/school/${slug}`} className="block">
               {/* Short name + mascot */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-baseline gap-2">
                 <span
                   className="text-2xl font-black tracking-tight"
                   style={{ color: colorPrimary }}
@@ -59,7 +59,7 @@ export function SchoolCard({
               </div>
 
               {/* Full name */}
-              <h3 className="mt-1 truncate text-sm font-medium text-foreground group-hover:text-emerald">
+              <h3 className="mt-1.5 truncate text-sm font-medium text-foreground transition-colors duration-200 group-hover:text-emerald">
                 {name}
               </h3>
             </Link>
@@ -71,7 +71,7 @@ export function SchoolCard({
                 {city}, {state}
               </span>
               <span
-                className="rounded-full px-2 py-0.5 text-xs font-medium"
+                className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                 style={{
                   backgroundColor: colorPrimary + '1A',
                   color: colorPrimary,
@@ -80,6 +80,14 @@ export function SchoolCard({
                 {conference}
               </span>
             </div>
+
+            {/* View link hint */}
+            <Link
+              href={`/recruit/school/${slug}`}
+              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground/60 transition-colors group-hover:text-emerald"
+            >
+              View program <ChevronRight className="h-3 w-3" />
+            </Link>
           </div>
 
           {/* Favorite button */}

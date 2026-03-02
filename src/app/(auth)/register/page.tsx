@@ -6,24 +6,28 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Eye, EyeOff, GraduationCap, Users, UserCheck } from 'lucide-react'
 
 type Role = 'recruit' | 'parent' | 'coach_admin'
 
-const ROLE_OPTIONS: { role: Role; label: string; desc: string }[] = [
+const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.ComponentType<{ className?: string }> }[] = [
   {
     role: 'recruit',
     label: 'Recruit',
     desc: 'I am a prospective student-athlete exploring schools.',
+    icon: GraduationCap,
   },
   {
     role: 'parent',
     label: 'Parent',
     desc: 'I am supporting my child through the recruiting process.',
+    icon: Users,
   },
   {
     role: 'coach_admin',
     label: 'Coach / Admin',
     desc: 'I manage a school profile and recruiting content.',
+    icon: UserCheck,
   },
 ]
 
@@ -42,6 +46,7 @@ export default function RegisterPage() {
   const [selectedRole, setSelectedRole] = useState<Role>('recruit')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,8 +93,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-8">
-      <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
+    <div className="rounded-2xl border border-border bg-card p-8">
+      <h1 className="text-2xl font-black tracking-tight text-foreground">Create Account</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Join College Info to start exploring.
       </p>
@@ -128,20 +133,30 @@ export default function RegisterPage() {
           <label className="mb-2 block text-sm font-medium text-foreground">
             Password
           </label>
-          <Input
-            type="password"
-            placeholder="At least 6 characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="At least 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pr-10"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-foreground">
             Confirm Password
           </label>
           <Input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Re-enter your password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -162,12 +177,17 @@ export default function RegisterPage() {
                   type="button"
                   key={option.role}
                   onClick={() => setSelectedRole(option.role)}
-                  className={`flex w-full items-center rounded-lg border p-4 text-left transition-colors ${
+                  className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200 ${
                     isSelected
-                      ? 'border-emerald bg-emerald/5'
+                      ? 'border-emerald bg-emerald/5 shadow-sm shadow-emerald/10'
                       : 'border-border hover:border-muted-foreground/30'
                   }`}
                 >
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                    isSelected ? 'bg-emerald/10' : 'bg-muted'
+                  }`}>
+                    <option.icon className={`h-4 w-4 ${isSelected ? 'text-emerald' : 'text-muted-foreground'}`} />
+                  </div>
                   <div className="flex-1">
                     <p
                       className={`font-semibold ${
@@ -181,7 +201,7 @@ export default function RegisterPage() {
                     </p>
                   </div>
                   <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
                       isSelected ? 'border-emerald' : 'border-muted-foreground/40'
                     }`}
                   >

@@ -12,6 +12,7 @@ import {
   Zap,
   Shield,
   Check,
+  GraduationCap,
 } from 'lucide-react'
 
 const SCHOOL_COLORS = [
@@ -23,13 +24,13 @@ const SCHOOL_COLORS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-background overflow-hidden scroll-smooth">
       {/* Nav */}
       <nav className="fixed top-0 z-50 w-full bg-background/60 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald">
-              <span className="text-sm font-black text-white">CI</span>
+              <GraduationCap className="h-4 w-4 text-white" />
             </div>
             <span className="text-lg font-bold text-foreground">
               College Info
@@ -67,7 +68,7 @@ export default function LandingPage() {
             {SCHOOL_COLORS.map((s, i) => (
               <div
                 key={s.name}
-                className="h-1/5"
+                className="h-1/4"
                 style={{ backgroundColor: s.primary }}
               />
             ))}
@@ -76,7 +77,7 @@ export default function LandingPage() {
             {SCHOOL_COLORS.map((s, i) => (
               <div
                 key={s.name}
-                className="h-1/5"
+                className="h-1/4"
                 style={{ backgroundColor: s.secondary }}
               />
             ))}
@@ -480,7 +481,7 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded bg-emerald">
-              <span className="text-[10px] font-black text-white">CI</span>
+              <GraduationCap className="h-3 w-3 text-white" />
             </div>
             <span className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} College Info

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { GraduationCap } from 'lucide-react'
 
 export default function AuthLayout({
   children,
@@ -10,9 +11,14 @@ export default function AuthLayout({
       <div className="w-full max-w-md">
         <Link
           href="/"
-          className="mb-8 block text-center text-2xl font-bold text-foreground"
+          className="mb-8 flex items-center justify-center gap-2.5"
         >
-          College Info
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald">
+            <GraduationCap className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-2xl font-bold text-foreground">
+            College Info
+          </span>
         </Link>
         {children}
       </div>

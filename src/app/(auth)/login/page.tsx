@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Play } from 'lucide-react'
+import { Play, Eye, EyeOff, GraduationCap, Users, Shield, UserCheck } from 'lucide-react'
 
 const ROLE_ROUTES: Record<string, string> = {
   recruit: '/recruit',
@@ -16,10 +16,10 @@ const ROLE_ROUTES: Record<string, string> = {
 }
 
 const DEMO_ACCOUNTS = [
-  { label: 'Recruit', email: 'recruit@test.com', password: 'test1234', role: 'recruit' },
-  { label: 'Coach', email: 'coach@test.com', password: 'test1234', role: 'coach_admin' },
-  { label: 'Parent', email: 'parent@test.com', password: 'test1234', role: 'parent' },
-  { label: 'Admin', email: 'super@test.com', password: 'test1234', role: 'super_admin' },
+  { label: 'Recruit', email: 'recruit@test.com', password: 'test1234', role: 'recruit', icon: GraduationCap, desc: 'Browse schools' },
+  { label: 'Coach', email: 'coach@test.com', password: 'test1234', role: 'coach_admin', icon: UserCheck, desc: 'Manage program' },
+  { label: 'Parent', email: 'parent@test.com', password: 'test1234', role: 'parent', icon: Users, desc: 'Monitor recruit' },
+  { label: 'Admin', email: 'super@test.com', password: 'test1234', role: 'super_admin', icon: Shield, desc: 'Platform admin' },
 ]
 
 export default function LoginPage() {
@@ -29,6 +29,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [demoLoading, setDemoLoading] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleLogin = async (loginEmail: string, loginPassword: string, role?: string) => {
     setError(null)
@@ -72,10 +73,10 @@ export default function LoginPage() {
   return (
     <div className="space-y-4">
       {/* Demo buttons */}
-      <div className="rounded-xl border border-emerald/30 bg-emerald/5 p-6">
+      <div className="rounded-2xl border border-emerald/20 bg-emerald/5 p-6">
         <div className="mb-4 flex items-center gap-2">
           <Play className="h-4 w-4 text-emerald" />
-          <p className="text-sm font-semibold text-emerald">Try a demo</p>
+          <p className="text-sm font-semibold text-emerald">Try a demo account</p>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {DEMO_ACCOUNTS.map((account) => (
@@ -83,11 +84,17 @@ export default function LoginPage() {
               key={account.role}
               variant="outline"
               size="sm"
-              className="border-emerald/30 hover:bg-emerald/10 hover:border-emerald"
+              className="h-auto flex-col items-start gap-0.5 border-emerald/20 px-3 py-2.5 hover:bg-emerald/10 hover:border-emerald"
               disabled={loading}
               onClick={() => handleDemo(account)}
             >
-              {demoLoading === account.role ? 'Loading...' : account.label}
+              <span className="flex items-center gap-1.5 text-xs font-semibold">
+                <account.icon className="h-3 w-3" />
+                {demoLoading === account.role ? 'Loading...' : account.label}
+              </span>
+              <span className="text-[10px] text-muted-foreground font-normal">
+                {account.desc}
+              </span>
             </Button>
           ))}
         </div>
@@ -104,8 +111,8 @@ export default function LoginPage() {
       </div>
 
       {/* Login form */}
-      <div className="rounded-xl border border-border bg-card p-8">
-        <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
+      <div className="rounded-2xl border border-border bg-card p-8">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">Welcome back</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Log in to your account to continue.
         </p>
@@ -133,13 +140,23 @@ export default function LoginPage() {
             <label className="mb-2 block text-sm font-medium text-foreground">
               Password
             </label>
-            <Input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
           <Button
             type="submit"

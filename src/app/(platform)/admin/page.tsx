@@ -1,7 +1,8 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Eye, Users, BarChart3, Link2 } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Eye, Users, BarChart3, Link2, ArrowRight, Building } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -12,8 +13,20 @@ export default async function AdminDashboard() {
   const displayName =
     user?.user_metadata?.display_name ?? user?.email?.split('@')[0] ?? 'Coach'
 
-  // Get first school for demo
-  const school = await prisma.school.findFirst()
+  // Get managed school
+  let school: any = null
+  if (user) {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { schoolId: true },
+    }).catch(() => null)
+    if (dbUser?.schoolId) {
+      school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
+    }
+  }
+  if (!school) {
+    school = await prisma.school.findFirst()
+  }
 
   // Get stats
   let totalViews = 0
@@ -41,16 +54,17 @@ export default async function AdminDashboard() {
   }
 
   const stats = [
-    { label: 'Total Views', value: totalViews.toString(), icon: Eye },
-    { label: 'Unique Recruits', value: uniqueRecruits.toString(), icon: Users },
-    { label: 'Avg. Engagement', value: '—', icon: BarChart3 },
-    { label: 'Active Invites', value: activeInvites.toString(), icon: Link2 },
+    { label: 'Total Views', value: totalViews.toString(), icon: Eye, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+    { label: 'Unique Recruits', value: uniqueRecruits.toString(), icon: Users, color: 'text-emerald', bg: 'bg-emerald/10' },
+    { label: 'Avg. Engagement', value: '—', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10' },
+    { label: 'Active Invites', value: activeInvites.toString(), icon: Link2, color: 'text-amber-400', bg: 'bg-amber-400/10' },
   ]
 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">
+        <span className="text-sm font-medium text-emerald">Coach Dashboard</span>
+        <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
           Welcome back, {displayName}
         </h1>
         <p className="mt-2 text-muted-foreground">
@@ -58,37 +72,76 @@ export default async function AdminDashboard() {
         </p>
       </div>
 
+      {/* Stats grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{stat.value}</p>
+          <Card key={stat.label} className="overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {stat.label}
+                </p>
+                <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${stat.bg}`}>
+                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                </div>
+              </div>
+              <p className="mt-3 text-3xl font-black tracking-tight">{stat.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
+      {/* Managing school card */}
       {school && (
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Managing: {school.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Use the sidebar to manage your school profile, media, facilities,
-                coaches, jerseys, and invite links.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <Card className="mt-6 overflow-hidden">
+          <div
+            className="h-1"
+            style={{
+              background: `linear-gradient(to right, ${school.colorPrimary}, ${school.colorSecondary})`,
+            }}
+          />
+          <CardContent className="flex items-center justify-between p-6">
+            <div className="flex items-center gap-4">
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ backgroundColor: school.colorPrimary + '1A' }}
+              >
+                <Building className="h-6 w-6" style={{ color: school.colorPrimary }} />
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Managing</p>
+                <p className="text-lg font-bold text-foreground">{school.name}</p>
+              </div>
+            </div>
+            <Link href="/admin/school">
+              <span className="flex items-center gap-1 text-sm font-medium text-emerald hover:underline">
+                Edit <ArrowRight className="h-3 w-3" />
+              </span>
+            </Link>
+          </CardContent>
+        </Card>
       )}
+
+      {/* Quick links */}
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        {[
+          { label: 'View Analytics', href: '/admin/analytics', icon: BarChart3 },
+          { label: 'Manage Facilities', href: '/admin/facilities', icon: Building },
+          { label: 'Generate Invites', href: '/admin/invites', icon: Link2 },
+        ].map((link) => (
+          <Link key={link.href} href={link.href}>
+            <Card className="group cursor-pointer transition-all hover:border-emerald/30 hover:shadow-lg hover:shadow-emerald/5">
+              <CardContent className="flex items-center gap-3 p-4">
+                <link.icon className="h-4 w-4 text-muted-foreground group-hover:text-emerald" />
+                <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                  {link.label}
+                </span>
+                <ArrowRight className="ml-auto h-3 w-3 text-muted-foreground/50 group-hover:text-emerald" />
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }
