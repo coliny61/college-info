@@ -10,24 +10,27 @@ import { Eye, EyeOff, GraduationCap, Users, UserCheck } from 'lucide-react'
 
 type Role = 'recruit' | 'parent' | 'coach_admin'
 
-const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.ComponentType<{ className?: string }> }[] = [
+const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.ComponentType<{ className?: string }>; color: string }[] = [
   {
     role: 'recruit',
     label: 'Recruit',
     desc: 'I am a prospective student-athlete exploring schools.',
     icon: GraduationCap,
+    color: '#10B981',
   },
   {
     role: 'parent',
     label: 'Parent',
     desc: 'I am supporting my child through the recruiting process.',
     icon: Users,
+    color: '#F59E0B',
   },
   {
     role: 'coach_admin',
     label: 'Coach / Admin',
     desc: 'I manage a school profile and recruiting content.',
     icon: UserCheck,
+    color: '#3B82F6',
   },
 ]
 
@@ -91,6 +94,8 @@ export default function RegisterPage() {
     router.push(ROLE_ROUTES[selectedRole])
     router.refresh()
   }
+
+  const selectedColor = ROLE_OPTIONS.find(o => o.role === selectedRole)?.color ?? '#10B981'
 
   return (
     <div className="rounded-2xl border border-border bg-card p-8">
@@ -177,22 +182,27 @@ export default function RegisterPage() {
                   type="button"
                   key={option.role}
                   onClick={() => setSelectedRole(option.role)}
-                  className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200 ${
-                    isSelected
-                      ? 'border-emerald bg-emerald/5 shadow-sm shadow-emerald/10'
-                      : 'border-border hover:border-muted-foreground/30'
-                  }`}
+                  className="flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200"
+                  style={{
+                    borderColor: isSelected ? option.color : 'var(--border)',
+                    backgroundColor: isSelected ? `${option.color}08` : 'transparent',
+                    boxShadow: isSelected ? `0 0 20px ${option.color}10` : 'none',
+                  }}
                 >
-                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-                    isSelected ? 'bg-emerald/10' : 'bg-muted'
-                  }`}>
-                    <option.icon className={`h-4 w-4 ${isSelected ? 'text-emerald' : 'text-muted-foreground'}`} />
+                  <div
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors"
+                    style={{
+                      backgroundColor: isSelected ? `${option.color}15` : 'var(--muted)',
+                    }}
+                  >
+                    <span style={{ color: isSelected ? option.color : 'var(--muted-foreground)' }}>
+                      <option.icon className="h-4 w-4" />
+                    </span>
                   </div>
                   <div className="flex-1">
                     <p
-                      className={`font-semibold ${
-                        isSelected ? 'text-emerald' : 'text-foreground'
-                      }`}
+                      className="font-semibold transition-colors"
+                      style={{ color: isSelected ? option.color : 'var(--foreground)' }}
                     >
                       {option.label}
                     </p>
@@ -201,12 +211,17 @@ export default function RegisterPage() {
                     </p>
                   </div>
                   <div
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                      isSelected ? 'border-emerald' : 'border-muted-foreground/40'
-                    }`}
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors"
+                    style={{
+                      borderColor: isSelected ? option.color : 'var(--muted-foreground)',
+                      opacity: isSelected ? 1 : 0.4,
+                    }}
                   >
                     {isSelected && (
-                      <div className="h-2.5 w-2.5 rounded-full bg-emerald" />
+                      <div
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: option.color }}
+                      />
                     )}
                   </div>
                 </button>
@@ -217,7 +232,8 @@ export default function RegisterPage() {
 
         <Button
           type="submit"
-          className="w-full bg-emerald hover:bg-emerald-dark text-white"
+          className="w-full text-white transition-colors"
+          style={{ backgroundColor: selectedColor }}
           disabled={loading}
         >
           {loading ? 'Creating Account...' : 'Create Account'}

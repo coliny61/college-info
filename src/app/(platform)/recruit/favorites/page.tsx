@@ -39,7 +39,7 @@ export default async function FavoritesPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
+      <div className="mb-6 animate-in-up">
         <h1 className="text-3xl font-black tracking-tight text-foreground">Favorites</h1>
         <p className="mt-2 text-muted-foreground">
           Schools you&apos;re interested in.

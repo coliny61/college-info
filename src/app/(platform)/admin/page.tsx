@@ -71,7 +71,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-8">
+      <div className="mb-8 animate-in-up">
         <span className="text-sm font-medium text-emerald">Coach Dashboard</span>
         <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
           Welcome back, {displayName}
@@ -82,7 +82,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-in-up delay-1">
         {stats.map((stat) => (
           <Card key={stat.label} className="overflow-hidden">
             <CardContent className="p-5">
@@ -94,57 +94,70 @@ export default async function AdminDashboard() {
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </div>
-              <p className="mt-3 text-3xl font-black tracking-tight">{stat.value}</p>
+              <p className="mt-3 text-3xl font-black tracking-tight text-scoreboard">{stat.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Managing school card */}
+      {/* Managing school card — bold school colors */}
       {school && (
-        <Card className="mt-6 overflow-hidden">
+        <Card className="mt-6 overflow-hidden animate-in-up delay-2">
           <div
-            className="h-1"
+            className="relative overflow-hidden"
             style={{
-              background: `linear-gradient(to right, ${school.colorPrimary}, ${school.colorSecondary})`,
+              background: `linear-gradient(135deg, ${school.colorPrimary}, ${school.colorSecondary})`,
             }}
-          />
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-xl"
-                style={{ backgroundColor: school.colorPrimary + '1A' }}
-              >
-                <Building className="h-6 w-6" style={{ color: school.colorPrimary }} />
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Managing</p>
-                <p className="text-lg font-bold text-foreground">{school.name}</p>
-              </div>
+          >
+            {/* Yard-line pattern */}
+            <div
+              className="absolute inset-0 opacity-[0.08]"
+              style={{
+                backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent calc(50% - 0.5px), white calc(50% - 0.5px), white calc(50% + 0.5px), transparent calc(50% + 0.5px))`,
+                backgroundSize: '80px 100%',
+              }}
+            />
+            {/* Watermark */}
+            <div
+              className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-8xl font-black opacity-[0.08]"
+              style={{ color: school.colorAccent || '#fff' }}
+            >
+              {school.shortName}
             </div>
-            <Link href="/admin/program">
-              <span className="flex items-center gap-1 text-sm font-medium text-emerald hover:underline">
-                Edit Program <ArrowRight className="h-3 w-3" />
-              </span>
-            </Link>
-          </CardContent>
+            <div className="relative flex items-center justify-between p-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <Building className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-white/60">Managing</p>
+                  <p className="text-lg font-bold text-white">{school.name}</p>
+                </div>
+              </div>
+              <Link href="/admin/program">
+                <span className="flex items-center gap-1 rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+                  Edit Program <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            </div>
+          </div>
         </Card>
       )}
 
       {/* Quick links */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 animate-in-up delay-3">
         {[
           { label: 'Manage Program', href: '/admin/program', icon: Building },
           { label: 'View Analytics', href: '/admin/analytics', icon: BarChart3 },
         ].map((link) => (
           <Link key={link.href} href={link.href}>
-            <Card className="group cursor-pointer transition-all hover:border-emerald/30 hover:shadow-lg hover:shadow-emerald/5">
+            <Card className="group cursor-pointer transition-all hover:border-white/15 hover:shadow-lg hover:shadow-black/10">
               <CardContent className="flex items-center gap-3 p-4">
-                <link.icon className="h-4 w-4 text-muted-foreground group-hover:text-emerald" />
-                <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                <link.icon className="h-4 w-4 text-muted-foreground group-hover:text-emerald transition-colors" />
+                <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                   {link.label}
                 </span>
-                <ArrowRight className="ml-auto h-3 w-3 text-muted-foreground/50 group-hover:text-emerald" />
+                <ArrowRight className="ml-auto h-3 w-3 text-muted-foreground/50 group-hover:text-emerald transition-colors" />
               </CardContent>
             </Card>
           </Link>
@@ -152,7 +165,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Invite Links */}
-      <div className="mt-8">
+      <div className="mt-8 animate-in-up delay-4">
         <div className="mb-4 flex items-center gap-2">
           <Link2 className="h-4 w-4 text-emerald" />
           <h2 className="text-lg font-bold text-foreground">Invite Links</h2>

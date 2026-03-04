@@ -18,7 +18,7 @@ export default async function SuperAdminDashboard() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-8">
+      <div className="mb-8 animate-in-up">
         <span className="text-sm font-medium text-emerald">Super Admin</span>
         <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
           Platform Overview
@@ -28,7 +28,7 @@ export default async function SuperAdminDashboard() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-in-up delay-1">
         {stats.map((stat) => (
           <Card key={stat.label} className="overflow-hidden">
             <CardContent className="p-5">
@@ -40,7 +40,7 @@ export default async function SuperAdminDashboard() {
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </div>
-              <p className="mt-3 text-3xl font-black tracking-tight">{stat.value}</p>
+              <p className="mt-3 text-3xl font-black tracking-tight text-scoreboard">{stat.value}</p>
             </CardContent>
           </Card>
         ))}

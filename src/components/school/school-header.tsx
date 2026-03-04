@@ -32,59 +32,71 @@ export function SchoolHeader({
 }: SchoolHeaderProps) {
   return (
     <div
-      className="relative overflow-hidden rounded-xl p-6 sm:p-8"
+      className="relative overflow-hidden rounded-2xl"
       style={{
         background: `linear-gradient(135deg, ${colorPrimary}, ${colorSecondary})`,
-        // Set CSS vars for downstream theming
         ['--school-primary' as string]: colorPrimary,
         ['--school-secondary' as string]: colorSecondary,
         ['--school-accent' as string]: colorAccent,
       }}
     >
-      {/* Background pattern */}
+      {/* Yard-line pattern */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-[0.06]"
         style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, ${colorAccent} 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
+          backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent calc(50% - 0.5px), ${colorAccent} calc(50% - 0.5px), ${colorAccent} calc(50% + 0.5px), transparent calc(50% + 0.5px))`,
+          backgroundSize: '80px 100%',
         }}
       />
 
-      <div className="relative flex items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1
-              className="text-4xl font-black tracking-tight sm:text-5xl"
+      {/* Dark gradient overlay for text contrast */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+
+      {/* Watermark short name */}
+      <div
+        className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-[12rem] font-black leading-none opacity-[0.06]"
+        style={{ color: colorAccent }}
+      >
+        {shortName}
+      </div>
+
+      <div className="relative px-6 py-10 sm:px-8 sm:py-14">
+        <div className="flex items-start justify-between gap-4">
+          <div className="animate-in-up">
+            <div className="flex items-center gap-3">
+              <h1
+                className="text-5xl font-black tracking-tighter sm:text-7xl text-scoreboard"
+                style={{ color: colorAccent }}
+              >
+                {shortName}
+              </h1>
+              <Badge
+                variant="outline"
+                className="border-white/30 text-xs font-bold"
+                style={{ color: colorAccent }}
+              >
+                {conference}
+              </Badge>
+            </div>
+
+            <p
+              className="mt-2 text-lg font-medium opacity-90"
               style={{ color: colorAccent }}
             >
-              {shortName}
-            </h1>
-            <Badge
-              variant="outline"
-              className="border-white/30 text-xs"
+              {name}
+            </p>
+
+            <div
+              className="mt-2 flex items-center gap-1 text-sm opacity-70"
               style={{ color: colorAccent }}
             >
-              {conference}
-            </Badge>
+              <MapPin className="h-3.5 w-3.5" />
+              {city}, {state} &middot; {mascot}
+            </div>
           </div>
 
-          <p
-            className="mt-1 text-lg font-medium opacity-90"
-            style={{ color: colorAccent }}
-          >
-            {name}
-          </p>
-
-          <div
-            className="mt-2 flex items-center gap-1 text-sm opacity-75"
-            style={{ color: colorAccent }}
-          >
-            <MapPin className="h-3.5 w-3.5" />
-            {city}, {state} &middot; {mascot}
-          </div>
+          <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
         </div>
-
-        <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
       </div>
     </div>
   )

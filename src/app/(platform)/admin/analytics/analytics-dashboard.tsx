@@ -62,13 +62,13 @@ export function AnalyticsDashboard({
   return (
     <div className="space-y-6">
       {/* Summary cards */}
-      <div className="grid gap-4 sm:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-4 animate-in-up">
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
             <Eye className="h-5 w-5 text-emerald" />
             <div>
               <p className="text-xs text-muted-foreground">Total Events</p>
-              <p className="text-xl font-bold">{totalEvents}</p>
+              <p className="text-xl font-bold text-scoreboard">{totalEvents}</p>
             </div>
           </CardContent>
         </Card>
@@ -77,7 +77,7 @@ export function AnalyticsDashboard({
             <Users className="h-5 w-5 text-emerald" />
             <div>
               <p className="text-xs text-muted-foreground">Unique Recruits</p>
-              <p className="text-xl font-bold">{uniqueRecruits}</p>
+              <p className="text-xl font-bold text-scoreboard">{uniqueRecruits}</p>
             </div>
           </CardContent>
         </Card>
@@ -86,7 +86,7 @@ export function AnalyticsDashboard({
             <Activity className="h-5 w-5 text-emerald" />
             <div>
               <p className="text-xs text-muted-foreground">Sections Tracked</p>
-              <p className="text-xl font-bold">{sectionData.length}</p>
+              <p className="text-xl font-bold text-scoreboard">{sectionData.length}</p>
             </div>
           </CardContent>
         </Card>
@@ -105,7 +105,7 @@ export function AnalyticsDashboard({
       </div>
 
       {/* Views chart */}
-      <Card>
+      <Card className="animate-in-up delay-1">
         <CardHeader>
           <CardTitle className="text-lg">Views Over Time</CardTitle>
         </CardHeader>
@@ -146,7 +146,7 @@ export function AnalyticsDashboard({
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 animate-in-up delay-2">
         {/* Section breakdown */}
         <Card>
           <CardHeader>
@@ -217,7 +217,7 @@ export function AnalyticsDashboard({
       </div>
 
       {/* Engagement table */}
-      <Card>
+      <Card className="animate-in-up delay-3">
         <CardHeader>
           <CardTitle className="text-lg">Recruit Engagement</CardTitle>
         </CardHeader>

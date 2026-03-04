@@ -32,23 +32,39 @@ export function SchoolCard({
   showFavorite = true,
 }: SchoolCardProps) {
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-black/20 hover:border-white/20">
-      {/* School color accent strip */}
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/20 hover:border-white/15">
+      {/* Bold left color bar */}
       <div
-        className="h-1.5"
+        className="absolute left-0 top-0 h-full w-1 transition-all duration-300 group-hover:w-1.5"
         style={{
-          background: `linear-gradient(to right, ${colorPrimary}, ${colorSecondary})`,
+          background: `linear-gradient(to bottom, ${colorPrimary}, ${colorSecondary})`,
         }}
       />
 
-      <CardContent className="p-5">
+      {/* Watermark short name */}
+      <div
+        className="pointer-events-none absolute -right-2 -top-3 select-none text-7xl font-black opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.06]"
+        style={{ color: colorPrimary }}
+      >
+        {shortName}
+      </div>
+
+      {/* Hover background wash */}
+      <div
+        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `linear-gradient(135deg, ${colorPrimary}08, transparent 70%)`,
+        }}
+      />
+
+      <CardContent className="relative p-5 pl-5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <Link href={`/recruit/school/${slug}`} className="block">
               {/* Short name + mascot */}
               <div className="flex items-baseline gap-2">
                 <span
-                  className="text-2xl font-black tracking-tight"
+                  className="text-2xl font-black tracking-tight text-scoreboard"
                   style={{ color: colorPrimary }}
                 >
                   {shortName}
@@ -59,7 +75,7 @@ export function SchoolCard({
               </div>
 
               {/* Full name */}
-              <h3 className="mt-1.5 truncate text-sm font-medium text-foreground transition-colors duration-200 group-hover:text-emerald">
+              <h3 className="mt-1.5 truncate text-sm font-medium text-foreground transition-colors duration-200 group-hover:text-foreground/90">
                 {name}
               </h3>
             </Link>
@@ -71,10 +87,10 @@ export function SchoolCard({
                 {city}, {state}
               </span>
               <span
-                className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                className="rounded-full px-2 py-0.5 text-[11px] font-bold"
                 style={{
-                  backgroundColor: colorPrimary + '1A',
-                  color: colorPrimary,
+                  backgroundColor: colorPrimary,
+                  color: '#FFFFFF',
                 }}
               >
                 {conference}
@@ -84,7 +100,7 @@ export function SchoolCard({
             {/* View link hint */}
             <Link
               href={`/recruit/school/${slug}`}
-              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground/60 transition-colors group-hover:text-emerald"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground/50 transition-all duration-200 group-hover:text-emerald group-hover:gap-2"
             >
               View program <ChevronRight className="h-3 w-3" />
             </Link>

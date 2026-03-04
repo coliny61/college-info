@@ -89,6 +89,44 @@
   --sidebar-ring: oklch(0.696 0.17 162.48);
 }
 
+/* ── Stadium Dark Animations ── */
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(10px, -8px); }
+  66% { transform: translate(-5px, 4px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -98,5 +136,71 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Entrance animations */
+  .animate-in-up {
+    animation: fade-in-up 0.5s ease-out both;
+  }
+  .animate-in-fade {
+    animation: fade-in 0.4s ease-out both;
+  }
+  .animate-in-right {
+    animation: slide-in-right 0.4s ease-out both;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+  }
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  /* Stagger delays */
+  .delay-1 { animation-delay: 0.05s; }
+  .delay-2 { animation-delay: 0.1s; }
+  .delay-3 { animation-delay: 0.15s; }
+  .delay-4 { animation-delay: 0.2s; }
+  .delay-5 { animation-delay: 0.25s; }
+  .delay-6 { animation-delay: 0.3s; }
+  .delay-7 { animation-delay: 0.35s; }
+  .delay-8 { animation-delay: 0.4s; }
+
+  /* Stadium Dark utilities */
+  .bg-yard-lines {
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent calc(50% - 0.5px),
+      oklch(1 0 0 / 0.04) calc(50% - 0.5px),
+      oklch(1 0 0 / 0.04) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+    background-size: 80px 100%;
+  }
+
+  .bg-field-hash {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent calc(50% - 0.5px),
+        oklch(1 0 0 / 0.03) calc(50% - 0.5px),
+        oklch(1 0 0 / 0.03) calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+      );
+    background-size: 100% 40px;
+  }
+
+  /* Scoreboard-style numbers */
+  .text-scoreboard {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
   }
 }

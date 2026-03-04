@@ -16,10 +16,10 @@ const ROLE_ROUTES: Record<string, string> = {
 }
 
 const DEMO_ACCOUNTS = [
-  { label: 'Recruit', email: 'recruit@test.com', password: 'test1234', role: 'recruit', icon: GraduationCap, desc: 'Browse schools' },
-  { label: 'Coach', email: 'coach@test.com', password: 'test1234', role: 'coach_admin', icon: UserCheck, desc: 'Manage program' },
-  { label: 'Parent', email: 'parent@test.com', password: 'test1234', role: 'parent', icon: Users, desc: 'Monitor recruit' },
-  { label: 'Admin', email: 'super@test.com', password: 'test1234', role: 'super_admin', icon: Shield, desc: 'Platform admin' },
+  { label: 'Recruit', email: 'recruit@test.com', password: 'test1234', role: 'recruit', icon: GraduationCap, desc: 'Browse schools', color: '#10B981' },
+  { label: 'Coach', email: 'coach@test.com', password: 'test1234', role: 'coach_admin', icon: UserCheck, desc: 'Manage program', color: '#3B82F6' },
+  { label: 'Parent', email: 'parent@test.com', password: 'test1234', role: 'parent', icon: Users, desc: 'Monitor recruit', color: '#F59E0B' },
+  { label: 'Admin', email: 'super@test.com', password: 'test1234', role: 'super_admin', icon: Shield, desc: 'Platform admin', color: '#EF4444' },
 ]
 
 export default function LoginPage() {
@@ -73,7 +73,7 @@ export default function LoginPage() {
   return (
     <div className="space-y-4">
       {/* Demo buttons */}
-      <div className="rounded-2xl border border-emerald/20 bg-emerald/5 p-6">
+      <div className="rounded-2xl border border-emerald/20 bg-emerald/[0.03] p-6">
         <div className="mb-4 flex items-center gap-2">
           <Play className="h-4 w-4 text-emerald" />
           <p className="text-sm font-semibold text-emerald">Try a demo account</p>
@@ -84,12 +84,17 @@ export default function LoginPage() {
               key={account.role}
               variant="outline"
               size="sm"
-              className="h-auto flex-col items-start gap-0.5 border-emerald/20 px-3 py-2.5 hover:bg-emerald/10 hover:border-emerald"
+              className="h-auto flex-col items-start gap-0.5 px-3 py-2.5 hover:bg-white/[0.03] transition-colors"
+              style={{
+                borderColor: `${account.color}30`,
+                borderLeftWidth: '3px',
+                borderLeftColor: account.color,
+              }}
               disabled={loading}
               onClick={() => handleDemo(account)}
             >
               <span className="flex items-center gap-1.5 text-xs font-semibold">
-                <account.icon className="h-3 w-3" />
+                <account.icon className="h-3 w-3" style={{ color: account.color }} />
                 {demoLoading === account.role ? 'Loading...' : account.label}
               </span>
               <span className="text-[10px] text-muted-foreground font-normal">

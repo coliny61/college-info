@@ -63,7 +63,7 @@ export default async function RecruitDashboard() {
   return (
     <div className="mx-auto max-w-6xl">
       {/* Welcome */}
-      <div className="mb-8">
+      <div className="mb-8 animate-in-up">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="h-5 w-5 text-emerald" />
           <span className="text-sm font-medium text-emerald">Dashboard</span>
@@ -76,52 +76,52 @@ export default async function RecruitDashboard() {
         </p>
       </div>
 
-      {/* Quick action cards */}
-      <div className="mb-10 grid gap-4 sm:grid-cols-3">
-        <Link href="/recruit/schools">
-          <Card className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald/5 hover:border-emerald/30">
+      {/* Quick action cards — asymmetric layout */}
+      <div className="mb-10 grid gap-4 grid-cols-2 sm:grid-cols-4">
+        {/* Browse Schools — spans 2 cols */}
+        <Link href="/recruit/schools" className="col-span-2">
+          <Card className="group relative h-full cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald/5 hover:border-emerald/30">
+            <div className="bg-yard-lines absolute inset-0 pointer-events-none opacity-30" />
+            <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-emerald/[0.06] blur-2xl transition-all group-hover:bg-emerald/[0.12]" />
+            {/* Watermark */}
+            <div className="pointer-events-none absolute -right-2 -bottom-4 select-none text-6xl font-black text-emerald/[0.04] transition-all duration-300 group-hover:text-emerald/[0.08]">
+              EXPLORE
+            </div>
             <CardContent className="relative p-6">
-              <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-emerald/5 blur-2xl transition-all group-hover:bg-emerald/10" />
-              <div className="relative">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald/10">
-                  <Search className="h-5 w-5 text-emerald" />
-                </div>
-                <h3 className="text-base font-bold text-foreground">Browse Schools</h3>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Explore programs across the country.
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-emerald opacity-0 transition-opacity group-hover:opacity-100">
-                  Explore <ArrowRight className="h-3 w-3" />
-                </span>
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald/10">
+                <Search className="h-5 w-5 text-emerald" />
               </div>
+              <h3 className="text-lg font-bold text-foreground">Browse Schools</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Explore programs across the country. Compare academics, athletics, and more.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-emerald opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:gap-2">
+                Explore <ArrowRight className="h-3.5 w-3.5" />
+              </span>
             </CardContent>
           </Card>
         </Link>
 
+        {/* Favorites */}
         <Link href="/recruit/favorites">
-          <Card className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald/5 hover:border-emerald/30">
-            <CardContent className="relative p-6">
-              <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-red-500/5 blur-2xl transition-all group-hover:bg-red-500/10" />
-              <div className="relative">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10">
-                  <Heart className="h-5 w-5 text-red-400" />
-                </div>
-                <h3 className="text-base font-bold text-foreground">Favorites</h3>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {favoriteSchools.length > 0
-                    ? `${favoriteSchools.length} school${favoriteSchools.length === 1 ? '' : 's'} saved`
-                    : 'Save schools to compare'}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-emerald opacity-0 transition-opacity group-hover:opacity-100">
-                  View <ArrowRight className="h-3 w-3" />
-                </span>
+          <Card className="group h-full cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-red-500/5 hover:border-red-500/20">
+            <CardContent className="relative p-5">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10">
+                <Heart className="h-5 w-5 text-red-400" />
               </div>
+              <h3 className="text-base font-bold text-foreground">Favorites</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {favoriteSchools.length > 0
+                  ? <><span className="text-red-400 font-bold text-scoreboard">{favoriteSchools.length}</span> saved</>
+                  : 'Save schools to compare'}
+              </p>
             </CardContent>
           </Card>
         </Link>
 
-        <Card className="overflow-hidden border-dashed opacity-60">
-          <CardContent className="relative p-6">
+        {/* Jersey Room */}
+        <Card className="group overflow-hidden border-dashed transition-colors hover:border-white/15">
+          <CardContent className="relative p-5">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
               <Shirt className="h-5 w-5 text-muted-foreground" />
             </div>
@@ -129,7 +129,7 @@ export default async function RecruitDashboard() {
               Jersey Room
             </h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              Pick a school to build your uniform.
+              Pick a school first.
             </p>
           </CardContent>
         </Card>
@@ -137,7 +137,7 @@ export default async function RecruitDashboard() {
 
       {/* Favorites row */}
       {favoriteSchools.length > 0 && (
-        <div className="mb-10">
+        <div className="mb-10 animate-in-up delay-2">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-bold text-foreground">
               Your Favorites
@@ -163,7 +163,7 @@ export default async function RecruitDashboard() {
       )}
 
       {/* All schools */}
-      <div>
+      <div className="animate-in-up delay-3">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">All Schools</h2>
           <Link
