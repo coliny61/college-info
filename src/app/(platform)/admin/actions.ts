@@ -46,7 +46,7 @@ export async function updateSchoolProfile(formData: FormData) {
     },
   })
 
-  revalidatePath('/admin/school')
+  revalidatePath('/admin/program')
   revalidatePath('/recruit')
 }
 
@@ -66,12 +66,12 @@ export async function createCoach(formData: FormData) {
     },
   })
 
-  revalidatePath('/admin/coaches')
+  revalidatePath('/admin/program')
 }
 
 export async function deleteCoach(coachId: string) {
   await prisma.coach.delete({ where: { id: coachId } })
-  revalidatePath('/admin/coaches')
+  revalidatePath('/admin/program')
 }
 
 export async function createFacility(formData: FormData) {
@@ -86,12 +86,12 @@ export async function createFacility(formData: FormData) {
     },
   })
 
-  revalidatePath('/admin/facilities')
+  revalidatePath('/admin/program')
 }
 
 export async function deleteFacility(facilityId: string) {
   await prisma.facility.delete({ where: { id: facilityId } })
-  revalidatePath('/admin/facilities')
+  revalidatePath('/admin/program')
 }
 
 export async function generateInviteLink() {
@@ -108,11 +108,11 @@ export async function generateInviteLink() {
     },
   })
 
-  revalidatePath('/admin/invites')
+  revalidatePath('/admin')
   return invite.code
 }
 
 export async function deleteInviteLink(inviteId: string) {
   await prisma.inviteLink.delete({ where: { id: inviteId } })
-  revalidatePath('/admin/invites')
+  revalidatePath('/admin')
 }

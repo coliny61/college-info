@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { Card, CardContent } from '@/components/ui/card'
 import { Eye, Users, BarChart3, Link2, ArrowRight, Building } from 'lucide-react'
+import { InvitesManager } from './invites-manager'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -52,6 +53,14 @@ export default async function AdminDashboard() {
       },
     })
   }
+
+  // Fetch invite links
+  const invites = school
+    ? await prisma.inviteLink.findMany({
+        where: { schoolId: school.id },
+        orderBy: { createdAt: 'desc' },
+      })
+    : []
 
   const stats = [
     { label: 'Total Views', value: totalViews.toString(), icon: Eye, color: 'text-blue-400', bg: 'bg-blue-400/10' },
@@ -113,9 +122,9 @@ export default async function AdminDashboard() {
                 <p className="text-lg font-bold text-foreground">{school.name}</p>
               </div>
             </div>
-            <Link href="/admin/school">
+            <Link href="/admin/program">
               <span className="flex items-center gap-1 text-sm font-medium text-emerald hover:underline">
-                Edit <ArrowRight className="h-3 w-3" />
+                Edit Program <ArrowRight className="h-3 w-3" />
               </span>
             </Link>
           </CardContent>
@@ -123,11 +132,10 @@ export default async function AdminDashboard() {
       )}
 
       {/* Quick links */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {[
+          { label: 'Manage Program', href: '/admin/program', icon: Building },
           { label: 'View Analytics', href: '/admin/analytics', icon: BarChart3 },
-          { label: 'Manage Facilities', href: '/admin/facilities', icon: Building },
-          { label: 'Generate Invites', href: '/admin/invites', icon: Link2 },
         ].map((link) => (
           <Link key={link.href} href={link.href}>
             <Card className="group cursor-pointer transition-all hover:border-emerald/30 hover:shadow-lg hover:shadow-emerald/5">
@@ -141,6 +149,23 @@ export default async function AdminDashboard() {
             </Card>
           </Link>
         ))}
+      </div>
+
+      {/* Invite Links */}
+      <div className="mt-8">
+        <div className="mb-4 flex items-center gap-2">
+          <Link2 className="h-4 w-4 text-emerald" />
+          <h2 className="text-lg font-bold text-foreground">Invite Links</h2>
+        </div>
+        <InvitesManager
+          invites={invites.map((inv) => ({
+            id: inv.id,
+            code: inv.code,
+            expiresAt: inv.expiresAt,
+            usedCount: inv.usedCount,
+            createdAt: inv.createdAt,
+          }))}
+        />
       </div>
     </div>
   )

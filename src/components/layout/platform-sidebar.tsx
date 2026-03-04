@@ -11,12 +11,7 @@ import {
   Heart,
   User,
   BarChart3,
-  Edit3,
-  Image as ImageIcon,
-  MapPin,
   Users,
-  Shirt,
-  Link2,
   Shield,
   Building,
   CreditCard,
@@ -44,13 +39,8 @@ const PARENT_NAV: NavItem[] = [
 
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: Home },
-  { label: 'School Profile', href: '/admin/school', icon: Edit3 },
-  { label: 'Media', href: '/admin/media', icon: ImageIcon },
-  { label: 'Facilities', href: '/admin/facilities', icon: MapPin },
-  { label: 'Coaches', href: '/admin/coaches', icon: Users },
-  { label: 'Jerseys', href: '/admin/jerseys', icon: Shirt },
+  { label: 'Program', href: '/admin/program', icon: Building },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-  { label: 'Invites', href: '/admin/invites', icon: Link2 },
 ]
 
 const SUPER_ADMIN_NAV: NavItem[] = [
