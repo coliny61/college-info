@@ -29,6 +29,9 @@ interface AnalyticsDashboardProps {
   engagementData: Array<{
     name: string
     email: string
+    sport: string | null
+    position: string | null
+    graduationYear: number | null
     sections: string[]
     totalDuration: number
     visits: number
@@ -231,7 +234,9 @@ export function AnalyticsDashboard({
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead>Sport</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Class</TableHead>
                   <TableHead>Sections</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Visits</TableHead>
@@ -241,11 +246,20 @@ export function AnalyticsDashboard({
               <TableBody>
                 {engagementData.map((recruit, i) => (
                   <TableRow key={i}>
-                    <TableCell className="font-medium">
-                      {recruit.name}
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{recruit.name}</p>
+                        <p className="text-xs text-muted-foreground">{recruit.email}</p>
+                      </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {recruit.email}
+                      {recruit.sport ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {recruit.position ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {recruit.graduationYear ?? '—'}
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">

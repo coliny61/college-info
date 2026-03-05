@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toggleFavorite } from '@/app/(platform)/recruit/actions'
+import { toast } from 'sonner'
 
 interface FavoriteButtonProps {
   schoolId: string
@@ -24,8 +25,8 @@ export function FavoriteButton({
     startTransition(async () => {
       try {
         await toggleFavorite(schoolId)
+        toast.success(!isFavorited ? 'Added to favorites' : 'Removed from favorites')
       } catch {
-        // Revert on error
         setIsFavorited(isFavorited)
       }
     })

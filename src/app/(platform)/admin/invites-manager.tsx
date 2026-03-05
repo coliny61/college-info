@@ -4,7 +4,19 @@ import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Plus, Copy, Trash2, Check } from 'lucide-react'
+import { toast } from 'sonner'
 import { generateInviteLink, deleteInviteLink } from '@/app/(platform)/admin/actions'
 
 interface Invite {
@@ -23,13 +35,20 @@ export function InvitesManager({ invites }: { invites: Invite[] }) {
     setGenerating(true)
     await generateInviteLink()
     setGenerating(false)
+    toast.success('Invite link created')
   }
 
   const handleCopy = async (code: string, id: string) => {
     const url = `${window.location.origin}/invite/${code}`
     await navigator.clipboard.writeText(url)
     setCopiedId(id)
+    toast.success('Link copied')
     setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  const handleDelete = async (inviteId: string) => {
+    await deleteInviteLink(inviteId)
+    toast.success('Invite link deleted')
   }
 
   const isExpired = (invite: Invite) =>
@@ -92,11 +111,27 @@ export function InvitesManager({ invites }: { invites: Invite[] }) {
                       <Copy className="h-4 w-4" />
                     )}
                   </Button>
-                  <form action={() => deleteInviteLink(invite.id)}>
-                    <Button variant="ghost" size="icon" type="submit">
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </form>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Invite Link</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete this invite link? Recruits will no longer be able to use it.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(invite.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>

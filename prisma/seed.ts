@@ -22,6 +22,7 @@ async function main() {
 
   // Clear existing data in dependency order (children first)
   console.log('  Clearing existing data...')
+  await prisma.recruitProfile.deleteMany()
   await prisma.hotspot.deleteMany()
   await prisma.facility.deleteMany()
   await prisma.coach.deleteMany()

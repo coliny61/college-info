@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { Card, CardContent } from '@/components/ui/card'
 import { SchoolCard } from '@/components/school/school-card'
+import { OnboardingWizard } from '@/components/recruit/onboarding-wizard'
+import { ProfileSummaryCard } from '@/components/recruit/profile-summary-card'
 import { Search, Heart, Shirt, ArrowRight, Sparkles } from 'lucide-react'
 
 export default async function RecruitDashboard() {
@@ -13,6 +15,15 @@ export default async function RecruitDashboard() {
 
   const displayName =
     user?.user_metadata?.display_name ?? user?.email?.split('@')[0] ?? 'Recruit'
+
+  // Check for recruit profile
+  const profile = user
+    ? await prisma.recruitProfile.findUnique({ where: { userId: user.id } })
+    : null
+
+  if (user && !profile) {
+    return <OnboardingWizard />
+  }
 
   // Fetch favorites
   let favoriteSchools: any[] = []
@@ -75,6 +86,13 @@ export default async function RecruitDashboard() {
           Explore schools, build your dream uniform, and find the right fit.
         </p>
       </div>
+
+      {/* Profile summary */}
+      {profile && (
+        <div className="mb-6 animate-in-up delay-1">
+          <ProfileSummaryCard profile={profile} />
+        </div>
+      )}
 
       {/* Quick action cards — asymmetric layout */}
       <div className="mb-10 grid gap-4 grid-cols-2 sm:grid-cols-4">

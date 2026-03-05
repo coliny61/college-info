@@ -59,6 +59,24 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Role-based route protection
+  if (isProtected && user) {
+    const role = user.user_metadata?.role ?? 'recruit'
+    const correctRoute = ROLE_ROUTES[role] ?? '/recruit'
+
+    const mismatch =
+      (pathname.startsWith('/admin') && role !== 'coach_admin' && role !== 'super_admin') ||
+      (pathname.startsWith('/super-admin') && role !== 'super_admin') ||
+      (pathname.startsWith('/parent') && role !== 'parent') ||
+      (pathname.startsWith('/recruit') && role !== 'recruit')
+
+    if (mismatch) {
+      const url = request.nextUrl.clone()
+      url.pathname = correctRoute
+      return NextResponse.redirect(url)
+    }
+  }
+
   // Redirect authenticated users away from auth pages to their role dashboard
   const isAuthPage = pathname === '/login' || pathname === '/register'
   if (isAuthPage && user) {

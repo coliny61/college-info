@@ -1,4 +1,6 @@
 import { SchoolCard } from './school-card'
+import { CompareProvider } from './compare-context'
+import { CompareBar } from './compare-bar'
 
 interface School {
   id: string
@@ -17,12 +19,14 @@ interface SchoolGridProps {
   schools: School[]
   favoriteIds?: Set<string>
   showFavorites?: boolean
+  showCompare?: boolean
 }
 
 export function SchoolGrid({
   schools,
   favoriteIds = new Set(),
   showFavorites = true,
+  showCompare = true,
 }: SchoolGridProps) {
   if (schools.length === 0) {
     return (
@@ -32,7 +36,7 @@ export function SchoolGrid({
     )
   }
 
-  return (
+  const grid = (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {schools.map((school) => (
         <SchoolCard
@@ -40,8 +44,18 @@ export function SchoolGrid({
           {...school}
           isFavorited={favoriteIds.has(school.id)}
           showFavorite={showFavorites}
+          showCompare={showCompare}
         />
       ))}
     </div>
+  )
+
+  if (!showCompare) return grid
+
+  return (
+    <CompareProvider>
+      {grid}
+      <CompareBar />
+    </CompareProvider>
   )
 }

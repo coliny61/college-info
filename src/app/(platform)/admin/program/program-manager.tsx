@@ -8,7 +8,19 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Edit3, Users, MapPin, Shirt, Plus, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   updateSchoolProfile,
   createCoach,
@@ -94,17 +106,14 @@ export function ProgramManager({ school, coaches, facilities, jerseyAssets }: Pr
 
 function ProfileTab({ school }: { school: ProgramManagerProps['school'] }) {
   const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSaving(true)
-    setSaved(false)
     const formData = new FormData(e.currentTarget)
     await updateSchoolProfile(formData)
     setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    toast.success('School profile updated')
   }
 
   return (
@@ -176,7 +185,7 @@ function ProfileTab({ school }: { school: ProgramManagerProps['school'] }) {
       </Card>
 
       <Button type="submit" disabled={saving}>
-        {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
+        {saving ? 'Saving...' : 'Save Changes'}
       </Button>
     </form>
   )
@@ -192,6 +201,12 @@ function CoachesTab({ coaches }: { coaches: ProgramManagerProps['coaches'] }) {
     const formData = new FormData(e.currentTarget)
     await createCoach(formData)
     setOpen(false)
+    toast.success('Coach added')
+  }
+
+  const handleDelete = async (coachId: string) => {
+    await deleteCoach(coachId)
+    toast.success('Coach deleted')
   }
 
   return (
@@ -238,11 +253,27 @@ function CoachesTab({ coaches }: { coaches: ProgramManagerProps['coaches'] }) {
                   <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{coach.bio}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{coach.yearsAtSchool} years</p>
                 </div>
-                <form action={() => deleteCoach(coach.id)}>
-                  <Button variant="ghost" size="icon" type="submit">
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </form>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Coach</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete {coach.name}? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(coach.id)}>
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}
@@ -262,6 +293,12 @@ function FacilitiesTab({ facilities }: { facilities: ProgramManagerProps['facili
     const formData = new FormData(e.currentTarget)
     await createFacility(formData)
     setOpen(false)
+    toast.success('Facility added')
+  }
+
+  const handleDelete = async (facilityId: string) => {
+    await deleteFacility(facilityId)
+    toast.success('Facility deleted')
   }
 
   return (
@@ -319,11 +356,27 @@ function FacilitiesTab({ facilities }: { facilities: ProgramManagerProps['facili
                     </div>
                   )}
                 </div>
-                <form action={() => deleteFacility(facility.id)}>
-                  <Button variant="ghost" size="icon" type="submit">
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </form>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Facility</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete {facility.name}? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(facility.id)}>
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}

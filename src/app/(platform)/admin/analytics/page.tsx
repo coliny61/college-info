@@ -15,7 +15,16 @@ export default async function AdminAnalyticsPage() {
       createdAt: { gte: since },
     },
     include: {
-      user: { select: { id: true, displayName: true, email: true } },
+      user: {
+        select: {
+          id: true,
+          displayName: true,
+          email: true,
+          recruitProfile: {
+            select: { sport: true, position: true, graduationYear: true },
+          },
+        },
+      },
     },
     orderBy: { createdAt: 'desc' },
   })
@@ -37,6 +46,9 @@ export default async function AdminAnalyticsPage() {
     {
       name: string
       email: string
+      sport: string | null
+      position: string | null
+      graduationYear: number | null
       sections: Set<string>
       totalDuration: number
       visits: number
@@ -48,6 +60,9 @@ export default async function AdminAnalyticsPage() {
     const existing = recruitMap.get(e.userId) ?? {
       name: e.user.displayName,
       email: e.user.email,
+      sport: e.user.recruitProfile?.sport ?? null,
+      position: e.user.recruitProfile?.position ?? null,
+      graduationYear: e.user.recruitProfile?.graduationYear ?? null,
       sections: new Set<string>(),
       totalDuration: 0,
       visits: 0,
@@ -65,6 +80,9 @@ export default async function AdminAnalyticsPage() {
   const engagementData = Array.from(recruitMap.values()).map((r) => ({
     name: r.name,
     email: r.email,
+    sport: r.sport,
+    position: r.position,
+    graduationYear: r.graduationYear,
     sections: Array.from(r.sections),
     totalDuration: Math.round(r.totalDuration / 1000),
     visits: r.visits,

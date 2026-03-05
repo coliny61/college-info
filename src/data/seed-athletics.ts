@@ -3,12 +3,29 @@
 export async function seedAthletics(prisma: any, schoolMap: Record<string, any>) {
   // ─── Sports ─────────────────────────────────────────────────────────────────
   const sportDefinitions = [
+    // Football
     { slug: 'texas-tech', name: 'Football', conference: 'Big 12', headCoach: 'Joey McGuire', record: '8-5', ranking: null },
     { slug: 'usc', name: 'Football', conference: 'Big Ten', headCoach: 'Lincoln Riley', record: '7-6', ranking: null },
     { slug: 'baylor', name: 'Football', conference: 'Big 12', headCoach: 'Dave Aranda', record: '4-8', ranking: null },
     { slug: 'oklahoma', name: 'Football', conference: 'SEC', headCoach: 'Brent Venables', record: '6-7', ranking: null },
+    // Basketball
+    { slug: 'texas-tech', name: 'Basketball', conference: 'Big 12', headCoach: 'Grant McCasland', record: '23-11', ranking: 18 },
+    { slug: 'usc', name: 'Basketball', conference: 'Big Ten', headCoach: 'Eric Musselman', record: '20-14', ranking: null },
+    { slug: 'baylor', name: 'Basketball', conference: 'Big 12', headCoach: 'Scott Drew', record: '24-10', ranking: 12 },
+    { slug: 'oklahoma', name: 'Basketball', conference: 'SEC', headCoach: 'Porter Moser', record: '18-15', ranking: null },
+    // Baseball
+    { slug: 'texas-tech', name: 'Baseball', conference: 'Big 12', headCoach: 'Tim Tadlock', record: '39-22', ranking: 15 },
+    { slug: 'usc', name: 'Baseball', conference: 'Big Ten', headCoach: 'Jason Gill', record: '32-26', ranking: null },
+    { slug: 'baylor', name: 'Baseball', conference: 'Big 12', headCoach: 'Mitch Thompson', record: '35-23', ranking: 20 },
+    { slug: 'oklahoma', name: 'Baseball', conference: 'SEC', headCoach: 'Skip Johnson', record: '37-21', ranking: 10 },
+    // Soccer
+    { slug: 'texas-tech', name: 'Soccer', conference: 'Big 12', headCoach: 'Tom Stone', record: '14-5-2', ranking: null },
+    { slug: 'usc', name: 'Soccer', conference: 'Big Ten', headCoach: 'Keidane McAlpine', record: '18-3-1', ranking: 5 },
+    { slug: 'baylor', name: 'Soccer', conference: 'Big 12', headCoach: 'Michelle Lenard', record: '12-7-3', ranking: null },
+    { slug: 'oklahoma', name: 'Soccer', conference: 'SEC', headCoach: 'Mark Carr', record: '13-6-2', ranking: null },
   ]
 
+  // sportMap keyed by "slug-sportName" to handle multiple sports per school
   const sportMap: Record<string, any> = {}
   for (const def of sportDefinitions) {
     const sport = await prisma.sport.create({
@@ -21,7 +38,11 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
         ranking: def.ranking,
       },
     })
-    sportMap[def.slug] = sport
+    sportMap[`${def.slug}-${def.name}`] = sport
+    // Keep backward compat for Football references
+    if (def.name === 'Football') {
+      sportMap[def.slug] = sport
+    }
   }
   console.log(`  Created ${sportDefinitions.length} Sports`)
 
@@ -43,12 +64,40 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
     { slug: 'oklahoma', name: 'Brent Venables', title: 'Head Coach', bio: 'Brent Venables, a two-time national championship-winning defensive coordinator at Clemson, returned to his alma mater as head coach in 2022. Now navigating OU\'s transition to the SEC, Venables is building a program rooted in defensive toughness and championship culture.', yearsAtSchool: 3 },
     { slug: 'oklahoma', name: 'Ben Arbuckle', title: 'Offensive Coordinator', bio: 'The young play-caller from Washington State brings an innovative Air Raid system to Norman, giving the Sooners a high-tempo, explosive passing attack.', yearsAtSchool: 1 },
     { slug: 'oklahoma', name: 'Zac Alley', title: 'Defensive Coordinator', bio: 'A defensive specialist who worked under Venables at Clemson, Alley runs a physical, multiple-front defense designed to compete in the SEC.', yearsAtSchool: 3 },
+    // Basketball Coaches
+    { slug: 'texas-tech', name: 'Grant McCasland', title: 'Head Coach', bio: 'Took over the Red Raiders in 2023 after a successful run at North Texas. Known for developing guards and running a disciplined defensive system.', yearsAtSchool: 2, sport: 'Basketball' },
+    { slug: 'texas-tech', name: 'Brennan Shingleton', title: 'Assistant Coach', bio: 'A key recruiter and player development coach who helps run the Red Raiders\' offensive sets.', yearsAtSchool: 2, sport: 'Basketball' },
+    { slug: 'usc', name: 'Eric Musselman', title: 'Head Coach', bio: 'A former NBA head coach who built Arkansas into a tournament contender before bringing his high-energy style to USC and the Big Ten.', yearsAtSchool: 1, sport: 'Basketball' },
+    { slug: 'usc', name: 'Danny Manning', title: 'Assistant Coach', bio: 'A college basketball legend and former national champion at Kansas, Manning brings decades of coaching and playing experience.', yearsAtSchool: 1, sport: 'Basketball' },
+    { slug: 'baylor', name: 'Scott Drew', title: 'Head Coach', bio: 'Led Baylor to its first national championship in 2021. Drew has transformed the Bears into a perennial contender through elite recruiting and player development.', yearsAtSchool: 22, sport: 'Basketball' },
+    { slug: 'baylor', name: 'Jerome Tang (former)', title: 'Assistant Coach', bio: 'A longtime Drew assistant who helped build the championship program, known for his offensive system design and player mentorship.', yearsAtSchool: 5, sport: 'Basketball' },
+    { slug: 'oklahoma', name: 'Porter Moser', title: 'Head Coach', bio: 'Famous for leading Loyola Chicago on a Cinderella Final Four run, Moser now builds the Sooners for SEC competition with his motion offense.', yearsAtSchool: 4, sport: 'Basketball' },
+    { slug: 'oklahoma', name: 'Kevin Kruger', title: 'Assistant Coach', bio: 'A former head coach at UNLV and son of coaching legend Lon Kruger, he brings deep knowledge of Big 12 and SEC basketball.', yearsAtSchool: 2, sport: 'Basketball' },
+    // Baseball Coaches
+    { slug: 'texas-tech', name: 'Tim Tadlock', title: 'Head Coach', bio: 'Has built Texas Tech baseball into a national power, reaching multiple College World Series. Known for developing pitching and a blue-collar mentality.', yearsAtSchool: 12, sport: 'Baseball' },
+    { slug: 'texas-tech', name: 'J-Bob Thomas', title: 'Pitching Coach', bio: 'One of the top pitching coaches in college baseball, Thomas has developed multiple MLB draft picks at Texas Tech.', yearsAtSchool: 10, sport: 'Baseball' },
+    { slug: 'usc', name: 'Jason Gill', title: 'Head Coach', bio: 'Building the Trojans back into a Pac-12 and Big Ten baseball power with strong SoCal recruiting pipelines.', yearsAtSchool: 4, sport: 'Baseball' },
+    { slug: 'usc', name: 'Ted Silva', title: 'Hitting Coach', bio: 'A veteran hitting instructor who has coached at multiple Division I programs and developed dozens of pro prospects.', yearsAtSchool: 3, sport: 'Baseball' },
+    { slug: 'baylor', name: 'Mitch Thompson', title: 'Head Coach', bio: 'Took over the Bears program and has built competitive Big 12 teams with a focus on pitching and defense.', yearsAtSchool: 5, sport: 'Baseball' },
+    { slug: 'baylor', name: 'Jon Strauss', title: 'Pitching Coach', bio: 'A proven pitching developer who has helped Baylor produce consistent arms for the MLB Draft.', yearsAtSchool: 4, sport: 'Baseball' },
+    { slug: 'oklahoma', name: 'Skip Johnson', title: 'Head Coach', bio: 'Has elevated Oklahoma baseball to national prominence, reaching the College World Series. A master recruiter in the Texas and SEC talent pipelines.', yearsAtSchool: 6, sport: 'Baseball' },
+    { slug: 'oklahoma', name: 'Clay Overcash', title: 'Hitting Coach', bio: 'Develops powerful Sooner lineups through data-driven approach and mechanical adjustments.', yearsAtSchool: 4, sport: 'Baseball' },
+    // Soccer Coaches
+    { slug: 'texas-tech', name: 'Tom Stone', title: 'Head Coach', bio: 'Has led Texas Tech women\'s soccer for over two decades, consistently competing in the Big 12 and earning NCAA tournament bids.', yearsAtSchool: 23, sport: 'Soccer' },
+    { slug: 'texas-tech', name: 'Shannon Simes', title: 'Assistant Coach', bio: 'A former professional player who focuses on attacking development and set piece strategy.', yearsAtSchool: 5, sport: 'Soccer' },
+    { slug: 'usc', name: 'Keidane McAlpine', title: 'Head Coach', bio: 'Led USC to a national championship and multiple Pac-12 titles. One of the top recruiters in women\'s college soccer.', yearsAtSchool: 10, sport: 'Soccer' },
+    { slug: 'usc', name: 'Regan Dougherty', title: 'Assistant Coach', bio: 'A former USC standout who returned to coach, specializing in goalkeeper training and defensive organization.', yearsAtSchool: 4, sport: 'Soccer' },
+    { slug: 'baylor', name: 'Michelle Lenard', title: 'Head Coach', bio: 'Building Baylor\'s soccer program into a consistent Big 12 competitor with a focus on technical skill development.', yearsAtSchool: 6, sport: 'Soccer' },
+    { slug: 'baylor', name: 'Ashley Harrington', title: 'Assistant Coach', bio: 'A skilled tactician who oversees defensive shape and player fitness programs for the Bears.', yearsAtSchool: 3, sport: 'Soccer' },
+    { slug: 'oklahoma', name: 'Mark Carr', title: 'Head Coach', bio: 'Has steadily improved Oklahoma\'s soccer program, bringing in strong recruiting classes as the Sooners transition to SEC play.', yearsAtSchool: 5, sport: 'Soccer' },
+    { slug: 'oklahoma', name: 'Lindsey Moore', title: 'Assistant Coach', bio: 'Focuses on midfield play and possession-based tactics, bringing international playing experience to the coaching staff.', yearsAtSchool: 3, sport: 'Soccer' },
   ]
 
   for (const def of coachDefinitions) {
+    const sportKey = (def as any).sport ? `${def.slug}-${(def as any).sport}` : def.slug
     await prisma.coach.create({
       data: {
-        sportId: sportMap[def.slug].id,
+        sportId: sportMap[sportKey].id,
         name: def.name,
         title: def.title,
         bio: def.bio,

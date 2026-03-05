@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { MapPin, ChevronRight } from 'lucide-react'
 import { FavoriteButton } from './favorite-button'
+import { CompareCheckbox } from './compare-checkbox'
 
 interface SchoolCardProps {
   id: string
@@ -16,6 +17,7 @@ interface SchoolCardProps {
   colorSecondary: string
   isFavorited?: boolean
   showFavorite?: boolean
+  showCompare?: boolean
 }
 
 export function SchoolCard({
@@ -30,6 +32,7 @@ export function SchoolCard({
   colorSecondary,
   isFavorited = false,
   showFavorite = true,
+  showCompare = false,
 }: SchoolCardProps) {
   return (
     <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/20 hover:border-white/15">
@@ -106,10 +109,13 @@ export function SchoolCard({
             </Link>
           </div>
 
-          {/* Favorite button */}
-          {showFavorite && (
-            <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
-          )}
+          {/* Actions */}
+          <div className="flex flex-col items-center gap-1">
+            {showFavorite && (
+              <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+            )}
+            {showCompare && <CompareCheckbox slug={slug} />}
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -50,6 +50,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [familyCode, setFamilyCode] = useState('')
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -74,6 +75,7 @@ export default function RegisterPage() {
         data: {
           display_name: displayName,
           role: selectedRole,
+          ...(selectedRole === 'parent' && familyCode ? { family_code: familyCode } : {}),
         },
       },
     })
@@ -229,6 +231,24 @@ export default function RegisterPage() {
             })}
           </div>
         </div>
+
+        {/* Family Code (parent only) */}
+        {selectedRole === 'parent' && (
+          <div>
+            <label className="mb-2 block text-sm font-medium text-foreground">
+              Family Code <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <Input
+              placeholder="e.g., MJ-7X4K"
+              value={familyCode}
+              onChange={(e) => setFamilyCode(e.target.value)}
+              className="font-mono tracking-wider"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              If your recruit gave you a family code, enter it here to link your accounts.
+            </p>
+          </div>
+        )}
 
         <Button
           type="submit"

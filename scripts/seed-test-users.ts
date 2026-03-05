@@ -137,15 +137,46 @@ async function main() {
     }
   }
 
-  // Link parent to recruit
+  // Link parent to recruit + set family code
   const recruitId = createdUsers['recruit@test.com']
   const parentId = createdUsers['parent@test.com']
-  if (recruitId && parentId) {
+  if (recruitId) {
+    // Set family code on recruit
     await prisma.user.update({
-      where: { id: parentId },
-      data: { linkedRecruitId: recruitId },
+      where: { id: recruitId },
+      data: { familyCode: 'MJ-7X4K' },
     })
-    console.log(`  [linked] parent@test.com → recruit@test.com`)
+    console.log(`  [set] recruit@test.com familyCode → MJ-7X4K`)
+
+    // Create recruit profile
+    await prisma.recruitProfile.upsert({
+      where: { userId: recruitId },
+      update: {},
+      create: {
+        userId: recruitId,
+        sport: 'Football',
+        position: 'Quarterback',
+        height: "6'2\"",
+        weight: 195,
+        graduationYear: 2027,
+        gpa: 3.8,
+        satScore: 1280,
+        actScore: 29,
+        highSchool: 'Southlake Carroll',
+        city: 'Southlake',
+        state: 'TX',
+        bio: 'Three-year varsity starter and team captain. Led team to state semifinals as a junior. Strong arm with excellent pocket awareness.',
+      },
+    })
+    console.log(`  [created] RecruitProfile for recruit@test.com`)
+
+    if (parentId) {
+      await prisma.user.update({
+        where: { id: parentId },
+        data: { linkedRecruitId: recruitId },
+      })
+      console.log(`  [linked] parent@test.com → recruit@test.com`)
+    }
   }
 
   console.log('\n✓ Test users ready!\n')

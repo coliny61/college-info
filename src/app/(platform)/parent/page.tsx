@@ -2,9 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { Card, CardContent } from '@/components/ui/card'
 import { SchoolGrid } from '@/components/school/school-grid'
-import { Heart, Eye, Users, Search } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkRecruitDialog } from '@/components/family/link-recruit-dialog'
+import { Heart, Eye, Users } from 'lucide-react'
 
 export default async function ParentDashboard() {
   const supabase = await createClient()
@@ -99,8 +98,11 @@ export default async function ParentDashboard() {
             No linked recruit
           </h3>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-            Once your recruit account is linked, their favorites and activity will appear here.
+            Enter your recruit&apos;s family code to see their favorites and activity.
           </p>
+          <div className="mt-6">
+            <LinkRecruitDialog />
+          </div>
         </div>
       )}
     </div>

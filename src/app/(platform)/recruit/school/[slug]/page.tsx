@@ -1,8 +1,17 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { SchoolHeader } from '@/components/school/school-header'
 import { SchoolTabs } from '@/components/school/school-tabs'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 export default async function SchoolDetailPage({
   params,
@@ -63,6 +72,20 @@ export default async function SchoolDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <Breadcrumb className="animate-in-fade">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/recruit/schools">Schools</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{school.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <SchoolHeader
         id={school.id}
         slug={school.slug}

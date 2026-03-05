@@ -9,6 +9,10 @@ interface SearchParams {
   q?: string
   conference?: string
   sort?: string
+  state?: string
+  sport?: string
+  tuition?: string
+  enrollment?: string
 }
 
 async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
@@ -29,6 +33,39 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
   }
   if (searchParams.conference && searchParams.conference !== 'All') {
     where.conference = searchParams.conference
+  }
+  if (searchParams.state && searchParams.state !== 'All') {
+    where.state = searchParams.state
+  }
+  if (searchParams.sport && searchParams.sport !== 'All') {
+    where.sports = { some: { name: { equals: searchParams.sport, mode: 'insensitive' } } }
+  }
+
+  // Tuition filter (join academics)
+  if (searchParams.tuition && searchParams.tuition !== 'All') {
+    const ranges: Record<string, { gte?: number; lte?: number }> = {
+      'under-15k': { lte: 15000 },
+      '15k-30k': { gte: 15000, lte: 30000 },
+      '30k-50k': { gte: 30000, lte: 50000 },
+      'over-50k': { gte: 50000 },
+    }
+    const range = ranges[searchParams.tuition]
+    if (range) {
+      where.academics = { ...where.academics, tuitionInState: range }
+    }
+  }
+
+  // Enrollment filter
+  if (searchParams.enrollment && searchParams.enrollment !== 'All') {
+    const ranges: Record<string, { gte?: number; lt?: number }> = {
+      small: { lt: 5000 },
+      medium: { gte: 5000, lt: 15000 },
+      large: { gte: 15000 },
+    }
+    const range = ranges[searchParams.enrollment]
+    if (range) {
+      where.academics = { ...where.academics, enrollment: range }
+    }
   }
 
   // Build orderBy

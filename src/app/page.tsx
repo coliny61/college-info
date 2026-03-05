@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import {
   BarChart3,
   Edit3,
   Shirt,
@@ -13,6 +19,7 @@ import {
   Shield,
   Check,
   GraduationCap,
+  Quote,
 } from 'lucide-react'
 
 const SCHOOL_COLORS = [
@@ -460,6 +467,104 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="px-6 py-32">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-16 text-center animate-in-up">
+            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+              Testimonials
+            </span>
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
+              Hear from our users
+            </h2>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                quote:
+                  'The analytics dashboard changed everything. We can see exactly which recruits are engaging with our program and follow up at the right time.',
+                name: 'Coach Williams',
+                role: 'Head Coach, Texas Tech',
+              },
+              {
+                quote:
+                  'Being able to compare schools side by side — academics, athletics, tuition — in one place saved me weeks of research. I found my perfect fit.',
+                name: 'Marcus J.',
+                role: 'Class of 2027 Recruit',
+              },
+              {
+                quote:
+                  "The family code feature lets me see exactly which schools my son is exploring. I feel connected to his recruiting journey without being overbearing.",
+                name: 'David Johnson',
+                role: 'Parent',
+              },
+            ].map((t, i) => (
+              <div
+                key={t.name}
+                className={`animate-in-up delay-${i + 1} relative rounded-2xl border border-border bg-card p-8`}
+              >
+                <Quote className="mb-4 h-6 w-6 text-emerald/40" />
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="mt-6 border-t border-border pt-4">
+                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                  <p className="text-xs text-muted-foreground">{t.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="px-6 py-32">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-16 text-center animate-in-up">
+            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+              FAQ
+            </span>
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
+              Frequently asked questions
+            </h2>
+          </div>
+
+          <Accordion type="single" collapsible className="animate-in-up delay-1">
+            <AccordionItem value="free">
+              <AccordionTrigger>Is College Info free for recruits?</AccordionTrigger>
+              <AccordionContent>
+                Yes, always. Recruits can browse every school profile, explore virtual tours, try the jersey room, and compare programs — completely free. Coaches pay for analytics and CMS tools.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="data">
+              <AccordionTrigger>What data do coaches see about recruits?</AccordionTrigger>
+              <AccordionContent>
+                Coaches can see which recruits viewed their program, which sections they explored (academics, athletics, tour, jersey room), how long they spent, and whether they favorited the school. Recruits control what profile information is visible.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="parents">
+              <AccordionTrigger>Can parents see their recruit&apos;s activity?</AccordionTrigger>
+              <AccordionContent>
+                Yes. Recruits can generate a family code and share it with their parents. Once linked, parents can see which schools their recruit has favorited, helping families stay aligned during the recruiting process.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="invites">
+              <AccordionTrigger>How do invite links work?</AccordionTrigger>
+              <AccordionContent>
+                Coaches can generate unique invite links from their dashboard. When a recruit clicks an invite link, they&apos;re taken directly to that school&apos;s profile page. The coach can track which recruits came through each link.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="sports">
+              <AccordionTrigger>What sports are supported?</AccordionTrigger>
+              <AccordionContent>
+                College Info supports all major college sports including Football, Basketball, Baseball, Soccer, Track &amp; Field, Swimming, Tennis, Golf, Volleyball, Softball, Wrestling, and Lacrosse. Each school can list multiple sports programs.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
