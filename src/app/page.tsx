@@ -438,103 +438,108 @@ export default function LandingPage() {
             <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
               Free for recruits.
               <br />
-              Simple for coaches.
+              Built for coaches.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              Recruits browse every school for free, always. Coaches unlock
-              analytics and CMS tools.
+              Recruits explore every school for free, always. Coaches choose the plan
+              that fits their program.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                name: 'Starter',
-                price: '$0',
-                period: '/mo',
-                desc: 'One school profile with basic tools.',
-                features: [
+          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+            {/* Self-Service */}
+            <div className="relative overflow-hidden rounded-2xl border border-border glass-panel p-8 transition-all duration-300 hover:-translate-y-1 hover:border-white/15 hover:shadow-xl hover:shadow-black/20">
+              <h3 className="text-display text-lg text-foreground tracking-normal">Self-Service</h3>
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-scoreboard text-5xl font-bold text-foreground">$99</span>
+                <span className="text-muted-foreground">/mo</span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                or <span className="font-semibold text-foreground">$990/yr</span> billed annually
+              </p>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Build and manage your own school profile.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
                   '1 school profile',
-                  'Basic page views',
                   'Jersey Room',
-                  'Virtual tours',
-                ],
-                cta: 'Get Started',
-                highlight: false,
-              },
-              {
-                name: 'Pro',
-                price: '$49',
-                period: '/mo',
-                desc: 'Full analytics and recruit tracking.',
-                features: [
-                  'Everything in Starter',
-                  'Recruit identity on views',
-                  'Section engagement tracking',
+                  'Virtual tours & panoramas',
+                  'Basic page view analytics',
                   'Invite link generator',
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-foreground">
+                    <Check className="h-4 w-4 shrink-0 text-emerald" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/register" className="mt-8 block">
+                <Button className="w-full uppercase tracking-wider text-xs" variant="outline">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+
+            {/* Pro — Done-for-You */}
+            <div className="relative overflow-hidden rounded-2xl border border-emerald bg-gradient-to-b from-emerald/[0.06] to-transparent p-8 shadow-2xl shadow-emerald/10 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald px-3 py-0.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-emerald/20">
+                Recommended
+              </div>
+              <h3 className="text-display text-lg text-foreground tracking-normal">Pro</h3>
+
+              {/* Setup fee */}
+              <div className="mt-4 rounded-lg bg-white/[0.04] px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">One-time setup</p>
+                <p className="text-scoreboard text-2xl font-bold text-foreground">$2,500</p>
+                <p className="text-xs text-muted-foreground">We build your entire virtual visit</p>
+              </div>
+
+              {/* Annual subscription */}
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-scoreboard text-5xl font-bold text-foreground">$2,400</span>
+                <span className="text-muted-foreground">/yr</span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                2-yr: <span className="text-foreground font-medium">$2,160/yr</span> &middot; 3-yr: <span className="text-foreground font-medium">$1,920/yr</span>
+              </p>
+
+              <p className="mt-3 text-sm text-muted-foreground">
+                Done-for-you build with full analytics suite.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  'Everything in Self-Service',
+                  'Done-for-you profile build',
+                  'Full recruit identity on views',
+                  'Section engagement tracking',
+                  'Visit insights & jersey preferences',
                   'CSV data export',
                   'Priority support',
-                ],
-                cta: 'Start Free Trial',
-                highlight: true,
-              },
-              {
-                name: 'Enterprise',
-                price: 'Custom',
-                period: '',
-                desc: 'For conferences and athletics departments.',
-                features: [
-                  'Everything in Pro',
-                  'Unlimited profiles',
-                  'Custom branding',
-                  'API access',
-                  'SSO & SAML',
-                  'Dedicated CSM',
-                ],
-                cta: 'Contact Sales',
-                highlight: false,
-              },
-            ].map((tier) => (
-              <div
-                key={tier.name}
-                className={`relative overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 ${
-                  tier.highlight
-                    ? 'border-emerald bg-gradient-to-b from-emerald/[0.06] to-transparent shadow-2xl shadow-emerald/10'
-                    : 'border-border glass-panel hover:border-white/15 hover:shadow-xl hover:shadow-black/20'
-                }`}
-              >
-                {tier.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald px-3 py-0.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-emerald/20">
-                    Popular
-                  </div>
-                )}
-                <h3 className="text-display text-lg text-foreground tracking-normal">{tier.name}</h3>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-scoreboard text-5xl font-bold text-foreground">
-                    {tier.price}
-                  </span>
-                  <span className="text-muted-foreground">{tier.period}</span>
-                </div>
-                <p className="mt-3 text-sm text-muted-foreground">{tier.desc}</p>
-                <ul className="mt-6 space-y-3">
-                  {tier.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-foreground">
-                      <Check className="h-4 w-4 shrink-0 text-emerald" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/register" className="mt-8 block">
-                  <Button
-                    className="w-full uppercase tracking-wider text-xs"
-                    variant={tier.highlight ? 'default' : 'outline'}
-                  >
-                    {tier.cta}
-                  </Button>
-                </Link>
-              </div>
-            ))}
+                  'Dedicated onboarding manager',
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-foreground">
+                    <Check className="h-4 w-4 shrink-0 text-emerald" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/register" className="mt-8 block">
+                <Button className="w-full uppercase tracking-wider text-xs">
+                  Schedule a Demo
+                </Button>
+              </Link>
+            </div>
           </div>
+
+          {/* Conference upsell */}
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Managing multiple programs?{' '}
+            <a href="mailto:hello@officialvirtualvisit.com" className="font-medium text-emerald hover:underline">
+              Contact us
+            </a>{' '}
+            for conference pricing.
+          </p>
         </div>
       </section>
 
