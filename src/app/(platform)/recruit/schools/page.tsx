@@ -37,10 +37,6 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
   if (searchParams.state && searchParams.state !== 'All') {
     where.state = searchParams.state
   }
-  if (searchParams.sport && searchParams.sport !== 'All') {
-    where.sports = { some: { name: { equals: searchParams.sport, mode: 'insensitive' } } }
-  }
-
   // Tuition filter (join academics)
   if (searchParams.tuition && searchParams.tuition !== 'All') {
     const ranges: Record<string, { gte?: number; lte?: number }> = {

@@ -21,7 +21,6 @@ const SORT_OPTIONS = [
 ]
 
 const STATES = ['All', 'CA', 'OK', 'TX'] // States from seeded data
-const SPORTS = ['All', 'Football', 'Basketball', 'Baseball', 'Soccer']
 const TUITION_OPTIONS = [
   { value: 'All', label: 'Any Tuition' },
   { value: 'under-15k', label: 'Under $15k' },
@@ -47,12 +46,11 @@ export function SchoolFilters() {
   const conference = searchParams.get('conference') ?? 'All'
   const sort = searchParams.get('sort') ?? 'name-asc'
   const stateFilter = searchParams.get('state') ?? 'All'
-  const sport = searchParams.get('sport') ?? 'All'
   const tuition = searchParams.get('tuition') ?? 'All'
   const enrollment = searchParams.get('enrollment') ?? 'All'
 
   const hasAdvancedFilters =
-    stateFilter !== 'All' || sport !== 'All' || tuition !== 'All' || enrollment !== 'All'
+    stateFilter !== 'All' || tuition !== 'All' || enrollment !== 'All'
 
   const updateParams = useCallback(
     (key: string, value: string) => {
@@ -72,7 +70,6 @@ export function SchoolFilters() {
   const clearAdvanced = () => {
     const params = new URLSearchParams(searchParams.toString())
     params.delete('state')
-    params.delete('sport')
     params.delete('tuition')
     params.delete('enrollment')
     startTransition(() => {
@@ -136,7 +133,7 @@ export function SchoolFilters() {
           Filters
           {hasAdvancedFilters && (
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">
-              {[stateFilter, sport, tuition, enrollment].filter((v) => v !== 'All').length}
+              {[stateFilter, tuition, enrollment].filter((v) => v !== 'All').length}
             </span>
           )}
         </Button>
@@ -153,19 +150,6 @@ export function SchoolFilters() {
               {STATES.map((s) => (
                 <SelectItem key={s} value={s}>
                   {s === 'All' ? 'All States' : s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={sport} onValueChange={(v) => updateParams('sport', v)}>
-            <SelectTrigger className="w-full sm:w-36">
-              <SelectValue placeholder="Sport" />
-            </SelectTrigger>
-            <SelectContent>
-              {SPORTS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s === 'All' ? 'All Sports' : s}
                 </SelectItem>
               ))}
             </SelectContent>

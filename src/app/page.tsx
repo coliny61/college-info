@@ -629,9 +629,9 @@ export default function LandingPage() {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="sports">
-              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What sports are supported?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">Is OVV only for football?</AccordionTrigger>
               <AccordionContent>
-                OVV supports all major college sports including Football, Basketball, Baseball, Soccer, Track &amp; Field, Swimming, Tennis, Golf, Volleyball, Softball, Wrestling, and Lacrosse. Each school can list multiple sports programs.
+                OVV is built specifically for college football recruiting. Every feature — from virtual tours to jersey rooms to analytics — is designed for football programs and football recruits.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

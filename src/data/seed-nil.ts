@@ -13,7 +13,7 @@ export async function seedNil(prisma: any, schoolMap: Record<string, any>) {
       notableDeals: [
         { athlete: 'Behren Morton', sport: 'Football', description: 'Starting QB, key portal acquisition with multi-year NIL commitment' },
         { athlete: 'Dadrion Taylor-Demerson', sport: 'Football', description: 'All-Big 12 safety, secured significant NIL deal before 2024 NFL Draft' },
-        { athlete: 'Pop Isaacs', sport: 'Basketball', description: 'Dynamic guard who transferred in with competitive NIL package' },
+        { athlete: 'Tahj Brooks', sport: 'Football', description: 'All-Big 12 running back and program face with strong NIL presence' },
       ],
     },
     {
@@ -27,7 +27,7 @@ export async function seedNil(prisma: any, schoolMap: Record<string, any>) {
       notableDeals: [
         { athlete: 'Caleb Williams', sport: 'Football', description: '2022 Heisman Trophy winner, extensive NIL portfolio before 2024 NFL Draft' },
         { athlete: 'Miller Moss', sport: 'Football', description: 'Starting QB with multi-platform NIL presence' },
-        { athlete: 'JuJu Watkins', sport: 'Basketball', description: 'Women\'s basketball phenom with national NIL profile and Gatorade deal' },
+        { athlete: 'Zachariah Branch', sport: 'Football', description: 'Electric return specialist and wide receiver with growing NIL portfolio' },
       ],
     },
     {
@@ -40,7 +40,7 @@ export async function seedNil(prisma: any, schoolMap: Record<string, any>) {
       description: 'GXG (Green & Gold) Collective was formed in partnership with Startup Waco. It connects student-athletes with NIL opportunities and helps them treat NIL as their own startup business. The Waco NIL Club provides additional support through local business partnerships and community engagement opportunities.',
       notableDeals: [
         { athlete: 'Sawyer Robertson', sport: 'Football', description: 'Transfer QB from Texas Tech with competitive NIL package' },
-        { athlete: 'Darianna Littlepage-Buggs', sport: 'Basketball', description: 'Women\'s basketball standout with national NIL profile' },
+        { athlete: 'Josh Cameron', sport: 'Football', description: 'Defensive playmaker with competitive NIL deal to stay in Waco' },
       ],
     },
     {

@@ -1,19 +1,5 @@
 export const SPORTS = [
   'Football',
-  'Basketball',
-  'Baseball',
-  'Soccer',
-  'Softball',
-  'Volleyball',
-  'Track & Field',
-  'Swimming',
-  'Tennis',
-  'Golf',
-  'Wrestling',
-  'Lacrosse',
-  'Hockey',
-  'Gymnastics',
-  'Rowing',
 ] as const
 
 export type Sport = (typeof SPORTS)[number]
@@ -23,51 +9,6 @@ export const POSITIONS: Record<string, string[]> = {
     'Quarterback', 'Running Back', 'Wide Receiver', 'Tight End',
     'Offensive Line', 'Defensive Line', 'Linebacker',
     'Cornerback', 'Safety', 'Kicker', 'Punter',
-  ],
-  Basketball: [
-    'Point Guard', 'Shooting Guard', 'Small Forward',
-    'Power Forward', 'Center',
-  ],
-  Baseball: [
-    'Pitcher', 'Catcher', 'First Base', 'Second Base',
-    'Shortstop', 'Third Base', 'Outfield', 'Designated Hitter',
-  ],
-  Soccer: [
-    'Goalkeeper', 'Defender', 'Midfielder', 'Forward',
-  ],
-  Softball: [
-    'Pitcher', 'Catcher', 'First Base', 'Second Base',
-    'Shortstop', 'Third Base', 'Outfield',
-  ],
-  Volleyball: [
-    'Setter', 'Outside Hitter', 'Middle Blocker',
-    'Opposite Hitter', 'Libero',
-  ],
-  'Track & Field': [
-    'Sprinter', 'Distance Runner', 'Hurdler', 'Jumper',
-    'Thrower', 'Multi-Event',
-  ],
-  Swimming: [
-    'Freestyle', 'Backstroke', 'Breaststroke',
-    'Butterfly', 'Individual Medley', 'Diver',
-  ],
-  Tennis: ['Singles', 'Doubles'],
-  Golf: ['Individual'],
-  Wrestling: [
-    '125 lbs', '133 lbs', '141 lbs', '149 lbs', '157 lbs',
-    '165 lbs', '174 lbs', '184 lbs', '197 lbs', '285 lbs',
-  ],
-  Lacrosse: [
-    'Attack', 'Midfield', 'Defense', 'Goalie',
-  ],
-  Hockey: [
-    'Center', 'Left Wing', 'Right Wing', 'Defenseman', 'Goalie',
-  ],
-  Gymnastics: [
-    'All-Around', 'Floor', 'Vault', 'Bars', 'Beam',
-  ],
-  Rowing: [
-    'Coxswain', 'Port', 'Starboard',
   ],
 }
 
