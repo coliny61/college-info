@@ -1,6 +1,6 @@
 {
-  "name": "College Info",
-  "short_name": "CollegeInfo",
+  "name": "OVV — Official Virtual Visit",
+  "short_name": "OVV",
   "description": "The recruiting platform for college athletics",
   "start_url": "/login",
   "display": "standalone",

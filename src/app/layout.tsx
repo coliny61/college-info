@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'College Info',
+  title: 'OVV — Official Virtual Visit',
   description:
     'The recruiting platform that helps coaches showcase their programs and gives recruits the tools to explore schools.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'College Info',
+    title: 'OVV',
   },
   icons: {
     icon: '/icon-192.png',

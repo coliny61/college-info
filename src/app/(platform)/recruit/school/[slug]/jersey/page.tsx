@@ -15,6 +15,7 @@ export default async function JerseyRoomPage({
   const school = await prisma.school.findUnique({
     where: { slug },
     select: {
+      id: true,
       name: true,
       slug: true,
       shortName: true,
@@ -57,6 +58,7 @@ export default async function JerseyRoomPage({
       </div>
 
       <JerseyBuilder
+        schoolId={school.id}
         schoolName={school.name}
         schoolSlug={school.slug}
         assets={school.jerseyAssets}

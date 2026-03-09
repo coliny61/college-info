@@ -20,25 +20,11 @@ const TEST_USERS = [
     displayName: 'Marcus Johnson',
   },
   {
-    email: 'parent@test.com',
-    password: 'test1234',
-    role: 'parent',
-    displayName: 'David Johnson',
-    // Will be linked to recruit after creation
-  },
-  {
     email: 'coach@test.com',
     password: 'test1234',
     role: 'coach_admin',
     displayName: 'Coach Williams',
-    // Will be linked to Texas Tech school
     schoolSlug: 'texas-tech',
-  },
-  {
-    email: 'super@test.com',
-    password: 'test1234',
-    role: 'super_admin',
-    displayName: 'Platform Admin',
   },
 ]
 
@@ -137,18 +123,9 @@ async function main() {
     }
   }
 
-  // Link parent to recruit + set family code
+  // Create recruit profile
   const recruitId = createdUsers['recruit@test.com']
-  const parentId = createdUsers['parent@test.com']
   if (recruitId) {
-    // Set family code on recruit
-    await prisma.user.update({
-      where: { id: recruitId },
-      data: { familyCode: 'MJ-7X4K' },
-    })
-    console.log(`  [set] recruit@test.com familyCode → MJ-7X4K`)
-
-    // Create recruit profile
     await prisma.recruitProfile.upsert({
       where: { userId: recruitId },
       update: {},
@@ -169,22 +146,12 @@ async function main() {
       },
     })
     console.log(`  [created] RecruitProfile for recruit@test.com`)
-
-    if (parentId) {
-      await prisma.user.update({
-        where: { id: parentId },
-        data: { linkedRecruitId: recruitId },
-      })
-      console.log(`  [linked] parent@test.com → recruit@test.com`)
-    }
   }
 
   console.log('\n✓ Test users ready!\n')
   console.log('Login credentials:')
   console.log('  recruit@test.com  / test1234  → /recruit')
-  console.log('  parent@test.com   / test1234  → /parent')
   console.log('  coach@test.com    / test1234  → /admin')
-  console.log('  super@test.com    / test1234  → /super-admin')
 
   await pool.end()
 }

@@ -3,9 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 const ROLE_ROUTES: Record<string, string> = {
   recruit: '/recruit',
-  parent: '/parent',
   coach_admin: '/admin',
-  super_admin: '/super-admin',
 }
 
 export async function updateSession(request: NextRequest) {
@@ -49,9 +47,7 @@ export async function updateSession(request: NextRequest) {
   // Protected routes — redirect unauthenticated users to login
   const isProtected =
     pathname.startsWith('/recruit') ||
-    pathname.startsWith('/parent') ||
-    pathname.startsWith('/admin') ||
-    pathname.startsWith('/super-admin')
+    pathname.startsWith('/admin')
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone()
@@ -65,9 +61,7 @@ export async function updateSession(request: NextRequest) {
     const correctRoute = ROLE_ROUTES[role] ?? '/recruit'
 
     const mismatch =
-      (pathname.startsWith('/admin') && role !== 'coach_admin' && role !== 'super_admin') ||
-      (pathname.startsWith('/super-admin') && role !== 'super_admin') ||
-      (pathname.startsWith('/parent') && role !== 'parent') ||
+      (pathname.startsWith('/admin') && role !== 'coach_admin') ||
       (pathname.startsWith('/recruit') && role !== 'recruit')
 
     if (mismatch) {

@@ -15,6 +15,7 @@ interface SchoolTabsProps {
 }
 
 export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
+  const schoolSlug = school.slug
   return (
     <Tabs defaultValue="overview">
       <TabsList className="w-full justify-start">
@@ -43,6 +44,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         <AcademicsTab
           academics={school.academics}
           colleges={school.colleges}
+          schoolSlug={schoolSlug}
           colorPrimary={colorPrimary}
         />
       </TabsContent>

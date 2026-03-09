@@ -6,20 +6,16 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Play, Eye, EyeOff, GraduationCap, Users, Shield, UserCheck } from 'lucide-react'
+import { Play, Eye, EyeOff, GraduationCap, UserCheck } from 'lucide-react'
 
 const ROLE_ROUTES: Record<string, string> = {
   recruit: '/recruit',
-  parent: '/parent',
   coach_admin: '/admin',
-  super_admin: '/super-admin',
 }
 
 const DEMO_ACCOUNTS = [
   { label: 'Recruit', email: 'recruit@test.com', password: 'test1234', role: 'recruit', icon: GraduationCap, desc: 'Browse schools', color: '#10B981' },
   { label: 'Coach', email: 'coach@test.com', password: 'test1234', role: 'coach_admin', icon: UserCheck, desc: 'Manage program', color: '#3B82F6' },
-  { label: 'Parent', email: 'parent@test.com', password: 'test1234', role: 'parent', icon: Users, desc: 'Monitor recruit', color: '#F59E0B' },
-  { label: 'Admin', email: 'super@test.com', password: 'test1234', role: 'super_admin', icon: Shield, desc: 'Platform admin', color: '#EF4444' },
 ]
 
 export default function LoginPage() {

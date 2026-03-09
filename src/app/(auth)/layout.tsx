@@ -42,7 +42,7 @@ export default function AuthLayout({
             <GraduationCap className="h-5 w-5 text-white" />
           </div>
           <span className="text-2xl font-bold text-foreground">
-            College Info
+            OVV
           </span>
         </Link>
         <div className="animate-in-up delay-1">

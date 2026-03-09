@@ -100,6 +100,58 @@ export default async function AdminAnalyticsPage() {
     count,
   }))
 
+  // Visit Insights: per-recruit college time + jersey preferences
+  const visitInsights: Array<{
+    name: string
+    email: string
+    topCollege: string | null
+    collegeTime: number
+    jerseyCombo: string | null
+    jerseyViews: number
+  }> = []
+
+  for (const [userId, recruit] of recruitMap.entries()) {
+    const userEvents = events.filter((e) => e.userId === userId)
+
+    // College time: find college:* duration events
+    const collegeEvents = userEvents.filter(
+      (e) => e.section.startsWith('college:') && e.action === 'duration' && e.duration
+    )
+    const collegeTime: Record<string, number> = {}
+    collegeEvents.forEach((e) => {
+      collegeTime[e.section] = (collegeTime[e.section] || 0) + (e.duration ?? 0)
+    })
+    const topCollegeEntry = Object.entries(collegeTime).sort(([, a], [, b]) => b - a)[0]
+
+    // Jersey combo: find jersey asset_selected events, get most frequent combo
+    const jerseySelections = userEvents.filter(
+      (e) => e.section === 'jersey' && e.action === 'asset_selected' && e.metadata
+    )
+    const comboCounts: Record<string, number> = {}
+    const jerseyDownloads = userEvents.filter(
+      (e) => e.section === 'jersey' && e.action === 'combination_downloaded' && e.metadata
+    )
+    jerseyDownloads.forEach((e) => {
+      const meta = e.metadata as Record<string, string> | null
+      if (meta) {
+        const combo = [meta.helmet, meta.jersey, meta.pants].filter(Boolean).join(' / ')
+        if (combo) comboCounts[combo] = (comboCounts[combo] || 0) + 1
+      }
+    })
+    const topCombo = Object.entries(comboCounts).sort(([, a], [, b]) => b - a)[0]
+
+    if (topCollegeEntry || topCombo || jerseySelections.length > 0) {
+      visitInsights.push({
+        name: recruit.name,
+        email: recruit.email,
+        topCollege: topCollegeEntry ? topCollegeEntry[0].replace('college:', '') : null,
+        collegeTime: topCollegeEntry ? Math.round(topCollegeEntry[1] / 1000) : 0,
+        jerseyCombo: topCombo ? topCombo[0] : null,
+        jerseyViews: topCombo ? topCombo[1] : jerseySelections.length,
+      })
+    }
+  }
+
   // Recent activity
   const recentActivity = events.slice(0, 20).map((e) => ({
     id: e.id,
@@ -126,6 +178,7 @@ export default async function AdminAnalyticsPage() {
         recentActivity={recentActivity}
         totalEvents={events.length}
         uniqueRecruits={recruitMap.size}
+        visitInsights={visitInsights}
       />
     </div>
   )

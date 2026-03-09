@@ -82,9 +82,11 @@ export async function seedAcademics(prisma: any, schoolMap: Record<string, any>)
   let collegeCount = 0
   let majorCount = 0
   for (const def of collegeDefinitions) {
+    const collegeSlug = def.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const college = await prisma.college.create({
       data: {
         schoolId: schoolMap[def.slug].id,
+        slug: collegeSlug,
         name: def.name,
         description: def.description,
         totalStudents: def.totalStudents,

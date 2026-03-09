@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Download, Eye, Users, Clock, Activity } from 'lucide-react'
+import { Download, Eye, Users, Clock, Activity, BookOpen, Shirt } from 'lucide-react'
 import {
   BarChart,
   Bar,
@@ -47,6 +47,14 @@ interface AnalyticsDashboardProps {
   }>
   totalEvents: number
   uniqueRecruits: number
+  visitInsights: Array<{
+    name: string
+    email: string
+    topCollege: string | null
+    collegeTime: number
+    jerseyCombo: string | null
+    jerseyViews: number
+  }>
 }
 
 export function AnalyticsDashboard({
@@ -57,6 +65,7 @@ export function AnalyticsDashboard({
   recentActivity,
   totalEvents,
   uniqueRecruits,
+  visitInsights,
 }: AnalyticsDashboardProps) {
   const handleExport = () => {
     window.open(`/api/analytics/export?schoolId=${schoolId}&days=30`, '_blank')
@@ -219,8 +228,83 @@ export function AnalyticsDashboard({
         </Card>
       </div>
 
-      {/* Engagement table */}
+      {/* Visit Insights */}
       <Card className="animate-in-up delay-3">
+        <CardHeader>
+          <CardTitle className="text-lg">Visit Insights</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Use this data to personalize in-person visits for each recruit.
+          </p>
+        </CardHeader>
+        <CardContent>
+          {visitInsights.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No visit insight data yet. Insights will appear as recruits explore colleges and the jersey room.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Recruit</TableHead>
+                  <TableHead>Top Department</TableHead>
+                  <TableHead>Time Spent</TableHead>
+                  <TableHead>Jersey Preference</TableHead>
+                  <TableHead>Views</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visitInsights.map((insight, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{insight.name}</p>
+                        <p className="text-xs text-muted-foreground">{insight.email}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {insight.topCollege ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald/10 px-2 py-0.5 text-xs text-emerald">
+                          <BookOpen className="h-3 w-3" />
+                          {insight.topCollege.replace(/-/g, ' ')}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {insight.collegeTime > 0 ? (
+                        <span className="text-scoreboard font-medium">
+                          {insight.collegeTime >= 60
+                            ? `${Math.floor(insight.collegeTime / 60)}m ${insight.collegeTime % 60}s`
+                            : `${insight.collegeTime}s`}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {insight.jerseyCombo ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-400">
+                          <Shirt className="h-3 w-3" />
+                          {insight.jerseyCombo}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-scoreboard">
+                      {insight.jerseyViews || '—'}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Engagement table */}
+      <Card className="animate-in-up delay-4">
         <CardHeader>
           <CardTitle className="text-lg">Recruit Engagement</CardTitle>
         </CardHeader>

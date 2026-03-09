@@ -29,20 +29,5 @@ export async function POST() {
     },
   })
 
-  // Auto-link parent to recruit via family code
-  const familyCode = user.user_metadata?.family_code
-  if (familyCode && role === 'parent') {
-    const recruit = await prisma.user.findUnique({
-      where: { familyCode },
-      select: { id: true, role: true },
-    })
-    if (recruit && recruit.role === 'recruit') {
-      await prisma.user.update({
-        where: { id: dbUser.id },
-        data: { linkedRecruitId: recruit.id },
-      })
-    }
-  }
-
   return NextResponse.json({ user: dbUser })
 }

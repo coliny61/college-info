@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { BookOpen, GraduationCap, DollarSign, Briefcase } from 'lucide-react'
+import Link from 'next/link'
+import { Card, CardContent } from '@/components/ui/card'
+import { BookOpen, GraduationCap, ArrowRight } from 'lucide-react'
 
 interface AcademicsTabProps {
   academics: {
@@ -16,6 +16,7 @@ interface AcademicsTabProps {
   } | null
   colleges: Array<{
     id: string
+    slug: string
     name: string
     description: string
     totalStudents: number
@@ -23,29 +24,16 @@ interface AcademicsTabProps {
       id: string
       name: string
       degreeType: string
-      description: string
-      pathways: Array<{
-        id: string
-        year: number
-        title: string
-        courses: string[]
-        description: string
-      }>
-      careerOutcomes: Array<{
-        id: string
-        title: string
-        medianSalary: number
-        growthRate: number
-        description: string
-      }>
     }>
   }>
+  schoolSlug: string
   colorPrimary: string
 }
 
 export function AcademicsTab({
   academics,
   colleges,
+  schoolSlug,
   colorPrimary,
 }: AcademicsTabProps) {
   return (
@@ -73,7 +61,7 @@ export function AcademicsTab({
               <CardContent className="p-4 text-center">
                 <p className="text-xs text-muted-foreground">{stat.label}</p>
                 <p
-                  className="mt-1 text-xl font-bold"
+                  className="mt-1 text-xl font-bold text-scoreboard"
                   style={{ color: colorPrimary }}
                 >
                   {stat.value}
@@ -84,130 +72,70 @@ export function AcademicsTab({
         </div>
       )}
 
-      {/* Colleges */}
-      {colleges.map((college) => (
-        <Card key={college.id}>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <BookOpen
-                    className="h-5 w-5"
-                    style={{ color: colorPrimary }}
-                  />
-                  {college.name}
-                </CardTitle>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {college.totalStudents.toLocaleString()} students
-                </p>
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {college.description}
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {college.majors.map((major, idx) => (
-              <div key={major.id}>
-                {idx > 0 && <Separator className="mb-4" />}
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <GraduationCap
-                        className="h-4 w-4"
+      {/* College directory */}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">
+          Colleges & Departments
+        </h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {colleges.map((college, idx) => (
+            <Link
+              key={college.id}
+              href={`/recruit/school/${schoolSlug}/college/${college.slug}`}
+              className={`group animate-in-up delay-${idx + 1}`}
+            >
+              <Card className="h-full transition-all hover:border-[color:var(--school-color)] hover:shadow-lg hover:shadow-[color:var(--school-color)]/5"
+                style={{ '--school-color': colorPrimary } as React.CSSProperties}
+              >
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3">
+                      <BookOpen
+                        className="mt-0.5 h-5 w-5 shrink-0"
                         style={{ color: colorPrimary }}
                       />
-                      <h4 className="font-medium text-foreground">
-                        {major.name}
-                      </h4>
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                        {major.degreeType}
-                      </span>
+                      <div>
+                        <h4 className="font-semibold text-foreground group-hover:text-[color:var(--school-color)]"
+                          style={{ '--school-color': colorPrimary } as React.CSSProperties}
+                        >
+                          {college.name}
+                        </h4>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {college.totalStudents.toLocaleString()} students
+                        </p>
+                      </div>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {major.description}
-                    </p>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-[color:var(--school-color)]"
+                      style={{ '--school-color': colorPrimary } as React.CSSProperties}
+                    />
                   </div>
 
-                  {/* Degree Pathways */}
-                  {major.pathways.length > 0 && (
-                    <div className="ml-6 space-y-2">
-                      {major.pathways.map((pathway) => (
-                        <div
-                          key={pathway.id}
-                          className="rounded-lg border border-border bg-muted/30 p-3"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span
-                              className="rounded-full px-2 py-0.5 text-xs font-medium"
-                              style={{
-                                backgroundColor: colorPrimary + '1A',
-                                color: colorPrimary,
-                              }}
-                            >
-                              Year {pathway.year}
-                            </span>
-                            <span className="text-sm font-medium text-foreground">
-                              {pathway.title}
-                            </span>
-                          </div>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {pathway.description}
-                          </p>
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {pathway.courses.map((course) => (
-                              <span
-                                key={course}
-                                className="rounded bg-background px-1.5 py-0.5 text-xs text-muted-foreground"
-                              >
-                                {course}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
+                    {college.description}
+                  </p>
 
-                  {/* Career Outcomes */}
-                  {major.careerOutcomes.length > 0 && (
-                    <div className="ml-6">
-                      {major.careerOutcomes.map((outcome) => (
-                        <div
-                          key={outcome.id}
-                          className="flex items-center gap-4 rounded-lg border border-border p-3"
-                        >
-                          <Briefcase
-                            className="h-4 w-4 shrink-0"
-                            style={{ color: colorPrimary }}
-                          />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-foreground">
-                              {outcome.title}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {outcome.description}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="flex items-center gap-1 text-sm font-bold text-foreground">
-                              <DollarSign className="h-3 w-3" />
-                              {outcome.medianSalary.toLocaleString()}
-                            </p>
-                            <p className="text-xs text-emerald">
-                              +{(outcome.growthRate * 100).toFixed(0)}% growth
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      ))}
+                  {/* Majors preview */}
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {college.majors.map((major) => (
+                      <span
+                        key={major.id}
+                        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs"
+                        style={{
+                          backgroundColor: colorPrimary + '15',
+                          color: colorPrimary,
+                        }}
+                      >
+                        <GraduationCap className="h-3 w-3" />
+                        {major.name}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

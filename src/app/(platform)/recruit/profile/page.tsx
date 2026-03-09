@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { ProfileForm } from './profile-form'
-import { FamilyCodeDisplay } from '@/components/family/family-code-display'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -14,13 +13,9 @@ export default async function ProfilePage() {
   const displayName =
     user.user_metadata?.display_name ?? user.email?.split('@')[0] ?? ''
 
-  const [profile, dbUser] = await Promise.all([
-    prisma.recruitProfile.findUnique({ where: { userId: user.id } }),
-    prisma.user.findUnique({
-      where: { id: user.id },
-      select: { familyCode: true },
-    }),
-  ])
+  const profile = await prisma.recruitProfile.findUnique({
+    where: { userId: user.id },
+  })
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -31,18 +26,12 @@ export default async function ProfilePage() {
         </p>
       </div>
 
-      <div className="space-y-6">
-        <ProfileForm
-          displayName={displayName}
-          email={user.email ?? ''}
-          role={user.user_metadata?.role ?? 'recruit'}
-          profile={profile}
-        />
-
-        <div className="animate-in-up delay-2">
-          <FamilyCodeDisplay familyCode={dbUser?.familyCode ?? null} />
-        </div>
-      </div>
+      <ProfileForm
+        displayName={displayName}
+        email={user.email ?? ''}
+        role={user.user_metadata?.role ?? 'recruit'}
+        profile={profile}
+      />
     </div>
   )
 }

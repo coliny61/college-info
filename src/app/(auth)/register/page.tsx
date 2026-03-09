@@ -6,9 +6,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Eye, EyeOff, GraduationCap, Users, UserCheck } from 'lucide-react'
+import { Eye, EyeOff, GraduationCap, UserCheck } from 'lucide-react'
 
-type Role = 'recruit' | 'parent' | 'coach_admin'
+type Role = 'recruit' | 'coach_admin'
 
 const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.ComponentType<{ className?: string }>; color: string }[] = [
   {
@@ -17,13 +17,6 @@ const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.Compo
     desc: 'I am a prospective student-athlete exploring schools.',
     icon: GraduationCap,
     color: '#10B981',
-  },
-  {
-    role: 'parent',
-    label: 'Parent',
-    desc: 'I am supporting my child through the recruiting process.',
-    icon: Users,
-    color: '#F59E0B',
   },
   {
     role: 'coach_admin',
@@ -36,7 +29,6 @@ const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.Compo
 
 const ROLE_ROUTES: Record<Role, string> = {
   recruit: '/recruit',
-  parent: '/parent',
   coach_admin: '/admin',
 }
 
@@ -50,7 +42,6 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [familyCode, setFamilyCode] = useState('')
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,7 +66,6 @@ export default function RegisterPage() {
         data: {
           display_name: displayName,
           role: selectedRole,
-          ...(selectedRole === 'parent' && familyCode ? { family_code: familyCode } : {}),
         },
       },
     })
@@ -103,7 +93,7 @@ export default function RegisterPage() {
     <div className="rounded-2xl border border-border bg-card p-8">
       <h1 className="text-2xl font-black tracking-tight text-foreground">Create Account</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Join College Info to start exploring.
+        Join OVV to start exploring.
       </p>
 
       {error && (
@@ -231,24 +221,6 @@ export default function RegisterPage() {
             })}
           </div>
         </div>
-
-        {/* Family Code (parent only) */}
-        {selectedRole === 'parent' && (
-          <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
-              Family Code <span className="text-muted-foreground font-normal">(optional)</span>
-            </label>
-            <Input
-              placeholder="e.g., MJ-7X4K"
-              value={familyCode}
-              onChange={(e) => setFamilyCode(e.target.value)}
-              className="font-mono tracking-wider"
-            />
-            <p className="mt-1 text-xs text-muted-foreground">
-              If your recruit gave you a family code, enter it here to link your accounts.
-            </p>
-          </div>
-        )}
 
         <Button
           type="submit"

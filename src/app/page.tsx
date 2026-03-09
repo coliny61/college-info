@@ -40,7 +40,7 @@ export default function LandingPage() {
               <GraduationCap className="h-4 w-4 text-white" />
             </div>
             <span className="text-lg font-bold text-foreground">
-              College Info
+              OVV
             </span>
           </Link>
           <div className="flex items-center gap-3">
@@ -498,9 +498,9 @@ export default function LandingPage() {
               },
               {
                 quote:
-                  "The family code feature lets me see exactly which schools my son is exploring. I feel connected to his recruiting journey without being overbearing.",
-                name: 'David Johnson',
-                role: 'Parent',
+                  "The jersey room alone had me hooked. Being able to mix and match uniforms for every school I'm considering made the whole experience feel real.",
+                name: 'Tyler W.',
+                role: 'Class of 2027 Recruit',
               },
             ].map((t, i) => (
               <div
@@ -535,7 +535,7 @@ export default function LandingPage() {
 
           <Accordion type="single" collapsible className="animate-in-up delay-1">
             <AccordionItem value="free">
-              <AccordionTrigger>Is College Info free for recruits?</AccordionTrigger>
+              <AccordionTrigger>Is OVV free for recruits?</AccordionTrigger>
               <AccordionContent>
                 Yes, always. Recruits can browse every school profile, explore virtual tours, try the jersey room, and compare programs — completely free. Coaches pay for analytics and CMS tools.
               </AccordionContent>
@@ -546,10 +546,10 @@ export default function LandingPage() {
                 Coaches can see which recruits viewed their program, which sections they explored (academics, athletics, tour, jersey room), how long they spent, and whether they favorited the school. Recruits control what profile information is visible.
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="parents">
-              <AccordionTrigger>Can parents see their recruit&apos;s activity?</AccordionTrigger>
+            <AccordionItem value="compare">
+              <AccordionTrigger>How do recruits compare schools?</AccordionTrigger>
               <AccordionContent>
-                Yes. Recruits can generate a family code and share it with their parents. Once linked, parents can see which schools their recruit has favorited, helping families stay aligned during the recruiting process.
+                Recruits can add up to three schools to a side-by-side comparison view, evaluating academics, athletics, tuition, graduation rates, and more — all in one place.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="invites">
@@ -561,7 +561,7 @@ export default function LandingPage() {
             <AccordionItem value="sports">
               <AccordionTrigger>What sports are supported?</AccordionTrigger>
               <AccordionContent>
-                College Info supports all major college sports including Football, Basketball, Baseball, Soccer, Track &amp; Field, Swimming, Tennis, Golf, Volleyball, Softball, Wrestling, and Lacrosse. Each school can list multiple sports programs.
+                OVV supports all major college sports including Football, Basketball, Baseball, Soccer, Track &amp; Field, Swimming, Tennis, Golf, Volleyball, Softball, Wrestling, and Lacrosse. Each school can list multiple sports programs.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -608,7 +608,7 @@ export default function LandingPage() {
               <GraduationCap className="h-3 w-3 text-white" />
             </div>
             <span className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} College Info
+              &copy; {new Date().getFullYear()} OVV
             </span>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">

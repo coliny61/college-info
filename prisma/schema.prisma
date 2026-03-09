@@ -11,9 +11,7 @@ datasource db {
 
 enum UserRole {
   recruit
-  parent
   coach_admin
-  super_admin
 }
 
 model User {
@@ -22,10 +20,6 @@ model User {
   role            UserRole
   displayName     String
   avatarUrl       String?
-  familyCode      String?   @unique
-  linkedRecruitId String?
-  linkedRecruit   User?     @relation("ParentRecruit", fields: [linkedRecruitId], references: [id])
-  linkedParents   User[]    @relation("ParentRecruit")
   schoolId        String?
   school          School?   @relation("SchoolAdmin", fields: [schoolId], references: [id])
   createdAt       DateTime  @default(now())
@@ -93,7 +87,6 @@ model School {
   favorites        Favorite[]
   analyticsEvents  AnalyticsEvent[]
   inviteLinks      InviteLink[]
-  media            Media[]
   jerseySelections JerseySelection[]
 
   @@map("schools")
@@ -122,6 +115,7 @@ model College {
   id            String  @id @default(uuid())
   schoolId      String
   school        School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  slug          String
   name          String
   description   String  @db.Text
   totalStudents Int
@@ -129,6 +123,7 @@ model College {
 
   majors Major[]
 
+  @@unique([schoolId, slug])
   @@map("colleges")
 }
 
@@ -311,16 +306,3 @@ model InviteLink {
   @@map("invite_links")
 }
 
-model Media {
-  id           String   @id @default(uuid())
-  schoolId     String
-  school       School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  type         String
-  url          String
-  thumbnailUrl String?
-  caption      String?
-  sortOrder    Int      @default(0)
-  createdAt    DateTime @default(now())
-
-  @@map("media")
-}

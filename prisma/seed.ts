@@ -37,7 +37,6 @@ async function main() {
   await prisma.jerseySelection.deleteMany()
   await prisma.favorite.deleteMany()
   await prisma.inviteLink.deleteMany()
-  await prisma.media.deleteMany()
   await prisma.user.deleteMany()
   await prisma.school.deleteMany()
   console.log('  Cleared.')

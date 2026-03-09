@@ -11,10 +11,7 @@ import {
   Heart,
   User,
   BarChart3,
-  Users,
-  Shield,
   Building,
-  CreditCard,
   Menu,
   GraduationCap,
   GitCompareArrows,
@@ -34,35 +31,19 @@ const RECRUIT_NAV: NavItem[] = [
   { label: 'Profile', href: '/recruit/profile', icon: User },
 ]
 
-const PARENT_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/parent', icon: Home },
-  { label: 'Profile', href: '/parent/profile', icon: User },
-]
-
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: Home },
   { label: 'Program', href: '/admin/program', icon: Building },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
 ]
 
-const SUPER_ADMIN_NAV: NavItem[] = [
-  { label: 'Overview', href: '/super-admin', icon: Shield },
-  { label: 'Schools', href: '/super-admin/schools', icon: Building },
-  { label: 'Users', href: '/super-admin/users', icon: Users },
-  { label: 'Billing', href: '/super-admin/billing', icon: CreditCard },
-]
-
 function getNavItems(pathname: string): NavItem[] {
-  if (pathname.startsWith('/super-admin')) return SUPER_ADMIN_NAV
   if (pathname.startsWith('/admin')) return ADMIN_NAV
-  if (pathname.startsWith('/parent')) return PARENT_NAV
   return RECRUIT_NAV
 }
 
 function getRoleLabel(pathname: string): string {
-  if (pathname.startsWith('/super-admin')) return 'Super Admin'
   if (pathname.startsWith('/admin')) return 'Coach Admin'
-  if (pathname.startsWith('/parent')) return 'Parent'
   return 'Recruit'
 }
 
@@ -89,7 +70,7 @@ function SidebarContent({
           className="text-lg font-bold text-foreground"
           onClick={onNavigate}
         >
-          College Info
+          OVV
         </Link>
       </div>
 
@@ -107,9 +88,7 @@ function SidebarContent({
           const isActive =
             pathname === item.href ||
             (item.href !== '/recruit' &&
-              item.href !== '/parent' &&
               item.href !== '/admin' &&
-              item.href !== '/super-admin' &&
               pathname.startsWith(item.href))
           return (
             <Link
@@ -135,7 +114,7 @@ function SidebarContent({
       {/* Bottom branding */}
       <div className="border-t border-border px-4 py-3">
         <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-          College Info Platform
+          Official Virtual Visit
         </p>
       </div>
     </>
