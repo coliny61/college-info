@@ -76,12 +76,9 @@ export default function RegisterPage() {
       return
     }
 
-    // Create Prisma user record
     try {
       await fetch('/api/auth/sync-user', { method: 'POST' })
-    } catch {
-      // Non-blocking — middleware will pick up on next request
-    }
+    } catch {}
 
     router.push(ROLE_ROUTES[selectedRole])
     router.refresh()
@@ -90,21 +87,23 @@ export default function RegisterPage() {
   const selectedColor = ROLE_OPTIONS.find(o => o.role === selectedRole)?.color ?? '#10B981'
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-8">
-      <h1 className="text-2xl font-black tracking-tight text-foreground">Create Account</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Join OVV to start exploring.
-      </p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-display text-3xl text-foreground">Create Account</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Join OVV to start exploring.
+        </p>
+      </div>
 
       {error && (
-        <div className="mt-4 rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3">
+        <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3">
           <p className="text-sm text-destructive">{error}</p>
         </div>
       )}
 
-      <form onSubmit={handleRegister} className="mt-6 space-y-4">
+      <form onSubmit={handleRegister} className="space-y-4">
         <div>
-          <label className="mb-2 block text-sm font-medium text-foreground">
+          <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
             Display Name
           </label>
           <Input
@@ -115,7 +114,7 @@ export default function RegisterPage() {
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm font-medium text-foreground">
+          <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
             Email
           </label>
           <Input
@@ -127,7 +126,7 @@ export default function RegisterPage() {
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm font-medium text-foreground">
+          <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
             Password
           </label>
           <div className="relative">
@@ -149,7 +148,7 @@ export default function RegisterPage() {
           </div>
         </div>
         <div>
-          <label className="mb-2 block text-sm font-medium text-foreground">
+          <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
             Confirm Password
           </label>
           <Input
@@ -163,7 +162,7 @@ export default function RegisterPage() {
 
         {/* Role Selector */}
         <div>
-          <label className="mb-3 block text-sm font-medium text-foreground">
+          <label className="mb-3 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
             I am a...
           </label>
           <div className="space-y-2">
@@ -174,17 +173,17 @@ export default function RegisterPage() {
                   type="button"
                   key={option.role}
                   onClick={() => setSelectedRole(option.role)}
-                  className="flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200"
+                  className="flex w-full items-center gap-3 rounded-xl p-4 text-left transition-all duration-200 glass-panel"
                   style={{
-                    borderColor: isSelected ? option.color : 'var(--border)',
-                    backgroundColor: isSelected ? `${option.color}08` : 'transparent',
+                    borderColor: isSelected ? option.color : undefined,
+                    backgroundColor: isSelected ? `${option.color}08` : undefined,
                     boxShadow: isSelected ? `0 0 20px ${option.color}10` : 'none',
                   }}
                 >
                   <div
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors"
                     style={{
-                      backgroundColor: isSelected ? `${option.color}15` : 'var(--muted)',
+                      backgroundColor: isSelected ? `${option.color}15` : 'oklch(1 0 0 / 0.04)',
                     }}
                   >
                     <span style={{ color: isSelected ? option.color : 'var(--muted-foreground)' }}>
@@ -193,7 +192,7 @@ export default function RegisterPage() {
                   </div>
                   <div className="flex-1">
                     <p
-                      className="font-semibold transition-colors"
+                      className="font-display text-sm font-semibold uppercase tracking-wide transition-colors"
                       style={{ color: isSelected ? option.color : 'var(--foreground)' }}
                     >
                       {option.label}
@@ -224,7 +223,7 @@ export default function RegisterPage() {
 
         <Button
           type="submit"
-          className="w-full text-white transition-colors"
+          className="w-full text-white uppercase tracking-wider text-xs font-semibold transition-colors"
           style={{ backgroundColor: selectedColor }}
           disabled={loading}
         >
@@ -232,7 +231,7 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{' '}
         <Link href="/login" className="text-emerald hover:underline font-medium">
           Log In

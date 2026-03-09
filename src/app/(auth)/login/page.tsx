@@ -67,66 +67,57 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Demo buttons */}
-      <div className="rounded-2xl border border-emerald/20 bg-emerald/[0.03] p-6">
-        <div className="mb-4 flex items-center gap-2">
-          <Play className="h-4 w-4 text-emerald" />
-          <p className="text-sm font-semibold text-emerald">Try a demo account</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-display text-3xl text-foreground">Welcome Back</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Log in to your account to continue.
+        </p>
+      </div>
+
+      {/* Demo accounts */}
+      <div className="glass-panel rounded-xl p-5">
+        <div className="mb-3 flex items-center gap-2">
+          <Play className="h-3.5 w-3.5 text-emerald" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-emerald">Try a demo</p>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {DEMO_ACCOUNTS.map((account) => (
-            <Button
+            <button
               key={account.role}
-              variant="outline"
-              size="sm"
-              className="h-auto flex-col items-start gap-0.5 px-3 py-2.5 hover:bg-white/[0.03] transition-colors"
+              className="glass-panel flex flex-col items-start gap-1 rounded-lg px-4 py-3 text-left transition-all duration-200 hover:bg-white/[0.04]"
               style={{
-                borderColor: `${account.color}30`,
-                borderLeftWidth: '3px',
-                borderLeftColor: account.color,
+                borderLeft: `3px solid ${account.color}`,
               }}
               disabled={loading}
               onClick={() => handleDemo(account)}
             >
-              <span className="flex items-center gap-1.5 text-xs font-semibold">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
                 <account.icon className="h-3 w-3" style={{ color: account.color }} />
                 {demoLoading === account.role ? 'Loading...' : account.label}
               </span>
-              <span className="text-[10px] text-muted-foreground font-normal">
+              <span className="text-[10px] text-muted-foreground">
                 {account.desc}
               </span>
-            </Button>
+            </button>
           ))}
         </div>
       </div>
 
       {/* Divider */}
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs">
-          <span className="bg-background px-3 text-muted-foreground">or log in with email</span>
-        </div>
-      </div>
+      <div className="section-divider" />
 
       {/* Login form */}
-      <div className="rounded-2xl border border-border bg-card p-8">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">Welcome back</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Log in to your account to continue.
-        </p>
-
+      <div className="space-y-4">
         {error && (
-          <div className="mt-4 rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3">
+          <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3">
             <p className="text-sm text-destructive">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
+            <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
               Email
             </label>
             <Input
@@ -138,7 +129,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
+            <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
               Password
             </label>
             <div className="relative">
@@ -161,14 +152,14 @@ export default function LoginPage() {
           </div>
           <Button
             type="submit"
-            className="w-full bg-emerald hover:bg-emerald-dark text-white"
+            className="w-full bg-emerald hover:bg-emerald-dark text-white uppercase tracking-wider text-xs font-semibold"
             disabled={loading}
           >
             {loading && !demoLoading ? 'Logging in...' : 'Log In'}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
           <Link href="/register" className="text-emerald hover:underline font-medium">
             Sign Up

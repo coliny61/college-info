@@ -61,13 +61,13 @@ function SidebarContent({
   return (
     <>
       {/* Logo + Brand */}
-      <div className="flex h-16 items-center gap-2.5 border-b border-border px-6">
+      <div className="flex h-16 items-center gap-2.5 border-b border-white/[0.06] px-6">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald">
           <GraduationCap className="h-4 w-4 text-white" />
         </div>
         <Link
           href="/"
-          className="text-lg font-bold text-foreground"
+          className="font-display text-lg font-bold uppercase tracking-wider text-foreground"
           onClick={onNavigate}
         >
           OVV
@@ -76,7 +76,7 @@ function SidebarContent({
 
       {/* Role badge */}
       <div className="px-4 py-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald/10 px-3 py-1 text-xs font-semibold text-emerald">
+        <span className="inline-flex items-center gap-1.5 rounded-sm bg-emerald/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
           {roleLabel}
         </span>
@@ -95,10 +95,10 @@ function SidebarContent({
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
+              className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 font-display text-xs uppercase tracking-[0.1em] transition-all duration-150 ${
                 isActive
-                  ? 'bg-emerald/10 text-emerald shadow-sm'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  ? 'glass-panel text-emerald'
+                  : 'text-muted-foreground hover:bg-white/[0.03] hover:text-foreground'
               }`}
             >
               {isActive && (
@@ -112,8 +112,8 @@ function SidebarContent({
       </nav>
 
       {/* Bottom branding */}
-      <div className="border-t border-border px-4 py-3">
-        <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
+      <div className="border-t border-white/[0.06] px-4 py-3">
+        <p className="font-display text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40">
           Official Virtual Visit
         </p>
       </div>
@@ -130,7 +130,7 @@ export function PlatformSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-border bg-card lg:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-white/[0.06] bg-background lg:flex">
         <SidebarContent
           navItems={navItems}
           roleLabel={roleLabel}
@@ -142,7 +142,7 @@ export function PlatformSidebar() {
       <div className="fixed left-4 top-4 z-50 lg:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="shadow-lg">
+            <Button variant="outline" size="icon" className="shadow-lg glass-panel">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>

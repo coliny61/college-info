@@ -1,8 +1,6 @@
 'use client'
 
 import { useTrackDuration, useTrackEvent } from '@/hooks/use-analytics'
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { GraduationCap, DollarSign, Briefcase, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
@@ -58,127 +56,140 @@ export function CollegeDetail({ college, schoolId, colorPrimary }: CollegeDetail
   }
 
   return (
-    <div className="space-y-6 animate-in-up">
+    <div className="space-y-8 animate-in-up">
       {/* College overview */}
       <div>
-        <p className="text-muted-foreground">{college.description}</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          <span className="text-scoreboard font-bold" style={{ color: colorPrimary }}>
+        <h2 className="text-display text-3xl text-foreground">{college.name}</h2>
+        <p className="mt-3 text-muted-foreground leading-relaxed">{college.description}</p>
+        <div className="mt-3 flex items-center gap-4">
+          <span className="text-scoreboard text-2xl font-bold" style={{ color: colorPrimary }}>
             {college.totalStudents.toLocaleString()}
-          </span>{' '}
-          students &middot; {college.majors.length} major{college.majors.length !== 1 ? 's' : ''}
-        </p>
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+            students &middot; {college.majors.length} major{college.majors.length !== 1 ? 's' : ''}
+          </span>
+        </div>
       </div>
 
+      <div className="section-divider" />
+
       {/* Majors */}
-      {college.majors.map((major, idx) => {
-        const isExpanded = expandedMajors.has(major.id)
-        return (
-          <Card key={major.id} className={`animate-in-up delay-${idx + 1}`}>
-            <button
-              onClick={() => toggleMajor(major.id, major.name)}
-              className="w-full text-left px-6 py-4 flex items-center justify-between hover:bg-muted/30 transition-colors rounded-t-lg"
-            >
-              <div className="flex items-center gap-3">
-                <GraduationCap className="h-5 w-5 shrink-0" style={{ color: colorPrimary }} />
-                <div>
-                  <h3 className="font-semibold text-foreground">{major.name}</h3>
-                  <span className="text-xs text-muted-foreground">{major.degreeType}</span>
+      <div className="space-y-3">
+        {college.majors.map((major) => {
+          const isExpanded = expandedMajors.has(major.id)
+          return (
+            <div key={major.id} className="glass-panel overflow-hidden rounded-xl">
+              <button
+                onClick={() => toggleMajor(major.id, major.name)}
+                className="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <GraduationCap className="h-5 w-5 shrink-0" style={{ color: colorPrimary }} />
+                  <div>
+                    <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+                      {major.name}
+                    </h3>
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {major.degreeType}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              )}
-            </button>
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
 
-            {isExpanded && (
-              <CardContent className="pt-0 space-y-4">
-                <p className="text-sm text-muted-foreground">{major.description}</p>
+              {isExpanded && (
+                <div className="px-5 pb-5 space-y-5 border-t border-white/[0.04] pt-4">
+                  <p className="text-sm text-muted-foreground">{major.description}</p>
 
-                {/* Degree Pathways */}
-                {major.pathways.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-foreground">Degree Pathway</h4>
-                    <div className="space-y-2">
-                      {major.pathways.map((pathway) => (
-                        <div
-                          key={pathway.id}
-                          className="rounded-lg border border-border bg-muted/30 p-3"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span
-                              className="rounded-full px-2 py-0.5 text-xs font-medium"
+                  {/* Degree Pathways — vertical timeline */}
+                  {major.pathways.length > 0 && (
+                    <div>
+                      <h4 className="text-display text-xs tracking-[0.15em] text-muted-foreground mb-3">
+                        Degree Pathway
+                      </h4>
+                      <div className="relative ml-3 border-l border-white/[0.08] pl-6 space-y-4">
+                        {major.pathways.map((pathway) => (
+                          <div key={pathway.id} className="relative">
+                            {/* Timeline dot */}
+                            <div
+                              className="absolute -left-[27px] top-1 h-3 w-3 rounded-full border-2"
                               style={{
-                                backgroundColor: colorPrimary + '1A',
-                                color: colorPrimary,
+                                borderColor: colorPrimary,
+                                backgroundColor: 'var(--background)',
                               }}
+                            />
+                            <span
+                              className="text-scoreboard text-xs font-bold"
+                              style={{ color: colorPrimary }}
                             >
                               Year {pathway.year}
                             </span>
-                            <span className="text-sm font-medium text-foreground">
+                            <p className="font-display text-sm font-medium uppercase tracking-wide text-foreground mt-0.5">
                               {pathway.title}
-                            </span>
+                            </p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {pathway.description}
+                            </p>
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {pathway.courses.map((course) => (
+                                <span
+                                  key={course}
+                                  className="rounded-sm bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                                >
+                                  {course}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {pathway.description}
-                          </p>
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {pathway.courses.map((course) => (
-                              <span
-                                key={course}
-                                className="rounded bg-background px-1.5 py-0.5 text-xs text-muted-foreground"
-                              >
-                                {course}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Career Outcomes */}
-                {major.careerOutcomes.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-foreground">Career Outcomes</h4>
-                    {major.careerOutcomes.map((outcome) => (
-                      <div
-                        key={outcome.id}
-                        className="flex items-center gap-4 rounded-lg border border-border p-3"
-                      >
-                        <Briefcase
-                          className="h-4 w-4 shrink-0"
-                          style={{ color: colorPrimary }}
-                        />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-foreground">{outcome.title}</p>
-                          <p className="text-xs text-muted-foreground">{outcome.description}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="flex items-center gap-1 text-sm font-bold text-foreground">
-                            <DollarSign className="h-3 w-3" />
-                            <span className="text-scoreboard">
-                              {outcome.medianSalary.toLocaleString()}
-                            </span>
-                          </p>
-                          <p className="text-xs text-emerald">
-                            +{(outcome.growthRate * 100).toFixed(0)}% growth
-                          </p>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )}
 
-                <Separator />
-              </CardContent>
-            )}
-          </Card>
-        )
-      })}
+                  {/* Career Outcomes */}
+                  {major.careerOutcomes.length > 0 && (
+                    <div>
+                      <h4 className="text-display text-xs tracking-[0.15em] text-muted-foreground mb-3">
+                        Career Outcomes
+                      </h4>
+                      <div className="space-y-2">
+                        {major.careerOutcomes.map((outcome) => (
+                          <div
+                            key={outcome.id}
+                            className="flex items-center gap-4 rounded-lg bg-white/[0.02] p-3"
+                          >
+                            <Briefcase
+                              className="h-4 w-4 shrink-0"
+                              style={{ color: colorPrimary }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground">{outcome.title}</p>
+                              <p className="text-xs text-muted-foreground truncate">{outcome.description}</p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="flex items-center gap-0.5 text-scoreboard text-sm font-bold text-foreground">
+                                <DollarSign className="h-3 w-3" />
+                                {outcome.medianSalary.toLocaleString()}
+                              </p>
+                              <p className="text-[10px] text-emerald">
+                                +{(outcome.growthRate * 100).toFixed(0)}% growth
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

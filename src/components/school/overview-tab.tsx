@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   GraduationCap,
   Users,
@@ -28,37 +27,6 @@ interface OverviewTabProps {
   colorPrimary: string
 }
 
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  color,
-}: {
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  value: string
-  color: string
-}) {
-  return (
-    <Card>
-      <CardContent className="flex items-center gap-3 p-4">
-        <div
-          className="rounded-lg p-2"
-          style={{ backgroundColor: color + '1A' }}
-        >
-          <span style={{ color }}>
-            <Icon className="h-5 w-5" />
-          </span>
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-lg font-bold text-foreground">{value}</p>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 export function OverviewTab({
   description,
   academics,
@@ -67,86 +35,87 @@ export function OverviewTab({
   facilities,
   colorPrimary,
 }: OverviewTabProps) {
+  const stats = academics
+    ? [
+        { icon: Users, label: 'Enrollment', value: academics.enrollment.toLocaleString() },
+        { icon: GraduationCap, label: 'Admission Rate', value: `${(academics.admissionRate * 100).toFixed(0)}%` },
+        { icon: TrendingUp, label: 'Graduation Rate', value: `${(academics.graduationRate * 100).toFixed(0)}%` },
+        { icon: DollarSign, label: 'Median Earnings', value: `$${academics.medianEarnings.toLocaleString()}` },
+        ...(nilBudget
+          ? [{ icon: Banknote, label: 'NIL Budget', value: nilBudget >= 1000000 ? `$${(nilBudget / 1000000).toFixed(1)}M` : `$${nilBudget.toLocaleString()}` }]
+          : []),
+        ...(alumniCount > 0
+          ? [{ icon: Trophy, label: 'NFL Alumni', value: alumniCount.toString() }]
+          : []),
+      ]
+    : []
+
   return (
-    <div className="space-y-6">
-      {/* Description */}
+    <div className="space-y-10 animate-in-up">
+      {/* About — editorial style with drop cap */}
       <div>
-        <h3 className="mb-2 text-lg font-semibold text-foreground">About</h3>
-        <p className="text-sm leading-relaxed text-muted-foreground">
+        <h3 className="text-display mb-4 text-sm tracking-[0.15em] text-muted-foreground">
+          About
+        </h3>
+        <p className="drop-cap text-base leading-relaxed text-muted-foreground">
           {description}
         </p>
       </div>
 
-      {/* Stats grid */}
-      {academics && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <StatCard
-            icon={Users}
-            label="Enrollment"
-            value={academics.enrollment.toLocaleString()}
-            color={colorPrimary}
-          />
-          <StatCard
-            icon={GraduationCap}
-            label="Admission Rate"
-            value={`${(academics.admissionRate * 100).toFixed(0)}%`}
-            color={colorPrimary}
-          />
-          <StatCard
-            icon={TrendingUp}
-            label="Graduation Rate"
-            value={`${(academics.graduationRate * 100).toFixed(0)}%`}
-            color={colorPrimary}
-          />
-          <StatCard
-            icon={DollarSign}
-            label="Median Earnings"
-            value={`$${academics.medianEarnings.toLocaleString()}`}
-            color={colorPrimary}
-          />
-          {nilBudget && (
-            <StatCard
-              icon={Banknote}
-              label="NIL Budget"
-              value={nilBudget >= 1000000 ? `$${(nilBudget / 1000000).toFixed(1)}M` : `$${nilBudget.toLocaleString()}`}
-              color={colorPrimary}
-            />
-          )}
-          {alumniCount > 0 && (
-            <StatCard
-              icon={Trophy}
-              label="Notable NFL Alumni"
-              value={alumniCount.toString()}
-              color={colorPrimary}
-            />
-          )}
-        </div>
+      {/* Stat strip */}
+      {stats.length > 0 && (
+        <>
+          <div className="section-divider" />
+          <div className="stat-strip flex-wrap gap-y-6 py-2">
+            {stats.map((stat) => (
+              <div key={stat.label} className="min-w-[120px] py-2">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <stat.icon className="h-3.5 w-3.5" style={{ color: colorPrimary }} />
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {stat.label}
+                  </p>
+                </div>
+                <p className="text-scoreboard text-3xl font-bold text-foreground">
+                  {stat.value}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="section-divider" />
+        </>
       )}
 
-      {/* Featured facilities */}
+      {/* Facilities — glass panels */}
       {facilities.length > 0 && (
         <div>
-          <h3 className="mb-3 text-lg font-semibold text-foreground">
+          <h3 className="text-display mb-4 text-sm tracking-[0.15em] text-muted-foreground">
             Facilities
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             {facilities.slice(0, 4).map((facility) => (
-              <Card key={facility.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <Building
-                      className="h-4 w-4"
-                      style={{ color: colorPrimary }}
-                    />
-                    <CardTitle className="text-sm">{facility.name}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    {facility.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <div key={facility.id} className="glass-panel rounded-xl p-5">
+                <div className="flex items-center gap-2">
+                  <Building
+                    className="h-4 w-4"
+                    style={{ color: colorPrimary }}
+                  />
+                  <h4 className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+                    {facility.name}
+                  </h4>
+                </div>
+                <span
+                  className="mt-2 inline-block rounded-sm px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider capitalize"
+                  style={{
+                    backgroundColor: colorPrimary + '15',
+                    color: colorPrimary,
+                  }}
+                >
+                  {facility.type.replace('-', ' ')}
+                </span>
+                <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
+                  {facility.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>

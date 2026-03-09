@@ -1,9 +1,7 @@
 'use client'
 
 import { useTrackDuration } from '@/hooks/use-analytics'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Trophy, Star, Users } from 'lucide-react'
 
 interface AlumniTabProps {
   alumni: Array<{
@@ -38,101 +36,111 @@ export function AlumniTab({ alumni, schoolId, colorPrimary }: AlumniTabProps) {
   const activePlayers = alumni.filter((a) => a.isActive)
 
   return (
-    <div className="space-y-6 animate-in-up">
-      {/* Summary stats */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Card>
-          <CardContent className="flex items-center gap-3 p-4">
-            <Trophy className="h-5 w-5" style={{ color: colorPrimary }} />
-            <div>
-              <p className="text-xs text-muted-foreground">First-Round Picks</p>
-              <p className="text-xl font-bold text-scoreboard" style={{ color: colorPrimary }}>
-                {firstRounders.length}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center gap-3 p-4">
-            <Star className="h-5 w-5" style={{ color: colorPrimary }} />
-            <div>
-              <p className="text-xs text-muted-foreground">#1 Overall Picks</p>
-              <p className="text-xl font-bold text-scoreboard">
-                {numberOneOverall.length}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center gap-3 p-4">
-            <Users className="h-5 w-5" style={{ color: colorPrimary }} />
-            <div>
-              <p className="text-xs text-muted-foreground">Active in NFL</p>
-              <p className="text-xl font-bold text-scoreboard">
-                {activePlayers.length}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-10 animate-in-up">
+      {/* Hero stat strip */}
+      <div className="stat-strip rounded-xl border border-border bg-card/50 py-8 px-4">
+        <div>
+          <p className="text-scoreboard text-5xl font-bold" style={{ color: colorPrimary }}>
+            {firstRounders.length}
+          </p>
+          <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            First-Round Picks
+          </p>
+        </div>
+        <div>
+          <p className="text-scoreboard text-5xl font-bold text-foreground">
+            {numberOneOverall.length}
+          </p>
+          <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            #1 Overall
+          </p>
+        </div>
+        <div>
+          <p className="text-scoreboard text-5xl font-bold text-emerald">
+            {activePlayers.length}
+          </p>
+          <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            Active in NFL
+          </p>
+        </div>
       </div>
 
       {/* Alumni grid */}
       <div className="grid gap-4 sm:grid-cols-2">
-        {alumni.map((alum, idx) => (
-          <Card key={alum.id} className={`animate-in-up delay-${Math.min(idx + 1, 8)}`}>
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h4 className="font-semibold text-foreground">{alum.name}</h4>
-                  <div className="mt-1 flex items-center gap-2">
-                    <Badge
-                      style={{
-                        backgroundColor: colorPrimary + '1A',
-                        color: colorPrimary,
-                      }}
-                    >
-                      {alum.position}
-                    </Badge>
-                    {alum.isActive ? (
-                      <Badge variant="outline" className="border-emerald/40 text-emerald">
-                        Active
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-muted-foreground">
-                        Retired
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {alum.isFirstRound && (
-                  <div
-                    className="rounded-full px-2 py-1 text-xs font-bold"
+        {alumni.map((alum) => (
+          <div
+            key={alum.id}
+            className="relative glass-panel overflow-hidden rounded-xl p-5"
+            style={alum.isFirstRound ? { boxShadow: `inset 0 0 0 1px ${colorPrimary}30` } : undefined}
+          >
+            {/* First-rounder gold glow */}
+            {alum.isFirstRound && (
+              <div
+                className="absolute -right-4 -top-4 h-24 w-24 rounded-full blur-[40px] opacity-[0.08]"
+                style={{ backgroundColor: colorPrimary }}
+              />
+            )}
+
+            <div className="relative flex items-start justify-between">
+              <div>
+                <h4 className="font-display text-base font-bold uppercase tracking-wide text-foreground">
+                  {alum.name}
+                </h4>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <Badge
+                    className="text-[10px] uppercase tracking-wider"
                     style={{
-                      backgroundColor: colorPrimary,
-                      color: '#fff',
+                      backgroundColor: colorPrimary + '15',
+                      color: colorPrimary,
                     }}
                   >
-                    R{alum.draftRound} #{alum.draftPick}
-                  </div>
-                )}
+                    {alum.position}
+                  </Badge>
+                  {alum.isActive ? (
+                    <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
+                      Active
+                    </span>
+                  ) : (
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Retired
+                    </span>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-3 text-sm text-muted-foreground">
-                {alum.draftRound === 0 ? (
-                  <p>Undrafted &middot; {alum.draftYear} &middot; {alum.nflTeam}</p>
+              {/* Draft number — prominent Oswald */}
+              <div className="text-right">
+                {alum.draftRound > 0 ? (
+                  <>
+                    <p
+                      className="text-scoreboard text-3xl font-bold"
+                      style={alum.isFirstRound ? { color: colorPrimary } : undefined}
+                    >
+                      #{alum.draftPick}
+                    </p>
+                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground">
+                      Rd {alum.draftRound}
+                    </p>
+                  </>
                 ) : (
-                  <p>
-                    Round {alum.draftRound}, Pick {alum.draftPick} &middot;{' '}
-                    {alum.draftYear} NFL Draft &middot; {alum.nflTeam}
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    UDFA
                   </p>
                 )}
               </div>
+            </div>
 
-              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                {alum.careerHighlights}
+            <div className="mt-3 text-xs text-muted-foreground">
+              <p>
+                {alum.draftYear} &middot; {alum.nflTeam}
               </p>
-            </CardContent>
-          </Card>
+            </div>
+
+            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+              {alum.careerHighlights}
+            </p>
+          </div>
         ))}
       </div>
     </div>

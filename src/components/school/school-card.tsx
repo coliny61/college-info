@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { MapPin, ChevronRight } from 'lucide-react'
+import { MapPin, ArrowRight } from 'lucide-react'
 import { FavoriteButton } from './favorite-button'
 import { CompareCheckbox } from './compare-checkbox'
 
@@ -35,89 +35,73 @@ export function SchoolCard({
   showCompare = false,
 }: SchoolCardProps) {
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/20 hover:border-white/15">
-      {/* Bold left color bar */}
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30 border-0">
+      {/* Top gradient band — mini-poster style */}
       <div
-        className="absolute left-0 top-0 h-full w-1 transition-all duration-300 group-hover:w-1.5"
+        className="relative h-28 overflow-hidden"
         style={{
-          background: `linear-gradient(to bottom, ${colorPrimary}, ${colorSecondary})`,
+          background: `linear-gradient(135deg, ${colorPrimary}, ${colorSecondary})`,
         }}
-      />
-
-      {/* Watermark short name */}
-      <div
-        className="pointer-events-none absolute -right-2 -top-3 select-none text-7xl font-black opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.06]"
-        style={{ color: colorPrimary }}
       >
-        {shortName}
+        {/* Noise texture */}
+        <div className="absolute inset-0 bg-noise pointer-events-none" />
+
+        {/* School short name in band */}
+        <div
+          className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
+        >
+          <span
+            className="text-hero text-6xl opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.2]"
+            style={{ color: '#FFFFFF' }}
+          >
+            {shortName}
+          </span>
+        </div>
+
+        {/* Favorite + compare — top right in band */}
+        <div className="absolute right-2 top-2 flex items-center gap-1 z-10">
+          {showCompare && <CompareCheckbox slug={slug} />}
+          {showFavorite && (
+            <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+          )}
+        </div>
+
+        {/* Conference badge — bottom left in band */}
+        <div className="absolute bottom-3 left-4">
+          <span
+            className="rounded-sm px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em]"
+            style={{
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              color: '#FFFFFF',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            {conference}
+          </span>
+        </div>
       </div>
 
-      {/* Hover background wash */}
-      <div
-        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background: `linear-gradient(135deg, ${colorPrimary}08, transparent 70%)`,
-        }}
-      />
+      {/* Content area */}
+      <Link href={`/recruit/school/${slug}`} className="block">
+        <CardContent className="relative p-5">
+          {/* School name + mascot */}
+          <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
+            {name}
+          </h3>
+          <p className="mt-0.5 text-sm text-muted-foreground">{mascot}</p>
 
-      <CardContent className="relative p-5 pl-5">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1">
-            <Link href={`/recruit/school/${slug}`} className="block">
-              {/* Short name + mascot */}
-              <div className="flex items-baseline gap-2">
-                <span
-                  className="text-2xl font-black tracking-tight text-scoreboard"
-                  style={{ color: colorPrimary }}
-                >
-                  {shortName}
-                </span>
-                <span className="text-sm font-medium text-muted-foreground">
-                  {mascot}
-                </span>
-              </div>
-
-              {/* Full name */}
-              <h3 className="mt-1.5 truncate text-sm font-medium text-foreground transition-colors duration-200 group-hover:text-foreground/90">
-                {name}
-              </h3>
-            </Link>
-
-            {/* Location + Conference */}
-            <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
-                {city}, {state}
-              </span>
-              <span
-                className="rounded-full px-2 py-0.5 text-[11px] font-bold"
-                style={{
-                  backgroundColor: colorPrimary,
-                  color: '#FFFFFF',
-                }}
-              >
-                {conference}
-              </span>
-            </div>
-
-            {/* View link hint */}
-            <Link
-              href={`/recruit/school/${slug}`}
-              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground/50 transition-all duration-200 group-hover:text-emerald group-hover:gap-2"
-            >
-              View program <ChevronRight className="h-3 w-3" />
-            </Link>
+          {/* Location */}
+          <div className="mt-3 flex items-center justify-between">
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin className="h-3 w-3" />
+              {city}, {state}
+            </span>
+            <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground/40 transition-all duration-200 group-hover:text-emerald group-hover:gap-2">
+              View <ArrowRight className="h-3 w-3" />
+            </span>
           </div>
-
-          {/* Actions */}
-          <div className="flex flex-col items-center gap-1">
-            {showFavorite && (
-              <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
-            )}
-            {showCompare && <CompareCheckbox slug={slug} />}
-          </div>
-        </div>
-      </CardContent>
+        </CardContent>
+      </Link>
     </Card>
   )
 }

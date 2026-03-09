@@ -12,14 +12,11 @@ import {
   Shirt,
   Compass,
   ArrowRight,
-  ChevronRight,
+  ChevronDown,
   Eye,
   Users,
-  Zap,
-  Shield,
   Check,
   GraduationCap,
-  Quote,
 } from 'lucide-react'
 
 const SCHOOL_COLORS = [
@@ -39,111 +36,108 @@ export default function LandingPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald">
               <GraduationCap className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-foreground">
+            <span className="text-display text-lg tracking-normal text-foreground">
               OVV
             </span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="#features" className="hidden text-sm text-muted-foreground hover:text-foreground transition-colors sm:block">
+            <Link href="#features" className="hidden text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors sm:block">
               Features
             </Link>
-            <Link href="#for-coaches" className="hidden text-sm text-muted-foreground hover:text-foreground transition-colors sm:block">
-              For Coaches
+            <Link href="#for-coaches" className="hidden text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors sm:block">
+              Coaches
             </Link>
-            <Link href="#pricing" className="hidden text-sm text-muted-foreground hover:text-foreground transition-colors sm:block">
+            <Link href="#pricing" className="hidden text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors sm:block">
               Pricing
             </Link>
             <div className="mx-2 hidden h-4 w-px bg-border sm:block" />
             <Link href="/login">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-xs uppercase tracking-wider">
                 Log In
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm">Get Started</Button>
+              <Button size="sm" className="text-xs uppercase tracking-wider">Get Started</Button>
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative min-h-screen px-6 pt-16">
-        {/* Floating school-color orbs */}
+      {/* ═══ HERO ═══ */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-16 bg-noise">
+        {/* Diagonal gradient slashes */}
         <div className="absolute inset-0 overflow-hidden">
-          {SCHOOL_COLORS.map((s, i) => (
-            <div
-              key={s.name}
-              className={`absolute rounded-full blur-[100px] animate-float-slow opacity-[0.07]`}
-              style={{
-                backgroundColor: s.primary,
-                width: `${280 + i * 40}px`,
-                height: `${280 + i * 40}px`,
-                left: `${10 + i * 22}%`,
-                top: `${15 + (i % 2) * 30}%`,
-                animationDelay: `${i * 1.5}s`,
-                animationDuration: `${8 + i * 2}s`,
-              }}
-            />
-          ))}
-          {/* Central emerald glow */}
-          <div className="absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald/[0.06] blur-[150px]" />
+          <div
+            className="absolute -left-1/4 top-0 h-full w-1/2 opacity-[0.04] animate-drift"
+            style={{
+              background: 'linear-gradient(135deg, transparent 40%, #10B981 50%, transparent 60%)',
+            }}
+          />
+          <div
+            className="absolute -right-1/4 top-0 h-full w-1/2 opacity-[0.03] animate-drift"
+            style={{
+              background: 'linear-gradient(135deg, transparent 40%, #10B981 50%, transparent 60%)',
+              animationDelay: '4s',
+            }}
+          />
+          {/* Subtle bottom fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background to-transparent" />
         </div>
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center pt-24 sm:pt-32 lg:pt-40">
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
           {/* Badge */}
-          <div className="animate-in-up mb-8 flex items-center gap-2 rounded-full border border-emerald/20 bg-emerald/5 px-4 py-1.5">
-            <Zap className="h-3.5 w-3.5 text-emerald" />
-            <span className="text-xs font-medium text-emerald">
-              The future of college recruiting
+          <div className="animate-in-up mb-10 flex items-center gap-2 rounded-full border border-emerald/20 bg-emerald/5 px-4 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" />
+            <span className="text-xs font-medium uppercase tracking-widest text-emerald">
+              Now Live
             </span>
           </div>
 
-          <h1 className="animate-in-up delay-1 max-w-4xl text-center text-5xl font-black tracking-tight text-foreground sm:text-6xl lg:text-8xl">
-            Where recruits
-            <br />
-            <span className="relative">
-              <span className="relative z-10 bg-gradient-to-r from-emerald via-emerald-light to-emerald bg-clip-text text-transparent">
-                find their fit
-              </span>
+          {/* Hero text — massive Oswald */}
+          <h1 className="animate-in-up delay-1 text-hero text-[clamp(3rem,10vw,9rem)] text-foreground leading-[0.9]">
+            The Official
+          </h1>
+          <h1 className="animate-in-up delay-2 text-hero text-[clamp(3rem,10vw,9rem)] leading-[0.9]">
+            <span className="bg-gradient-to-r from-emerald via-emerald-light to-emerald bg-clip-text text-transparent">
+              Virtual Visit
             </span>
           </h1>
 
-          <p className="animate-in-up delay-2 mx-auto mt-8 max-w-2xl text-center text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          <p className="animate-in-up delay-3 mx-auto mt-10 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Coaches showcase programs with virtual tours, jersey builders, and rich profiles.
             Recruits explore for free. Analytics show you who&apos;s truly interested.
           </p>
 
-          <div className="animate-in-up delay-3 mt-12 flex flex-col items-center gap-4 sm:flex-row">
+          <div className="animate-in-up delay-4 mt-12 flex flex-col items-center gap-4 sm:flex-row">
             <Link href="/register">
-              <Button size="lg" className="h-12 gap-2 px-8 text-base">
+              <Button size="lg" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
                 Start Exploring
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
             <Link href="/recruit">
-              <Button size="lg" variant="outline" className="h-12 gap-2 px-8 text-base">
+              <Button size="lg" variant="outline" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
                 View Demo
-                <ChevronRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>
 
-          {/* School showcase */}
-          <div className="animate-in-up delay-4 mt-20 flex items-center gap-4">
-            <span className="text-xs text-muted-foreground/60">Trusted by</span>
-            <div className="flex gap-3">
+          {/* School badges */}
+          <div className="animate-in-up delay-5 mt-16 flex items-center gap-6">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">Trusted by</span>
+            <div className="flex gap-4">
               {SCHOOL_COLORS.map((school) => (
                 <div
                   key={school.name}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 group"
                 >
                   <div
-                    className="h-7 w-7 rounded-full shadow-lg transition-transform hover:scale-110"
+                    className="h-8 w-8 rounded-full shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
                     style={{
                       background: `linear-gradient(135deg, ${school.primary}, ${school.secondary})`,
                     }}
                   />
-                  <span className="hidden text-xs font-bold text-muted-foreground/50 sm:inline">
+                  <span className="hidden text-xs font-display uppercase tracking-wider text-muted-foreground/40 group-hover:text-muted-foreground transition-colors sm:inline">
                     {school.short}
                   </span>
                 </div>
@@ -151,54 +145,63 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Stats bar */}
-          <div className="animate-in-up delay-5 relative mt-16 w-full max-w-3xl overflow-hidden rounded-2xl border border-border">
-            <div className="bg-yard-lines absolute inset-0 pointer-events-none" />
-            <div className="relative grid grid-cols-3 gap-px bg-border">
-              {[
-                { value: '5+', label: 'Programs' },
-                { value: '200+', label: 'Recruits' },
-                { value: '10k+', label: 'Page Views' },
-              ].map((stat) => (
-                <div key={stat.label} className="bg-card px-6 py-5 text-center">
-                  <p className="text-2xl font-black text-foreground text-scoreboard sm:text-3xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+          {/* Scroll indicator */}
+          <div className="mt-20 animate-bounce-down">
+            <ChevronDown className="h-5 w-5 text-muted-foreground/30" />
           </div>
         </div>
       </section>
 
-      {/* Features - Bento Grid */}
-      <section id="features" className="px-6 py-32">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-16 max-w-2xl">
-            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+      {/* ═══ STAT STRIP ═══ */}
+      <section className="relative border-y border-border">
+        <div className="bg-yard-lines absolute inset-0 pointer-events-none opacity-40" />
+        <div className="relative mx-auto max-w-5xl stat-strip py-10 px-6">
+          {[
+            { value: '5+', label: 'Programs' },
+            { value: '200+', label: 'Recruits' },
+            { value: '10k+', label: 'Page Views' },
+            { value: '98%', label: 'Retention' },
+          ].map((stat) => (
+            <div key={stat.label} className="py-2">
+              <p className="text-scoreboard text-5xl font-bold text-foreground sm:text-6xl">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ FEATURES — Alternating Panels ═══ */}
+      <section id="features" className="py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-20">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
               Platform
             </span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
-              Built for the modern recruiting experience
+            <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
+              Built for the modern
+              <br />
+              recruiting experience
             </h2>
           </div>
+        </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Large feature card — Analytics */}
-            <div className="animate-in-up sm:col-span-2 lg:col-span-2 relative overflow-hidden rounded-2xl border border-border bg-card p-8 lg:p-10">
-              <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-emerald/[0.07] blur-[60px]" />
-              <div className="bg-yard-lines absolute inset-0 pointer-events-none opacity-50" />
-              <div className="relative">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald/10">
-                  <BarChart3 className="h-6 w-6 text-emerald" />
+        {/* Feature 1: Analytics — text left, visual right */}
+        <div className="relative py-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald/[0.02] to-transparent" />
+          <div className="relative mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <div>
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald/10">
+                  <BarChart3 className="h-7 w-7 text-emerald" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground">
+                <h3 className="text-display text-3xl text-foreground">
                   Real-Time Analytics
                 </h3>
-                <p className="mt-3 max-w-lg text-muted-foreground">
+                <p className="mt-4 text-muted-foreground leading-relaxed">
                   See exactly which recruits are viewing your program, which sections
                   they spend time on, and how they engage. Know who&apos;s interested
                   before they ever reach out.
@@ -216,74 +219,169 @@ export default function LandingPage() {
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Jersey Room */}
-            <div className="animate-in-up delay-1 group relative overflow-hidden rounded-2xl border border-border bg-card p-8 transition-colors hover:border-white/20">
-              <div className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full opacity-[0.08] transition-opacity group-hover:opacity-[0.15]"
-                style={{ background: 'linear-gradient(135deg, #CC0000, #FFC72C, #003015, #841617)' }}
-              />
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald/10">
-                <Shirt className="h-6 w-6 text-emerald" />
+              {/* Mock analytics panel */}
+              <div className="relative">
+                <div className="absolute -inset-4 rounded-3xl bg-emerald/[0.03] blur-xl" />
+                <div className="relative glass-panel rounded-2xl p-6 shadow-2xl shadow-black/20">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h4 className="text-display text-sm text-foreground tracking-normal">
+                      Recruit Engagement
+                    </h4>
+                    <span className="flex items-center gap-1.5 rounded-full bg-emerald/10 px-2.5 py-0.5 text-xs text-emerald">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" />
+                      Live
+                    </span>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { name: 'Marcus Johnson', sections: ['Academics', 'Athletics', 'Tour'], time: '14m 32s', active: true },
+                      { name: 'Tyler Williams', sections: ['Overview', 'Jersey Room'], time: '8m 15s', active: true },
+                      { name: 'James Carter', sections: ['Academics', 'Athletics'], time: '6m 44s', active: false },
+                      { name: 'Devon Brooks', sections: ['Tour', 'Jersey Room', 'Athletics'], time: '22m 08s', active: false },
+                    ].map((recruit) => (
+                      <div
+                        key={recruit.name}
+                        className="flex items-center justify-between rounded-lg border border-white/[0.04] bg-background/50 p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`h-2 w-2 rounded-full ${recruit.active ? 'bg-emerald animate-pulse' : 'bg-muted-foreground/30'}`} />
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {recruit.name}
+                            </p>
+                            <div className="flex gap-1 mt-0.5">
+                              {recruit.sections.map((s) => (
+                                <span
+                                  key={s}
+                                  className="rounded bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                                >
+                                  {s}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-scoreboard text-xs text-muted-foreground">
+                          {recruit.time}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-foreground">
-                Jersey Room
-              </h3>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Recruits mix and match helmets, jerseys, and pants in your school
-                colors. Download and share their dream uniform.
-              </p>
             </div>
+          </div>
+        </div>
 
-            {/* Tour */}
-            <div className="animate-in-up delay-2 group relative overflow-hidden rounded-2xl border border-border bg-card p-8 transition-colors hover:border-white/20">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald/10">
-                <Compass className="h-6 w-6 text-emerald" />
+        <div className="section-divider mx-auto max-w-4xl" />
+
+        {/* Feature 2: Jersey Room — visual left, text right */}
+        <div className="relative py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              {/* Visual — school color orbs */}
+              <div className="relative flex items-center justify-center py-12">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {SCHOOL_COLORS.map((s, i) => (
+                    <div
+                      key={s.short}
+                      className="absolute rounded-full blur-[60px] animate-float-slow"
+                      style={{
+                        backgroundColor: s.primary,
+                        width: '120px',
+                        height: '120px',
+                        opacity: 0.15,
+                        left: `${20 + i * 18}%`,
+                        top: `${25 + (i % 2) * 30}%`,
+                        animationDelay: `${i * 2}s`,
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="relative glass-panel rounded-2xl p-10 text-center">
+                  <Shirt className="mx-auto h-16 w-16 text-muted-foreground/30" />
+                  <p className="text-display mt-4 text-2xl text-foreground">Mix. Match. Share.</p>
+                  <p className="mt-2 text-sm text-muted-foreground">Your dream uniform in seconds</p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-foreground">
-                360° Virtual Tours
-              </h3>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Panoramic stadium, weight room, and locker room tours with
-                interactive hotspots. Explore from anywhere.
-              </p>
+
+              <div>
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald/10">
+                  <Shirt className="h-7 w-7 text-emerald" />
+                </div>
+                <h3 className="text-display text-3xl text-foreground">
+                  Jersey Room
+                </h3>
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  Recruits mix and match helmets, jerseys, and pants in your school
+                  colors. Download and share their dream uniform. Coaches see which
+                  colorways resonate most.
+                </p>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* CMS */}
-            <div className="animate-in-up delay-3 sm:col-span-2 group relative overflow-hidden rounded-2xl border border-border bg-card p-8 transition-colors hover:border-white/20">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald/10">
-                <Edit3 className="h-6 w-6 text-emerald" />
+        <div className="section-divider mx-auto max-w-4xl" />
+
+        {/* Feature 3: Tours + CMS — text left, feature list right */}
+        <div className="relative py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <div>
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald/10">
+                  <Compass className="h-7 w-7 text-emerald" />
+                </div>
+                <h3 className="text-display text-3xl text-foreground">
+                  Virtual Tours & CMS
+                </h3>
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  Panoramic stadium, weight room, and locker room tours with
+                  interactive hotspots. Full CMS to manage your school profile,
+                  coaching staff, facilities — all from one dashboard.
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-foreground">
-                Full Program CMS
-              </h3>
-              <p className="mt-3 max-w-lg text-sm text-muted-foreground">
-                Edit your school profile, manage coaching staff,
-                update facilities — all from one dashboard. Generate invite links
-                to bring recruits directly to your page.
-              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { icon: Compass, label: '360° Virtual Tours' },
+                  { icon: Edit3, label: 'Full Program CMS' },
+                  { icon: Users, label: 'Coaching Staff' },
+                  { icon: BarChart3, label: 'Engagement Data' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="glass-panel rounded-xl p-5 transition-colors hover:bg-white/[0.05]"
+                  >
+                    <item.icon className="h-5 w-5 text-emerald" />
+                    <p className="mt-3 text-sm font-medium text-foreground">{item.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* For Coaches */}
-      <section id="for-coaches" className="px-6 py-32">
-        <div className="mx-auto max-w-6xl">
+      {/* ═══ FOR COACHES ═══ */}
+      <section id="for-coaches" className="relative py-32 bg-noise">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald/[0.02] via-transparent to-transparent" />
+        <div className="relative mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-16 lg:grid-cols-2">
-            <div className="animate-in-up">
-              <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
                 For Coaches
               </span>
-              <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
-                Stop guessing.
+              <h2 className="text-display mt-4 text-4xl text-foreground sm:text-5xl leading-[1.1]">
+                Stop Guessing.
                 <br />
-                Start knowing.
+                Start Knowing.
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground">
+              <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
                 Every recruit who views your page is tracked. You see their name,
                 which sections they explored, how long they stayed, and whether
-                they came back. No more wondering if that recruit is really interested.
+                they came back.
               </p>
               <div className="mt-8 space-y-4">
                 {[
@@ -291,8 +389,8 @@ export default function LandingPage() {
                   'Track time spent on academics, athletics, tour, and jersey',
                   'Export engagement data as CSV for your recruiting board',
                   'Generate invite links to share with prospects',
-                ].map((item, i) => (
-                  <div key={item} className={`flex items-start gap-3 animate-in-right delay-${i + 2}`}>
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald/10">
                       <Check className="h-3 w-3 text-emerald" />
                     </div>
@@ -301,60 +399,28 @@ export default function LandingPage() {
                 ))}
               </div>
               <Link href="/register" className="mt-10 inline-block">
-                <Button size="lg" className="gap-2">
+                <Button size="lg" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
                   Create Your Program
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
 
-            {/* Mock analytics card */}
-            <div className="animate-in-up delay-2 relative">
-              <div className="absolute -inset-4 rounded-3xl bg-emerald/[0.04] blur-xl" />
-              <div className="relative rounded-2xl border border-border bg-card p-6 shadow-2xl shadow-black/20">
-                <div className="mb-4 flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-foreground">
-                    Recruit Engagement
-                  </h4>
-                  <span className="flex items-center gap-1.5 rounded-full bg-emerald/10 px-2.5 py-0.5 text-xs text-emerald">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" />
-                    Live
-                  </span>
+            {/* Visual — large stat callout */}
+            <div className="flex flex-col items-center gap-6">
+              <div className="glass-panel w-full rounded-2xl p-10 text-center">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Average Time on Page</p>
+                <p className="text-scoreboard mt-2 text-7xl font-bold text-emerald">14:32</p>
+                <p className="mt-2 text-sm text-muted-foreground">minutes per recruit visit</p>
+              </div>
+              <div className="grid w-full grid-cols-2 gap-3">
+                <div className="glass-panel rounded-xl p-6 text-center">
+                  <p className="text-scoreboard text-4xl font-bold text-foreground">89%</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Return Rate</p>
                 </div>
-                <div className="space-y-2.5">
-                  {[
-                    { name: 'Marcus Johnson', sections: ['Academics', 'Athletics', 'Tour'], time: '14m 32s', active: true },
-                    { name: 'Tyler Williams', sections: ['Overview', 'Jersey Room'], time: '8m 15s', active: true },
-                    { name: 'James Carter', sections: ['Academics', 'Athletics'], time: '6m 44s', active: false },
-                    { name: 'Devon Brooks', sections: ['Tour', 'Jersey Room', 'Athletics'], time: '22m 08s', active: false },
-                  ].map((recruit, i) => (
-                    <div
-                      key={recruit.name}
-                      className={`flex items-center justify-between rounded-lg border border-border/50 bg-background/50 p-3 animate-in-up delay-${i + 3}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`h-2 w-2 rounded-full ${recruit.active ? 'bg-emerald animate-pulse' : 'bg-muted-foreground/30'}`} />
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {recruit.name}
-                          </p>
-                          <div className="flex gap-1 mt-0.5">
-                            {recruit.sections.map((s) => (
-                              <span
-                                key={s}
-                                className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground"
-                              >
-                                {s}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono text-muted-foreground text-scoreboard">
-                        {recruit.time}
-                      </span>
-                    </div>
-                  ))}
+                <div className="glass-panel rounded-xl p-6 text-center">
+                  <p className="text-scoreboard text-4xl font-bold text-foreground">4.2</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Avg Sections</p>
                 </div>
               </div>
             </div>
@@ -362,15 +428,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* ═══ PRICING ═══ */}
       <section id="pricing" className="px-6 py-32">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-16 text-center animate-in-up">
-            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+          <div className="mb-20 text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
               Pricing
             </span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
-              Free for recruits. Simple for coaches.
+            <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
+              Free for recruits.
+              <br />
+              Simple for coaches.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Recruits browse every school for free, always. Coaches unlock
@@ -426,23 +494,23 @@ export default function LandingPage() {
                 cta: 'Contact Sales',
                 highlight: false,
               },
-            ].map((tier, i) => (
+            ].map((tier) => (
               <div
                 key={tier.name}
-                className={`animate-in-up delay-${i + 1} relative rounded-2xl border p-8 transition-colors ${
+                className={`relative overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 ${
                   tier.highlight
-                    ? 'border-emerald bg-gradient-to-b from-emerald/[0.08] to-transparent shadow-2xl shadow-emerald/10'
-                    : 'border-border bg-card hover:border-white/15'
+                    ? 'border-emerald bg-gradient-to-b from-emerald/[0.06] to-transparent shadow-2xl shadow-emerald/10'
+                    : 'border-border glass-panel hover:border-white/15 hover:shadow-xl hover:shadow-black/20'
                 }`}
               >
                 {tier.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald px-3 py-0.5 text-xs font-semibold text-white shadow-lg shadow-emerald/20">
-                    Most Popular
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald px-3 py-0.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-emerald/20">
+                    Popular
                   </div>
                 )}
-                <h3 className="text-lg font-bold text-foreground">{tier.name}</h3>
+                <h3 className="text-display text-lg text-foreground tracking-normal">{tier.name}</h3>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-5xl font-black text-foreground text-scoreboard">
+                  <span className="text-scoreboard text-5xl font-bold text-foreground">
                     {tier.price}
                   </span>
                   <span className="text-muted-foreground">{tier.period}</span>
@@ -458,7 +526,7 @@ export default function LandingPage() {
                 </ul>
                 <Link href="/register" className="mt-8 block">
                   <Button
-                    className="w-full"
+                    className="w-full uppercase tracking-wider text-xs"
                     variant={tier.highlight ? 'default' : 'outline'}
                   >
                     {tier.cta}
@@ -470,19 +538,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="px-6 py-32">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-16 text-center animate-in-up">
-            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+      {/* ═══ TESTIMONIALS — Pull Quotes ═══ */}
+      <section className="py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-20 text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
               Testimonials
             </span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
+            <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
               Hear from our users
             </h2>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="space-y-16">
             {[
               {
                 quote:
@@ -503,17 +571,14 @@ export default function LandingPage() {
                 role: 'Class of 2027 Recruit',
               },
             ].map((t, i) => (
-              <div
-                key={t.name}
-                className={`animate-in-up delay-${i + 1} relative rounded-2xl border border-border bg-card p-8`}
-              >
-                <Quote className="mb-4 h-6 w-6 text-emerald/40" />
-                <p className="text-sm leading-relaxed text-muted-foreground">
+              <div key={t.name} className={i % 2 === 1 ? 'text-right' : ''}>
+                <div className="section-divider mb-8" />
+                <blockquote className={`font-display text-2xl font-medium leading-relaxed text-foreground sm:text-3xl ${i % 2 === 1 ? 'ml-auto' : ''} max-w-3xl`}>
                   &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="mt-6 border-t border-border pt-4">
+                </blockquote>
+                <div className="mt-6">
                   <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}</p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">{t.role}</p>
                 </div>
               </div>
             ))}
@@ -521,45 +586,45 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ═══ FAQ ═══ */}
       <section id="faq" className="px-6 py-32">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-16 text-center animate-in-up">
-            <span className="text-sm font-semibold uppercase tracking-wider text-emerald">
+          <div className="mb-20 text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
               FAQ
             </span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
-              Frequently asked questions
+            <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
+              Frequently Asked
             </h2>
           </div>
 
-          <Accordion type="single" collapsible className="animate-in-up delay-1">
+          <Accordion type="single" collapsible>
             <AccordionItem value="free">
-              <AccordionTrigger>Is OVV free for recruits?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">Is OVV free for recruits?</AccordionTrigger>
               <AccordionContent>
                 Yes, always. Recruits can browse every school profile, explore virtual tours, try the jersey room, and compare programs — completely free. Coaches pay for analytics and CMS tools.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="data">
-              <AccordionTrigger>What data do coaches see about recruits?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What data do coaches see about recruits?</AccordionTrigger>
               <AccordionContent>
                 Coaches can see which recruits viewed their program, which sections they explored (academics, athletics, tour, jersey room), how long they spent, and whether they favorited the school. Recruits control what profile information is visible.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="compare">
-              <AccordionTrigger>How do recruits compare schools?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">How do recruits compare schools?</AccordionTrigger>
               <AccordionContent>
                 Recruits can add up to three schools to a side-by-side comparison view, evaluating academics, athletics, tuition, graduation rates, and more — all in one place.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="invites">
-              <AccordionTrigger>How do invite links work?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">How do invite links work?</AccordionTrigger>
               <AccordionContent>
                 Coaches can generate unique invite links from their dashboard. When a recruit clicks an invite link, they&apos;re taken directly to that school&apos;s profile page. The coach can track which recruits came through each link.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="sports">
-              <AccordionTrigger>What sports are supported?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What sports are supported?</AccordionTrigger>
               <AccordionContent>
                 OVV supports all major college sports including Football, Basketball, Baseball, Soccer, Track &amp; Field, Swimming, Tennis, Golf, Volleyball, Softball, Wrestling, and Lacrosse. Each school can list multiple sports programs.
               </AccordionContent>
@@ -568,50 +633,49 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 py-32">
-        <div className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl border border-emerald/20 p-12 text-center sm:p-16">
-          {/* Background orbs */}
-          <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-emerald/[0.06] blur-[80px] animate-float-slow" />
-          <div className="absolute -bottom-20 -right-20 h-60 w-60 rounded-full bg-emerald/[0.04] blur-[80px] animate-float-slow" style={{ animationDelay: '3s' }} />
-          <div className="relative">
-            <h2 className="text-3xl font-black text-foreground sm:text-4xl">
-              Ready to see who&apos;s watching?
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-              Set up your school profile in minutes. Start tracking recruit
-              engagement today.
-            </p>
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Link href="/register">
-                <Button size="lg" className="h-12 gap-2 px-8">
-                  Create Your Program
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/recruit">
-                <Button size="lg" variant="ghost" className="h-12 gap-2 px-8">
-                  <Shield className="h-4 w-4" />
-                  Explore as a Recruit
-                </Button>
-              </Link>
-            </div>
+      {/* ═══ CTA ═══ */}
+      <section className="relative px-6 py-32 bg-noise">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald/[0.03] via-emerald/[0.01] to-transparent" />
+        <div className="relative mx-auto max-w-4xl text-center">
+          <h2 className="text-display text-4xl text-foreground sm:text-6xl">
+            Ready to See
+            <br />
+            <span className="bg-gradient-to-r from-emerald via-emerald-light to-emerald bg-clip-text text-transparent">
+              Who&apos;s Watching?
+            </span>
+          </h2>
+          <p className="mx-auto mt-6 max-w-lg text-muted-foreground">
+            Set up your school profile in minutes. Start tracking recruit
+            engagement today.
+          </p>
+          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link href="/register">
+              <Button size="lg" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
+                Create Your Program
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/recruit">
+              <Button size="lg" variant="ghost" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
+                Explore as a Recruit
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ═══ FOOTER ═══ */}
       <footer className="border-t border-border px-6 py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <div className="flex h-6 w-6 items-center justify-center rounded bg-emerald">
               <GraduationCap className="h-3 w-3 text-white" />
             </div>
-            <span className="text-sm text-muted-foreground">
+            <span className="font-display text-sm uppercase tracking-wider text-muted-foreground">
               &copy; {new Date().getFullYear()} OVV
             </span>
           </div>
-          <div className="flex gap-6 text-sm text-muted-foreground">
+          <div className="flex gap-6 text-xs uppercase tracking-wider text-muted-foreground">
             <Link href="/login" className="hover:text-foreground transition-colors">
               Log In
             </Link>

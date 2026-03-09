@@ -60,24 +60,45 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
     trackEvent(`school:${schoolSlug}`, 'tab_switch', school.id, { tab })
   }
 
+  const tabs = [
+    { value: 'overview', label: 'Overview' },
+    { value: 'academics', label: 'Academics' },
+    { value: 'athletics', label: 'Athletics' },
+    { value: 'nil', label: 'NIL' },
+    { value: 'alumni', label: 'Alumni' },
+    { value: 'tour', label: 'Tour' },
+  ]
+
   return (
     <Tabs defaultValue="overview" onValueChange={handleTabChange}>
-      <TabsList className="w-full justify-start overflow-x-auto">
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="academics">Academics</TabsTrigger>
-        <TabsTrigger value="athletics">Athletics</TabsTrigger>
-        <TabsTrigger value="nil">NIL</TabsTrigger>
-        <TabsTrigger value="alumni">Alumni</TabsTrigger>
-        <TabsTrigger value="tour">Tour</TabsTrigger>
-        <TabsTrigger value="jersey" asChild>
-          <Link href={`/recruit/school/${school.slug}/jersey`}>
-            <Shirt className="mr-1 h-3.5 w-3.5" />
-            Jersey Room
-          </Link>
-        </TabsTrigger>
-      </TabsList>
+      <div className="sticky top-16 z-30 -mx-6 border-b border-border bg-background/80 backdrop-blur-xl px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 lg:rounded-none lg:border-none lg:bg-transparent lg:backdrop-blur-none">
+        <TabsList className="h-auto w-full justify-start gap-0 overflow-x-auto rounded-none border-b border-border bg-transparent p-0 lg:border-b">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors data-[state=active]:border-current data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-foreground hover:text-foreground"
+              style={{
+                ['--school-color' as string]: colorPrimary,
+              }}
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
+          <TabsTrigger
+            value="jersey"
+            asChild
+            className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Link href={`/recruit/school/${school.slug}/jersey`}>
+              <Shirt className="mr-1 h-3.5 w-3.5" />
+              Jersey
+            </Link>
+          </TabsTrigger>
+        </TabsList>
+      </div>
 
-      <TabsContent value="overview" className="mt-6">
+      <TabsContent value="overview" className="mt-8">
         <OverviewTab
           description={school.description}
           academics={school.academics}
@@ -88,7 +109,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="academics" className="mt-6">
+      <TabsContent value="academics" className="mt-8">
         <AcademicsTab
           academics={school.academics}
           colleges={school.colleges}
@@ -97,7 +118,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="athletics" className="mt-6">
+      <TabsContent value="athletics" className="mt-8">
         <AthleticsTab
           sports={school.sports}
           facilities={school.facilities}
@@ -105,7 +126,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="nil" className="mt-6">
+      <TabsContent value="nil" className="mt-8">
         <NilTab
           nilProgram={school.nilProgram}
           schoolId={school.id}
@@ -113,7 +134,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="alumni" className="mt-6">
+      <TabsContent value="alumni" className="mt-8">
         <AlumniTab
           alumni={school.notableAlumni ?? []}
           schoolId={school.id}
@@ -121,7 +142,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="tour" className="mt-6">
+      <TabsContent value="tour" className="mt-8">
         <TourTab
           facilities={school.facilities}
           colorPrimary={colorPrimary}
