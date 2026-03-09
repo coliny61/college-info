@@ -3,10 +3,10 @@
 export async function seedAcademics(prisma: any, schoolMap: Record<string, any>) {
   // ─── School Academic Stats ──────────────────────────────────────────────────
   const academicStats = [
-    { slug: 'texas-tech', enrollment: 40322, admissionRate: 0.68, satAvg: 1140, actAvg: 24, tuitionInState: 11340, tuitionOutOfState: 23830, graduationRate: 0.62, medianEarnings: 49500, retentionRate: 0.84 },
-    { slug: 'usc', enrollment: 49042, admissionRate: 0.12, satAvg: 1480, actAvg: 34, tuitionInState: 66640, tuitionOutOfState: 66640, graduationRate: 0.92, medianEarnings: 74200, retentionRate: 0.97 },
-    { slug: 'baylor', enrollment: 20626, admissionRate: 0.67, satAvg: 1270, actAvg: 29, tuitionInState: 54298, tuitionOutOfState: 54298, graduationRate: 0.78, medianEarnings: 55900, retentionRate: 0.90 },
-    { slug: 'oklahoma', enrollment: 32076, admissionRate: 0.73, satAvg: 1240, actAvg: 27, tuitionInState: 12063, tuitionOutOfState: 29163, graduationRate: 0.71, medianEarnings: 50800, retentionRate: 0.88 },
+    { slug: 'texas-tech', enrollment: 40773, admissionRate: 0.73, satAvg: 1180, actAvg: 25, tuitionInState: 11852, tuitionOutOfState: 24157, graduationRate: 0.67, medianEarnings: 52000, retentionRate: 0.85, studentToFacultyRatio: 21.0, averageClassSize: 35, ranking: 187, athleteGraduationRate: 0.72 },
+    { slug: 'usc', enrollment: 49500, admissionRate: 0.12, satAvg: 1480, actAvg: 34, tuitionInState: 66640, tuitionOutOfState: 66640, graduationRate: 0.92, medianEarnings: 81000, retentionRate: 0.97, studentToFacultyRatio: 9.0, averageClassSize: 26, ranking: 28, athleteGraduationRate: 0.90 },
+    { slug: 'baylor', enrollment: 20824, admissionRate: 0.67, satAvg: 1270, actAvg: 29, tuitionInState: 54298, tuitionOutOfState: 54298, graduationRate: 0.78, medianEarnings: 58000, retentionRate: 0.90, studentToFacultyRatio: 15.0, averageClassSize: 28, ranking: 93, athleteGraduationRate: 0.82 },
+    { slug: 'oklahoma', enrollment: 32217, admissionRate: 0.73, satAvg: 1240, actAvg: 27, tuitionInState: 12063, tuitionOutOfState: 29163, graduationRate: 0.71, medianEarnings: 53000, retentionRate: 0.88, studentToFacultyRatio: 18.0, averageClassSize: 32, ranking: 127, athleteGraduationRate: 0.76 },
   ]
 
   for (const stats of academicStats) {

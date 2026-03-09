@@ -93,8 +93,69 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
     { slug: 'oklahoma', name: 'Lindsey Moore', title: 'Assistant Coach', bio: 'Focuses on midfield play and possession-based tactics, bringing international playing experience to the coaching staff.', yearsAtSchool: 3, sport: 'Soccer' },
   ]
 
+  // Coaching history for head football coaches
+  const coachingHistory: Record<string, { careerRecord: string; championships: string[]; previousRoles: string[]; awards: string[]; playersInNfl: number }> = {
+    'Joey McGuire': {
+      careerRecord: '36-18',
+      championships: ['2025 Big 12 Championship'],
+      previousRoles: ['Head Coach, Cedar Hill HS (2003-2016)', 'Associate HC / DL Coach, Baylor (2017-2021)'],
+      awards: ['2025 Big 12 Coach of the Year', 'Built Texas Tech into a Big 12 contender in 3 seasons'],
+      playersInNfl: 12,
+    },
+    'Lincoln Riley': {
+      careerRecord: '78-22',
+      championships: ['2017 Big 12 Championship', '2018 Big 12 Championship', '2019 Big 12 Championship', '2020 Big 12 Championship'],
+      previousRoles: ['Offensive Coordinator, Oklahoma (2015-2016)', 'Head Coach, Oklahoma (2017-2021)'],
+      awards: ['Mentored 3 Heisman Trophy winners (Mayfield, Murray, Williams)', '2x AP Coach of the Year Finalist'],
+      playersInNfl: 45,
+    },
+    'Dave Aranda': {
+      careerRecord: '30-27',
+      championships: ['2021 Big 12 Championship', '2022 Sugar Bowl Champion'],
+      previousRoles: ['Defensive Coordinator, LSU (2016-2019)', 'Defensive Coordinator, Wisconsin (2013-2015)', 'Defensive Coordinator, Utah State (2012)'],
+      awards: ['2021 AP Big 12 Coach of the Year', '2021 George Munger Coach of the Year Award'],
+      playersInNfl: 15,
+    },
+    'Brent Venables': {
+      careerRecord: '22-17',
+      championships: ['2000 National Championship (as OU DC)', '2016 National Championship (as Clemson DC)', '2018 National Championship (as Clemson DC)'],
+      previousRoles: ['Defensive Coordinator, Clemson (2012-2021)', 'Co-Defensive Coordinator, Oklahoma (1999-2011)'],
+      awards: ['2016 Broyles Award (Top Assistant Coach in America)', '2x National Championship DC'],
+      playersInNfl: 55,
+    },
+    'Scott Drew': {
+      careerRecord: '411-222',
+      championships: ['2021 NCAA National Championship', '2021 Big 12 Tournament Champion', '2023 Big 12 Regular Season Champion'],
+      previousRoles: ['Head Coach, Valparaiso (2000-2003)'],
+      awards: ['2021 Naismith Coach of the Year', '2021 AP Coach of the Year', 'Rebuilt Baylor from NCAA sanctions to national champion'],
+      playersInNfl: 0,
+    },
+    'Grant McCasland': {
+      careerRecord: '192-120',
+      championships: ['2021 C-USA Regular Season Champion', '2021 NIT Champion (North Texas)'],
+      previousRoles: ['Head Coach, North Texas (2017-2023)', 'Assistant Coach, Baylor (2008-2011)'],
+      awards: ['2021 C-USA Coach of the Year', '2023 Joe B. Hall Award'],
+      playersInNfl: 0,
+    },
+    'Eric Musselman': {
+      careerRecord: '218-98 (college)',
+      championships: ['3x NCAA Elite Eight appearances (Nevada, Arkansas)'],
+      previousRoles: ['Head Coach, Arkansas (2019-2024)', 'Head Coach, Nevada (2015-2019)', 'Head Coach, Sacramento Kings (2006-2007)', 'Head Coach, Golden State Warriors (2002-2004)'],
+      awards: ['2x SEC Coach of the Year Finalist', 'Former NBA Head Coach'],
+      playersInNfl: 0,
+    },
+    'Tim Tadlock': {
+      careerRecord: '530-280',
+      championships: ['3x Big 12 Regular Season Champion', '5x College World Series appearances'],
+      previousRoles: ['Assistant Coach, Texas Tech (2004-2012)'],
+      awards: ['3x Big 12 Coach of the Year', 'Built Texas Tech into a national baseball power'],
+      playersInNfl: 0,
+    },
+  }
+
   for (const def of coachDefinitions) {
     const sportKey = (def as any).sport ? `${def.slug}-${(def as any).sport}` : def.slug
+    const history = coachingHistory[def.name]
     await prisma.coach.create({
       data: {
         sportId: sportMap[sportKey].id,
@@ -102,6 +163,13 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
         title: def.title,
         bio: def.bio,
         yearsAtSchool: def.yearsAtSchool,
+        ...(history ? {
+          careerRecord: history.careerRecord,
+          championships: history.championships,
+          previousRoles: history.previousRoles,
+          awards: history.awards,
+          playersInNfl: history.playersInNfl,
+        } : {}),
       },
     })
   }

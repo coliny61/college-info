@@ -13,6 +13,10 @@ interface AcademicsTabProps {
     graduationRate: number
     medianEarnings: number
     retentionRate: number
+    studentToFacultyRatio: number | null
+    averageClassSize: number | null
+    ranking: number | null
+    athleteGraduationRate: number | null
   } | null
   colleges: Array<{
     id: string
@@ -42,6 +46,7 @@ export function AcademicsTab({
       {academics && (
         <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {[
+            ...(academics.ranking ? [{ label: 'US News Rank', value: `#${academics.ranking}` }] : []),
             { label: 'SAT Avg', value: academics.satAvg.toString() },
             { label: 'ACT Avg', value: academics.actAvg.toString() },
             {
@@ -56,6 +61,8 @@ export function AcademicsTab({
               label: 'Retention',
               value: `${(academics.retentionRate * 100).toFixed(0)}%`,
             },
+            ...(academics.studentToFacultyRatio ? [{ label: 'Student:Faculty', value: `${academics.studentToFacultyRatio}:1` }] : []),
+            ...(academics.athleteGraduationRate ? [{ label: 'Athlete Grad Rate', value: `${(academics.athleteGraduationRate * 100).toFixed(0)}%` }] : []),
           ].map((stat) => (
             <Card key={stat.label}>
               <CardContent className="p-4 text-center">

@@ -5,6 +5,8 @@ import {
   TrendingUp,
   DollarSign,
   Building,
+  Trophy,
+  Banknote,
 } from 'lucide-react'
 
 interface OverviewTabProps {
@@ -15,6 +17,8 @@ interface OverviewTabProps {
     graduationRate: number
     medianEarnings: number
   } | null
+  nilBudget: number | null
+  alumniCount: number
   facilities: Array<{
     id: string
     name: string
@@ -58,6 +62,8 @@ function StatCard({
 export function OverviewTab({
   description,
   academics,
+  nilBudget,
+  alumniCount,
   facilities,
   colorPrimary,
 }: OverviewTabProps) {
@@ -73,7 +79,7 @@ export function OverviewTab({
 
       {/* Stats grid */}
       {academics && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
             icon={Users}
             label="Enrollment"
@@ -98,6 +104,22 @@ export function OverviewTab({
             value={`$${academics.medianEarnings.toLocaleString()}`}
             color={colorPrimary}
           />
+          {nilBudget && (
+            <StatCard
+              icon={Banknote}
+              label="NIL Budget"
+              value={nilBudget >= 1000000 ? `$${(nilBudget / 1000000).toFixed(1)}M` : `$${nilBudget.toLocaleString()}`}
+              color={colorPrimary}
+            />
+          )}
+          {alumniCount > 0 && (
+            <StatCard
+              icon={Trophy}
+              label="Notable NFL Alumni"
+              value={alumniCount.toString()}
+              color={colorPrimary}
+            />
+          )}
         </div>
       )}
 

@@ -88,23 +88,29 @@ model School {
   analyticsEvents  AnalyticsEvent[]
   inviteLinks      InviteLink[]
   jerseySelections JerseySelection[]
+  nilProgram       NilProgram?
+  notableAlumni    NotableAlumni[]
 
   @@map("schools")
 }
 
 model SchoolAcademics {
-  id                String @id @default(uuid())
-  schoolId          String @unique
-  school            School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  enrollment        Int
-  admissionRate     Float
-  satAvg            Int
-  actAvg            Int
-  tuitionInState    Int
-  tuitionOutOfState Int
-  graduationRate    Float
-  medianEarnings    Int
-  retentionRate     Float
+  id                     String @id @default(uuid())
+  schoolId               String @unique
+  school                 School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  enrollment             Int
+  admissionRate          Float
+  satAvg                 Int
+  actAvg                 Int
+  tuitionInState         Int
+  tuitionOutOfState      Int
+  graduationRate         Float
+  medianEarnings         Int
+  retentionRate          Float
+  studentToFacultyRatio  Float?
+  averageClassSize       Int?
+  ranking                Int?
+  athleteGraduationRate  Float?
 
   @@map("school_academics")
 }
@@ -184,16 +190,55 @@ model Sport {
 }
 
 model Coach {
-  id            String  @id @default(uuid())
+  id            String   @id @default(uuid())
   sportId       String
-  sport         Sport   @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  sport         Sport    @relation(fields: [sportId], references: [id], onDelete: Cascade)
   name          String
   title         String
   imageUrl      String?
-  bio           String  @db.Text
+  bio           String   @db.Text
   yearsAtSchool Int
+  careerRecord  String?
+  championships String[]
+  previousRoles String[]
+  awards        String[]
+  playersInNfl  Int?
 
   @@map("coaches")
+}
+
+// ─── NIL & Alumni ───────────────────────────────────────────────────────────
+
+model NilProgram {
+  id              String @id @default(uuid())
+  schoolId        String @unique
+  school          School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  collectiveName  String
+  totalBudget     Int
+  footballSpend   Int
+  allSportsSpend  Int
+  founded         Int
+  description     String @db.Text
+  notableDeals    Json?
+
+  @@map("nil_programs")
+}
+
+model NotableAlumni {
+  id               String  @id @default(uuid())
+  schoolId         String
+  school           School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name             String
+  position         String
+  draftYear        Int
+  draftRound       Int
+  draftPick        Int
+  nflTeam          String
+  careerHighlights String  @db.Text
+  isFirstRound     Boolean @default(false)
+  isActive         Boolean @default(true)
+
+  @@map("notable_alumni")
 }
 
 // ─── Facilities & Tours ───────────────────────────────────────────────────────

@@ -44,6 +44,10 @@ export default async function SchoolDetailPage({
           hotspots: true,
         },
       },
+      nilProgram: true,
+      notableAlumni: {
+        orderBy: { draftYear: 'desc' as const },
+      },
     },
   })
 
