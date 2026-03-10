@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { updateProfile, updateRecruitProfile } from '@/app/(platform)/recruit/actions'
-import { SPORTS, POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
+import { POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
 import { toast } from 'sonner'
 
 interface RecruitProfile {
@@ -52,7 +52,7 @@ export function ProfileForm({ displayName, email, role, profile }: ProfileFormPr
 
   // Recruit profile fields
   const parsed = parseHeight(profile?.height)
-  const [sport, setSport] = useState(profile?.sport ?? '')
+  const [sport, setSport] = useState(profile?.sport ?? 'Football')
   const [position, setPosition] = useState(profile?.position ?? '')
   const [heightFeet, setHeightFeet] = useState(parsed.feet)
   const [heightInches, setHeightInches] = useState(parsed.inches)
@@ -165,19 +165,8 @@ export function ProfileForm({ displayName, email, role, profile }: ProfileFormPr
             <form onSubmit={handleProfileSave} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Sport</label>
-                  <Select value={sport} onValueChange={(v) => { setSport(v); setPosition('') }}>
-                    <SelectTrigger><SelectValue placeholder="Select sport" /></SelectTrigger>
-                    <SelectContent>
-                      {SPORTS.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
                   <label className="text-sm font-medium">Position</label>
-                  <Select value={position} onValueChange={setPosition} disabled={!positions.length}>
+                  <Select value={position} onValueChange={setPosition}>
                     <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
                     <SelectContent>
                       {positions.map((p) => (

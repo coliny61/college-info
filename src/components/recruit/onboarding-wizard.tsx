@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { SPORTS, POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
+import { POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
 import { createRecruitProfile } from '@/app/(platform)/recruit/actions'
 import { GraduationCap, Dumbbell, BookOpen, User, ArrowRight, ArrowLeft, Check } from 'lucide-react'
 
@@ -46,7 +46,7 @@ const INITIAL: FormData = {
   highSchool: '',
   city: '',
   state: '',
-  sport: '',
+  sport: 'Football',
   position: '',
   heightFeet: '',
   heightInches: '',
@@ -211,34 +211,16 @@ export function OnboardingWizard() {
             {step === 1 && (
               <>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Sport</label>
-                  <Select
-                    value={data.sport}
-                    onValueChange={(val) => {
-                      setData((prev) => ({ ...prev, sport: val, position: '' }))
-                    }}
-                  >
-                    <SelectTrigger><SelectValue placeholder="Select sport" /></SelectTrigger>
+                  <label className="text-sm font-medium">Position</label>
+                  <Select value={data.position} onValueChange={set('position')}>
+                    <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
                     <SelectContent>
-                      {SPORTS.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      {positions.map((p) => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                {positions.length > 0 && (
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Position</label>
-                    <Select value={data.position} onValueChange={set('position')}>
-                      <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
-                      <SelectContent>
-                        {positions.map((p) => (
-                          <SelectItem key={p} value={p}>{p}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Height (ft)</label>
