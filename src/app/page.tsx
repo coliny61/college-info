@@ -17,13 +17,18 @@ import {
   Users,
   Check,
   GraduationCap,
+  Trophy,
+  Shield,
+  Clock,
+  Download,
+  MapPin,
 } from 'lucide-react'
 
 const SCHOOL_COLORS = [
-  { name: 'Texas Tech', short: 'TTU', primary: '#CC0000', secondary: '#000000' },
-  { name: 'USC', short: 'USC', primary: '#990000', secondary: '#FFC72C' },
-  { name: 'Baylor', short: 'BU', primary: '#003015', secondary: '#FFB81C' },
-  { name: 'Oklahoma', short: 'OU', primary: '#841617', secondary: '#FDF9D8' },
+  { name: 'Texas Tech', short: 'TTU', conference: 'Big 12', primary: '#CC0000', secondary: '#000000' },
+  { name: 'USC', short: 'USC', conference: 'Big Ten', primary: '#990000', secondary: '#FFC72C' },
+  { name: 'Baylor', short: 'BU', conference: 'Big 12', primary: '#003015', secondary: '#FFB81C' },
+  { name: 'Oklahoma', short: 'OU', conference: 'SEC', primary: '#841617', secondary: '#FDF9D8' },
 ]
 
 export default function LandingPage() {
@@ -87,9 +92,9 @@ export default function LandingPage() {
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
           {/* Badge */}
           <div className="animate-in-up mb-10 flex items-center gap-2 rounded-full border border-emerald/20 bg-emerald/5 px-4 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" />
+            <Trophy className="h-3 w-3 text-emerald" />
             <span className="text-xs font-medium uppercase tracking-widest text-emerald">
-              Now Live
+              College Football Recruiting
             </span>
           </div>
 
@@ -104,41 +109,47 @@ export default function LandingPage() {
           </h1>
 
           <p className="animate-in-up delay-3 mx-auto mt-10 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Coaches showcase programs with virtual tours, jersey builders, and rich profiles.
-            Recruits explore for free. Analytics show you who&apos;s truly interested.
+            The recruiting platform built for D1 football. Coaches build immersive program
+            profiles with virtual tours, jersey rooms, and real-time recruit analytics.
+            Recruits explore every program for free.
           </p>
 
           <div className="animate-in-up delay-4 mt-12 flex flex-col items-center gap-4 sm:flex-row">
             <Link href="/register">
               <Button size="lg" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
-                Start Exploring
+                Create Your Program
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/recruit">
+            <Link href="/schools/texas-tech">
               <Button size="lg" variant="outline" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
-                View Demo
+                Preview a School
               </Button>
             </Link>
           </div>
 
-          {/* School badges */}
-          <div className="animate-in-up delay-5 mt-16 flex items-center gap-6">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">Trusted by</span>
-            <div className="flex gap-4">
+          {/* School program badges — more prominent */}
+          <div className="animate-in-up delay-5 mt-20 flex flex-col items-center gap-4">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">
+              Active Programs
+            </span>
+            <div className="flex flex-wrap justify-center gap-3">
               {SCHOOL_COLORS.map((school) => (
                 <div
                   key={school.name}
-                  className="flex items-center gap-2 group"
+                  className="flex items-center gap-2.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-4 py-2 transition-all duration-300 hover:bg-white/[0.05] hover:border-white/[0.12] group"
                 >
                   <div
-                    className="h-8 w-8 rounded-full shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+                    className="h-6 w-6 rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110"
                     style={{
                       background: `linear-gradient(135deg, ${school.primary}, ${school.secondary})`,
                     }}
                   />
-                  <span className="hidden text-xs font-display uppercase tracking-wider text-muted-foreground/40 group-hover:text-muted-foreground transition-colors sm:inline">
+                  <span className="text-xs font-display uppercase tracking-wider text-foreground/70 group-hover:text-foreground transition-colors">
                     {school.short}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/40 hidden sm:inline">
+                    {school.conference}
                   </span>
                 </div>
               ))}
@@ -146,7 +157,7 @@ export default function LandingPage() {
           </div>
 
           {/* Scroll indicator */}
-          <div className="mt-20 animate-bounce-down">
+          <div className="mt-16 animate-bounce-down">
             <ChevronDown className="h-5 w-5 text-muted-foreground/30" />
           </div>
         </div>
@@ -157,10 +168,10 @@ export default function LandingPage() {
         <div className="bg-yard-lines absolute inset-0 pointer-events-none opacity-40" />
         <div className="relative mx-auto max-w-5xl stat-strip py-10 px-6">
           {[
-            { value: '5+', label: 'Programs' },
-            { value: '200+', label: 'Recruits' },
-            { value: '10k+', label: 'Page Views' },
-            { value: '98%', label: 'Retention' },
+            { value: '4', label: 'D1 Programs' },
+            { value: '3', label: 'Conferences' },
+            { value: '36', label: 'Jersey Combos' },
+            { value: '16', label: '360° Tours' },
           ].map((stat) => (
             <div key={stat.label} className="py-2">
               <p className="text-scoreboard text-5xl font-bold text-foreground sm:text-6xl">
@@ -179,13 +190,17 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-20">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
-              Platform
+              The Experience
             </span>
             <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
-              Built for the modern
+              Everything a recruit
               <br />
-              recruiting experience
+              needs to see
             </h2>
+            <p className="mt-4 max-w-xl text-muted-foreground">
+              Virtual tours, jersey customization, program analytics, and detailed academics
+              — all in one place coaches control and recruits explore for free.
+            </p>
           </div>
         </div>
 
@@ -235,10 +250,10 @@ export default function LandingPage() {
                   </div>
                   <div className="space-y-2.5">
                     {[
-                      { name: 'Marcus Johnson', sections: ['Academics', 'Athletics', 'Tour'], time: '14m 32s', active: true },
-                      { name: 'Tyler Williams', sections: ['Overview', 'Jersey Room'], time: '8m 15s', active: true },
-                      { name: 'James Carter', sections: ['Academics', 'Athletics'], time: '6m 44s', active: false },
-                      { name: 'Devon Brooks', sections: ['Tour', 'Jersey Room', 'Athletics'], time: '22m 08s', active: false },
+                      { name: 'Marcus Johnson', pos: 'QB · 2027', sections: ['Football', 'Academics', 'Tour'], time: '14m 32s', active: true },
+                      { name: 'Tyler Williams', pos: 'WR · 2027', sections: ['Jersey Room', 'Campus'], time: '8m 15s', active: true },
+                      { name: 'James Carter', pos: 'LB · 2028', sections: ['Academics', 'Football'], time: '6m 44s', active: false },
+                      { name: 'Devon Brooks', pos: 'RB · 2027', sections: ['Tour', 'Jersey Room', 'Football'], time: '22m 08s', active: false },
                     ].map((recruit) => (
                       <div
                         key={recruit.name}
@@ -247,9 +262,12 @@ export default function LandingPage() {
                         <div className="flex items-center gap-3">
                           <div className={`h-2 w-2 rounded-full ${recruit.active ? 'bg-emerald animate-pulse' : 'bg-muted-foreground/30'}`} />
                           <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {recruit.name}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium text-foreground">
+                                {recruit.name}
+                              </p>
+                              <span className="text-[10px] text-muted-foreground/60">{recruit.pos}</span>
+                            </div>
                             <div className="flex gap-1 mt-0.5">
                               {recruit.sections.map((s) => (
                                 <span
@@ -345,10 +363,10 @@ export default function LandingPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: Compass, label: '360° Virtual Tours' },
-                  { icon: Edit3, label: 'Full Program CMS' },
-                  { icon: Users, label: 'Coaching Staff' },
-                  { icon: BarChart3, label: 'Engagement Data' },
+                  { icon: Compass, label: '360° Stadium Tours', desc: 'Panoramic facility walkthroughs' },
+                  { icon: Edit3, label: 'Program CMS', desc: 'Coaches manage everything' },
+                  { icon: Shield, label: 'Coaching Staff', desc: 'Bios, records, history' },
+                  { icon: MapPin, label: 'Campus Experience', desc: 'Facilities and campus life' },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -356,6 +374,7 @@ export default function LandingPage() {
                   >
                     <item.icon className="h-5 w-5 text-emerald" />
                     <p className="mt-3 text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -374,21 +393,21 @@ export default function LandingPage() {
                 For Coaches
               </span>
               <h2 className="text-display mt-4 text-4xl text-foreground sm:text-5xl leading-[1.1]">
-                Stop Guessing.
+                Know who&apos;s
                 <br />
-                Start Knowing.
+                interested.
               </h2>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-                Every recruit who views your page is tracked. You see their name,
-                which sections they explored, how long they stayed, and whether
-                they came back.
+                Every recruit who views your program is identified. See their name,
+                position, graduation year, which sections they explored, and whether
+                they came back — before you ever make a call.
               </p>
               <div className="mt-8 space-y-4">
                 {[
-                  'See recruit name and email on every view',
-                  'Track time spent on academics, athletics, tour, and jersey',
-                  'Export engagement data as CSV for your recruiting board',
-                  'Generate invite links to share with prospects',
+                  'Full recruit identity — name, position, class year',
+                  'Section-by-section time tracking (football, academics, tour, jersey)',
+                  'Export visit data to CSV for your recruiting board',
+                  'Generate branded invite links for prospect outreach',
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald/10">
@@ -548,10 +567,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-20 text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
-              Testimonials
+              From the Sideline
             </span>
             <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
-              Hear from our users
+              Coaches and recruits
             </h2>
           </div>
 
@@ -559,21 +578,21 @@ export default function LandingPage() {
             {[
               {
                 quote:
-                  'The analytics dashboard changed everything. We can see exactly which recruits are engaging with our program and follow up at the right time.',
+                  'We can see exactly which recruits spent time on our program — who looked at academics, who hit the jersey room, who came back twice. That changes how we prioritize outreach.',
                 name: 'Coach Williams',
-                role: 'Head Coach, Texas Tech',
+                role: 'Defensive Coordinator · Texas Tech',
               },
               {
                 quote:
-                  'Being able to compare schools side by side — academics, athletics, tuition — in one place saved me weeks of research. I found my perfect fit.',
+                  'I could explore every school on my list without making a single phone call. The virtual tours and program details were better than most official visits I\'ve been on.',
                 name: 'Marcus J.',
-                role: 'Class of 2027 Recruit',
+                role: 'QB · Class of 2027',
               },
               {
                 quote:
-                  "The jersey room alone had me hooked. Being able to mix and match uniforms for every school I'm considering made the whole experience feel real.",
+                  "The jersey room is what got me. I spent an hour mixing helmets, jerseys, and pants for every school on my list. It made the decision feel real.",
                 name: 'Tyler W.',
-                role: 'Class of 2027 Recruit',
+                role: 'WR · Class of 2027',
               },
             ].map((t, i) => (
               <div key={t.name} className={i % 2 === 1 ? 'text-right' : ''}>
@@ -596,10 +615,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-3xl">
           <div className="mb-20 text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">
-              FAQ
+              Questions
             </span>
             <h2 className="text-display mt-3 text-4xl text-foreground sm:text-5xl">
-              Frequently Asked
+              How it works
             </h2>
           </div>
 
@@ -607,31 +626,31 @@ export default function LandingPage() {
             <AccordionItem value="free">
               <AccordionTrigger className="text-left font-display uppercase tracking-wide">Is OVV free for recruits?</AccordionTrigger>
               <AccordionContent>
-                Yes, always. Recruits can browse every school profile, explore virtual tours, try the jersey room, and compare programs — completely free. Coaches pay for analytics and CMS tools.
+                Always. Recruits browse every program profile, take virtual tours, customize jerseys, and explore academics — completely free. Coaches invest in the platform to build and track their recruiting presence.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="data">
-              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What data do coaches see about recruits?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What can coaches see about who visits?</AccordionTrigger>
               <AccordionContent>
-                Coaches can see which recruits viewed their program, which sections they explored (academics, athletics, tour, jersey room), how long they spent, and whether they favorited the school. Recruits control what profile information is visible.
+                Coaches see which recruits viewed their program, their position and class year, which sections they explored (football, academics, campus tour, jersey room), total time spent, and whether they returned. It&apos;s the data you need to prioritize outreach.
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="compare">
-              <AccordionTrigger className="text-left font-display uppercase tracking-wide">How do recruits compare schools?</AccordionTrigger>
+            <AccordionItem value="setup">
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">What does the done-for-you setup include?</AccordionTrigger>
               <AccordionContent>
-                Recruits can add up to three schools to a side-by-side comparison view, evaluating academics, athletics, tuition, graduation rates, and more — all in one place.
+                Our Pro tier includes full setup: we photograph your facilities, create 360° tours, build your jersey assets, write your program copy, and configure your analytics dashboard. Your team gets a complete virtual visit experience without lifting a finger.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="invites">
-              <AccordionTrigger className="text-left font-display uppercase tracking-wide">How do invite links work?</AccordionTrigger>
+              <AccordionTrigger className="text-left font-display uppercase tracking-wide">How do coaches share their program?</AccordionTrigger>
               <AccordionContent>
-                Coaches can generate unique invite links from their dashboard. When a recruit clicks an invite link, they&apos;re taken directly to that school&apos;s profile page. The coach can track which recruits came through each link.
+                Coaches generate branded invite links from their dashboard. Share links via email, text, or social media. When a recruit clicks through, they land directly on your program page, and every interaction is tracked back to that invite.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="sports">
               <AccordionTrigger className="text-left font-display uppercase tracking-wide">Is OVV only for football?</AccordionTrigger>
               <AccordionContent>
-                OVV is built specifically for college football recruiting. Every feature — from virtual tours to jersey rooms to analytics — is designed for football programs and football recruits.
+                Yes — by design. OVV is purpose-built for college football recruiting. Every feature, from coaching staff profiles to jersey rooms to visit analytics, is designed specifically for football programs and football recruits.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -650,8 +669,8 @@ export default function LandingPage() {
             </span>
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-muted-foreground">
-            Set up your school profile in minutes. Start tracking recruit
-            engagement today.
+            Build your program&apos;s virtual visit. Start seeing which recruits
+            are genuinely interested — by name, position, and engagement.
           </p>
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link href="/register">
@@ -660,9 +679,9 @@ export default function LandingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/recruit">
+            <Link href="/schools/texas-tech">
               <Button size="lg" variant="ghost" className="h-13 gap-2 px-10 text-sm uppercase tracking-wider font-semibold">
-                Explore as a Recruit
+                Preview a School
               </Button>
             </Link>
           </div>
@@ -687,8 +706,8 @@ export default function LandingPage() {
             <Link href="/register" className="hover:text-foreground transition-colors">
               Sign Up
             </Link>
-            <Link href="/recruit" className="hover:text-foreground transition-colors">
-              Demo
+            <Link href="/schools/texas-tech" className="hover:text-foreground transition-colors">
+              Preview
             </Link>
           </div>
         </div>

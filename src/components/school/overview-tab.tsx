@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   GraduationCap,
   Users,
@@ -6,6 +7,8 @@ import {
   Building,
   Trophy,
   Banknote,
+  Shirt,
+  ArrowRight,
 } from 'lucide-react'
 
 interface OverviewTabProps {
@@ -25,6 +28,8 @@ interface OverviewTabProps {
     description: string
   }>
   colorPrimary: string
+  schoolSlug?: string
+  isPublic?: boolean
 }
 
 export function OverviewTab({
@@ -34,6 +39,8 @@ export function OverviewTab({
   alumniCount,
   facilities,
   colorPrimary,
+  schoolSlug,
+  isPublic = false,
 }: OverviewTabProps) {
   const stats = academics
     ? [
@@ -119,6 +126,45 @@ export function OverviewTab({
             ))}
           </div>
         </div>
+      )}
+
+      {/* Jersey Room CTA */}
+      {schoolSlug && (
+        <>
+          <div className="section-divider" />
+          <Link
+            href={isPublic ? '/register' : `/recruit/school/${schoolSlug}/jersey`}
+            className="group block"
+          >
+            <div
+              className="relative overflow-hidden rounded-xl p-8 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20"
+              style={{
+                background: `linear-gradient(135deg, ${colorPrimary}20, ${colorPrimary}08)`,
+                border: `1px solid ${colorPrimary}25`,
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: colorPrimary + '20' }}
+                  >
+                    <Shirt className="h-6 w-6" style={{ color: colorPrimary }} />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
+                      Jersey Room
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Mix and match helmets, jerseys, and pants — download your dream uniform
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-foreground" />
+              </div>
+            </div>
+          </Link>
+        </>
       )}
     </div>
   )

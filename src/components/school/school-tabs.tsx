@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { OverviewTab } from './overview-tab'
 import { AcademicsTab } from './academics-tab'
 import { AthleticsTab } from './athletics-tab'
+import { CampusTab } from './campus-tab'
 import { NilTab } from './nil-tab'
 import { AlumniTab } from './alumni-tab'
 import { TourTab } from './tour-tab'
@@ -16,16 +17,18 @@ import { getTracker } from '@/lib/analytics-tracker'
 interface SchoolTabsProps {
   school: any
   colorPrimary: string
+  isPublic?: boolean
 }
 
-export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
+export function SchoolTabs({ school, colorPrimary, isPublic = false }: SchoolTabsProps) {
   const schoolSlug = school.slug
   const trackEvent = useTrackEvent()
   const [activeTab, setActiveTab] = useState('overview')
   const tabStartTime = useRef(Date.now())
 
-  // Track duration when tab changes or unmount
+  // Track duration when tab changes or unmount (skip for public pages)
   useEffect(() => {
+    if (isPublic) return
     tabStartTime.current = Date.now()
 
     return () => {
@@ -40,30 +43,33 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         })
       }
     }
-  }, [activeTab, school.id])
+  }, [activeTab, school.id, isPublic])
 
   function handleTabChange(tab: string) {
-    // Track duration for previous tab
-    const duration = Date.now() - tabStartTime.current
-    if (duration > 1000) {
-      const tracker = getTracker()
-      tracker.track({
-        section: `tab:${activeTab}`,
-        action: 'duration',
-        schoolId: school.id,
-        duration,
-      })
+    if (!isPublic) {
+      // Track duration for previous tab
+      const duration = Date.now() - tabStartTime.current
+      if (duration > 1000) {
+        const tracker = getTracker()
+        tracker.track({
+          section: `tab:${activeTab}`,
+          action: 'duration',
+          schoolId: school.id,
+          duration,
+        })
+      }
+      trackEvent(`school:${schoolSlug}`, 'tab_switch', school.id, { tab })
     }
 
     setActiveTab(tab)
     tabStartTime.current = Date.now()
-    trackEvent(`school:${schoolSlug}`, 'tab_switch', school.id, { tab })
   }
 
   const tabs = [
     { value: 'overview', label: 'Overview' },
+    { value: 'athletics', label: 'Football' },
     { value: 'academics', label: 'Academics' },
-    { value: 'athletics', label: 'Athletics' },
+    { value: 'campus', label: 'Campus' },
     { value: 'nil', label: 'NIL' },
     { value: 'alumni', label: 'Alumni' },
     { value: 'tour', label: 'Tour' },
@@ -77,7 +83,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors data-[state=active]:border-current data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-foreground hover:text-foreground"
+              className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-all data-[state=active]:border-[var(--school-color)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-foreground hover:text-foreground"
               style={{
                 ['--school-color' as string]: colorPrimary,
               }}
@@ -90,7 +96,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
             asChild
             className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-foreground"
           >
-            <Link href={`/recruit/school/${school.slug}/jersey`}>
+            <Link href={isPublic ? '/register' : `/recruit/school/${school.slug}/jersey`}>
               <Shirt className="mr-1 h-3.5 w-3.5" />
               Jersey
             </Link>
@@ -98,7 +104,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         </TabsList>
       </div>
 
-      <TabsContent value="overview" className="mt-8">
+      <TabsContent value="overview" className="mt-8 data-[state=active]:animate-in-fade">
         <OverviewTab
           description={school.description}
           academics={school.academics}
@@ -106,19 +112,22 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
           alumniCount={school.notableAlumni?.length ?? 0}
           facilities={school.facilities}
           colorPrimary={colorPrimary}
+          schoolSlug={schoolSlug}
+          isPublic={isPublic}
         />
       </TabsContent>
 
-      <TabsContent value="academics" className="mt-8">
+      <TabsContent value="academics" className="mt-8 data-[state=active]:animate-in-fade">
         <AcademicsTab
           academics={school.academics}
           colleges={school.colleges}
           schoolSlug={schoolSlug}
           colorPrimary={colorPrimary}
+          isPublic={isPublic}
         />
       </TabsContent>
 
-      <TabsContent value="athletics" className="mt-8">
+      <TabsContent value="athletics" className="mt-8 data-[state=active]:animate-in-fade">
         <AthleticsTab
           sports={school.sports}
           facilities={school.facilities}
@@ -126,7 +135,18 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="nil" className="mt-8">
+      <TabsContent value="campus" className="mt-8 data-[state=active]:animate-in-fade">
+        <CampusTab
+          description={school.description}
+          city={school.city}
+          state={school.state}
+          enrollment={school.academics?.enrollment ?? null}
+          facilities={school.facilities}
+          colorPrimary={colorPrimary}
+        />
+      </TabsContent>
+
+      <TabsContent value="nil" className="mt-8 data-[state=active]:animate-in-fade">
         <NilTab
           nilProgram={school.nilProgram}
           schoolId={school.id}
@@ -134,7 +154,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="alumni" className="mt-8">
+      <TabsContent value="alumni" className="mt-8 data-[state=active]:animate-in-fade">
         <AlumniTab
           alumni={school.notableAlumni ?? []}
           schoolId={school.id}
@@ -142,7 +162,7 @@ export function SchoolTabs({ school, colorPrimary }: SchoolTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="tour" className="mt-8">
+      <TabsContent value="tour" className="mt-8 data-[state=active]:animate-in-fade">
         <TourTab
           facilities={school.facilities}
           colorPrimary={colorPrimary}

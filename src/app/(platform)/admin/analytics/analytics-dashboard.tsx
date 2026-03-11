@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,6 +23,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import { RecruitDetailPanel } from '@/components/admin/recruit-detail-panel'
 
 interface AnalyticsDashboardProps {
   schoolId: string
@@ -74,6 +76,13 @@ export function AnalyticsDashboard({
   uniqueRecruits,
   visitInsights,
 }: AnalyticsDashboardProps) {
+  const [selectedRecruitIdx, setSelectedRecruitIdx] = useState<number | null>(null)
+
+  const selectedRecruit = selectedRecruitIdx !== null ? engagementData[selectedRecruitIdx] : null
+  const selectedInsight = selectedRecruit
+    ? visitInsights.find((v) => v.email === selectedRecruit.email) ?? null
+    : null
+
   const handleExport = () => {
     window.open(`/api/analytics/export?schoolId=${schoolId}&days=30`, '_blank')
   }
@@ -237,7 +246,14 @@ export function AnalyticsDashboard({
               </TableHeader>
               <TableBody>
                 {visitInsights.map((insight, i) => (
-                  <TableRow key={i}>
+                  <TableRow
+                    key={i}
+                    className="cursor-pointer hover:bg-emerald/5 transition-colors"
+                    onClick={() => {
+                      const engIdx = engagementData.findIndex((e) => e.email === insight.email)
+                      if (engIdx >= 0) setSelectedRecruitIdx(engIdx)
+                    }}
+                  >
                     <TableCell>
                       <div>
                         <p className="font-medium text-foreground">{insight.name}</p>
@@ -312,7 +328,11 @@ export function AnalyticsDashboard({
               </TableHeader>
               <TableBody>
                 {engagementData.map((recruit, i) => (
-                  <TableRow key={i}>
+                  <TableRow
+                    key={i}
+                    className="cursor-pointer hover:bg-emerald/5 transition-colors"
+                    onClick={() => setSelectedRecruitIdx(i)}
+                  >
                     <TableCell>
                       <div>
                         <p className="font-medium text-foreground">{recruit.name}</p>
@@ -352,6 +372,14 @@ export function AnalyticsDashboard({
           )}
         </CardContent>
       </Card>
+
+      {/* Recruit Detail Panel */}
+      <RecruitDetailPanel
+        open={selectedRecruitIdx !== null}
+        onClose={() => setSelectedRecruitIdx(null)}
+        recruit={selectedRecruit}
+        insight={selectedInsight}
+      />
     </div>
   )
 }

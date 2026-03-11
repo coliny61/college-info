@@ -14,6 +14,7 @@ interface SchoolHeaderProps {
   colorSecondary: string
   colorAccent: string
   isFavorited: boolean
+  isPublic?: boolean
 }
 
 export function SchoolHeader({
@@ -28,6 +29,7 @@ export function SchoolHeader({
   colorSecondary,
   colorAccent,
   isFavorited,
+  isPublic = false,
 }: SchoolHeaderProps) {
   return (
     <div
@@ -69,12 +71,14 @@ export function SchoolHeader({
       </div>
 
       <div className="relative px-6 pb-10 pt-32 sm:px-8 sm:pb-14 sm:pt-40">
-        {/* Favorite button — top right */}
-        <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-          <div className="glass-panel rounded-full p-1">
-            <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+        {/* Favorite button — top right (hidden on public pages) */}
+        {!isPublic && (
+          <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+            <div className="glass-panel rounded-full p-1">
+              <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="animate-in-up">
           {/* Conference + Location — small caps above name */}

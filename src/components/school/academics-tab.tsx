@@ -31,6 +31,7 @@ interface AcademicsTabProps {
   }>
   schoolSlug: string
   colorPrimary: string
+  isPublic?: boolean
 }
 
 export function AcademicsTab({
@@ -38,6 +39,7 @@ export function AcademicsTab({
   colleges,
   schoolSlug,
   colorPrimary,
+  isPublic = false,
 }: AcademicsTabProps) {
   const stats = academics
     ? [
@@ -82,7 +84,7 @@ export function AcademicsTab({
           {colleges.map((college) => (
             <Link
               key={college.id}
-              href={`/recruit/school/${schoolSlug}/college/${college.slug}`}
+              href={isPublic ? `/schools/${schoolSlug}` : `/recruit/school/${schoolSlug}/college/${college.slug}`}
               className="group"
             >
               <div className="relative glass-panel overflow-hidden rounded-xl p-5 transition-all duration-300 hover:bg-white/[0.05] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10">
