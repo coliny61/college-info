@@ -1,15 +1,5 @@
 import Link from 'next/link'
-import {
-  GraduationCap,
-  Users,
-  TrendingUp,
-  DollarSign,
-  Building,
-  Trophy,
-  Banknote,
-  Shirt,
-  ArrowRight,
-} from 'lucide-react'
+import { Building, Shirt, ArrowRight } from 'lucide-react'
 
 interface OverviewTabProps {
   description: string
@@ -44,30 +34,25 @@ export function OverviewTab({
 }: OverviewTabProps) {
   const stats = academics
     ? [
-        { icon: Users, label: 'Enrollment', value: academics.enrollment.toLocaleString() },
-        { icon: GraduationCap, label: 'Admission Rate', value: `${(academics.admissionRate * 100).toFixed(0)}%` },
-        { icon: TrendingUp, label: 'Graduation Rate', value: `${(academics.graduationRate * 100).toFixed(0)}%` },
-        { icon: DollarSign, label: 'Median Earnings', value: `$${academics.medianEarnings.toLocaleString()}` },
+        { label: 'Enrollment', value: academics.enrollment.toLocaleString() },
+        { label: 'Admission Rate', value: `${(academics.admissionRate * 100).toFixed(0)}%` },
+        { label: 'Graduation Rate', value: `${(academics.graduationRate * 100).toFixed(0)}%` },
+        { label: 'Median Earnings', value: `$${academics.medianEarnings.toLocaleString()}` },
         ...(nilBudget
-          ? [{ icon: Banknote, label: 'NIL Budget', value: nilBudget >= 1000000 ? `$${(nilBudget / 1000000).toFixed(1)}M` : `$${nilBudget.toLocaleString()}` }]
+          ? [{ label: 'NIL Budget', value: nilBudget >= 1000000 ? `$${(nilBudget / 1000000).toFixed(1)}M` : `$${nilBudget.toLocaleString()}` }]
           : []),
         ...(alumniCount > 0
-          ? [{ icon: Trophy, label: 'NFL Alumni', value: alumniCount.toString() }]
+          ? [{ label: 'NFL Alumni', value: alumniCount.toString() }]
           : []),
       ]
     : []
 
   return (
     <div className="space-y-10 animate-in-up">
-      {/* About — editorial style with drop cap */}
-      <div>
-        <h3 className="text-display mb-4 text-sm tracking-[0.15em] text-muted-foreground">
-          About
-        </h3>
-        <p className="drop-cap text-base leading-relaxed text-muted-foreground">
-          {description}
-        </p>
-      </div>
+      {/* About */}
+      <p className="drop-cap text-base leading-relaxed text-muted-foreground">
+        {description}
+      </p>
 
       {/* Stat strip */}
       {stats.length > 0 && (
@@ -76,14 +61,11 @@ export function OverviewTab({
           <div className="stat-strip flex-wrap gap-y-6 py-2">
             {stats.map((stat) => (
               <div key={stat.label} className="min-w-[120px] py-2">
-                <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <stat.icon className="h-3.5 w-3.5" style={{ color: colorPrimary }} />
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                    {stat.label}
-                  </p>
-                </div>
                 <p className="text-scoreboard text-3xl font-bold text-foreground">
                   {stat.value}
+                </p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {stat.label}
                 </p>
               </div>
             ))}

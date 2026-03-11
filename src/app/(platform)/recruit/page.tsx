@@ -75,12 +75,11 @@ export default async function RecruitDashboard() {
     <div className="mx-auto max-w-6xl">
       {/* Welcome */}
       <div className="mb-8 animate-in-up">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-emerald mb-2">Dashboard</p>
         <h1 className="text-display text-4xl text-foreground">
-          Welcome back, {displayName}
+          {displayName}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Explore schools, build your dream uniform, and find the right fit.
+          Browse programs, tour facilities, and build your jersey.
         </p>
       </div>
 

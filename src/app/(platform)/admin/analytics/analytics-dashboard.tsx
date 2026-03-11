@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -11,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Download, Eye, Users, Clock, Activity, BookOpen, Shirt } from 'lucide-react'
+import { Download, Eye, Users, BookOpen, Shirt } from 'lucide-react'
 import {
   BarChart,
   Bar,
@@ -89,45 +88,33 @@ export function AnalyticsDashboard({
 
   return (
     <div className="space-y-8">
-      {/* Stat strip */}
-      <div className="stat-strip flex-wrap gap-y-4 rounded-xl border border-border bg-card/50 py-6 px-4 animate-in-up">
-        {[
-          { icon: Eye, label: 'Total Events', value: totalEvents.toString() },
-          { icon: Users, label: 'Unique Recruits', value: uniqueRecruits.toString() },
-          { icon: Activity, label: 'Sections', value: sectionData.length.toString() },
-          { icon: Clock, label: '30 Days', value: null },
-        ].map((stat) => (
-          <div key={stat.label} className="min-w-[100px] py-1">
-            <div className="flex items-center justify-center gap-1.5 mb-1">
-              <stat.icon className="h-3.5 w-3.5 text-emerald" />
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {stat.label}
-              </p>
-            </div>
-            {stat.value ? (
-              <p className="text-scoreboard text-3xl font-bold text-foreground">
-                {stat.value}
-              </p>
-            ) : (
-              <div className="flex justify-center">
-                <Button size="sm" variant="outline" onClick={handleExport} className="text-[10px] uppercase tracking-wider">
-                  <Download className="mr-1 h-3 w-3" />
-                  Export CSV
-                </Button>
-              </div>
-            )}
+      {/* Top bar */}
+      <div className="flex items-center justify-between animate-in-up">
+        <div className="flex items-center gap-8">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Profile Views</p>
+            <p className="text-scoreboard text-3xl font-bold text-foreground">{totalEvents}</p>
           </div>
-        ))}
+          <div className="h-8 w-px bg-border" />
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Prospects Identified</p>
+            <p className="text-scoreboard text-3xl font-bold text-foreground">{uniqueRecruits}</p>
+          </div>
+        </div>
+        <Button size="sm" variant="outline" onClick={handleExport} className="text-[10px] uppercase tracking-wider">
+          <Download className="mr-1 h-3 w-3" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Views chart — area instead of line */}
       <div className="glass-panel rounded-xl p-6 animate-in-up delay-1">
         <h3 className="text-display text-sm tracking-[0.15em] text-muted-foreground mb-4">
-          Views Over Time
+          Prospect Traffic
         </h3>
         {viewsData.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No analytics data yet. Views will appear as recruits browse your school.
+            No traffic yet. Data appears as recruits browse your program.
           </p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
@@ -164,11 +151,11 @@ export function AnalyticsDashboard({
         {/* Section breakdown */}
         <div className="glass-panel rounded-xl p-6">
           <h3 className="text-display text-sm tracking-[0.15em] text-muted-foreground mb-4">
-            Section Breakdown
+            What They Looked At
           </h3>
           {sectionData.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No section data yet.
+              No data yet.
             </p>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
@@ -186,11 +173,11 @@ export function AnalyticsDashboard({
         {/* Recent activity */}
         <div className="glass-panel rounded-xl p-6">
           <h3 className="text-display text-sm tracking-[0.15em] text-muted-foreground mb-4">
-            Recent Activity
+            Live Feed
           </h3>
           {recentActivity.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No activity yet.
+              No visits yet.
             </p>
           ) : (
             <div className="max-h-[250px] space-y-2 overflow-y-auto">
@@ -220,18 +207,16 @@ export function AnalyticsDashboard({
         </div>
       </div>
 
-      {/* Visit Insights */}
-      <Card className="animate-in-up delay-3">
-        <CardHeader>
-          <CardTitle className="text-display text-sm tracking-[0.15em] text-muted-foreground">Visit Insights</CardTitle>
-          <p className="text-xs text-muted-foreground">
-            Use this data to personalize in-person visits for each recruit.
-          </p>
-        </CardHeader>
-        <CardContent>
+      {/* Visit Prep Intel */}
+      <div className="glass-panel rounded-xl p-6 animate-in-up delay-3">
+        <h3 className="text-display text-sm tracking-[0.15em] text-muted-foreground">Visit Prep Intel</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          What to bring up when they come to campus.
+        </p>
+        <div className="mt-4">
           {visitInsights.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No visit insight data yet. Insights will appear as recruits explore colleges and the jersey room.
+              No data yet. Intel appears as recruits explore academics and the jersey room.
             </p>
           ) : (
             <Table>
@@ -299,18 +284,16 @@ export function AnalyticsDashboard({
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Engagement table */}
-      <Card className="animate-in-up delay-4">
-        <CardHeader>
-          <CardTitle className="text-display text-sm tracking-[0.15em] text-muted-foreground">Recruit Engagement</CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* All Prospects */}
+      <div className="glass-panel rounded-xl p-6 animate-in-up delay-4">
+        <h3 className="text-display text-sm tracking-[0.15em] text-muted-foreground">All Prospects</h3>
+        <div className="mt-4">
           {engagementData.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No recruit engagement data yet.
+              No prospect data yet.
             </p>
           ) : (
             <Table>
@@ -370,8 +353,8 @@ export function AnalyticsDashboard({
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Recruit Detail Panel */}
       <RecruitDetailPanel
