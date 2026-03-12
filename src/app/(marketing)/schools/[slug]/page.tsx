@@ -4,8 +4,10 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { SchoolHeader } from '@/components/school/school-header'
 import { SchoolTabs } from '@/components/school/school-tabs'
+import { MarketingNav } from '@/components/layout/marketing-nav'
+import { MarketingFooter } from '@/components/layout/marketing-footer'
 import { Button } from '@/components/ui/button'
-import { GraduationCap, ArrowRight, ArrowLeft } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -83,35 +85,7 @@ export default async function PublicSchoolPage({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Minimal nav */}
-      <nav className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald">
-              <GraduationCap className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-display text-lg tracking-normal text-foreground">
-              OVV
-            </span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="text-xs uppercase tracking-wider gap-1.5">
-                <ArrowLeft className="h-3.5 w-3.5" />
-                Home
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="ghost" size="sm" className="text-xs uppercase tracking-wider">
-                Log In
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button size="sm" className="text-xs uppercase tracking-wider">Get Started</Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <MarketingNav />
 
       {/* School content */}
       <div className="mx-auto max-w-6xl px-6 pt-24 pb-16 sm:px-8">
@@ -164,6 +138,8 @@ export default async function PublicSchoolPage({
           </Link>
         </div>
       </div>
+
+      <MarketingFooter />
     </div>
   )
 }
