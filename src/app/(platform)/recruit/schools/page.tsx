@@ -73,6 +73,12 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
     orderBy = { name: 'desc' }
   } else if (searchParams.sort === 'conference') {
     orderBy = [{ conference: 'asc' }, { name: 'asc' }]
+  } else if (searchParams.sort === 'tuition-low') {
+    orderBy = { academics: { tuitionInState: 'asc' } }
+  } else if (searchParams.sort === 'tuition-high') {
+    orderBy = { academics: { tuitionInState: 'desc' } }
+  } else if (searchParams.sort === 'enrollment-large') {
+    orderBy = { academics: { enrollment: 'desc' } }
   }
 
   const schools = await prisma.school.findMany({

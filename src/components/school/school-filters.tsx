@@ -11,14 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Search, SlidersHorizontal, X, Bookmark, BookmarkCheck } from 'lucide-react'
 
 const CONFERENCES = ['All', 'SEC', 'Big Ten', 'Big 12', 'ACC', 'Pac-12']
 const SORT_OPTIONS = [
   { value: 'name-asc', label: 'A → Z' },
   { value: 'name-desc', label: 'Z → A' },
   { value: 'conference', label: 'Conference' },
+  { value: 'tuition-low', label: 'Tuition: Low → High' },
+  { value: 'tuition-high', label: 'Tuition: High → Low' },
+  { value: 'enrollment-large', label: 'Enrollment: Large → Small' },
 ]
+
+const SAVED_FILTERS_KEY = 'ovv_saved_filters'
 
 const STATES = ['All', 'CA', 'OK', 'TX'] // States from seeded data
 const TUITION_OPTIONS = [
@@ -41,6 +46,10 @@ export function SchoolFilters() {
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
   const [showMore, setShowMore] = useState(false)
+  const [hasSaved, setHasSaved] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !!localStorage.getItem(SAVED_FILTERS_KEY)
+  })
 
   const search = searchParams.get('q') ?? ''
   const conference = searchParams.get('conference') ?? 'All'
@@ -66,6 +75,25 @@ export function SchoolFilters() {
     },
     [router, pathname, searchParams]
   )
+
+  const saveFilters = () => {
+    const filters = searchParams.toString()
+    localStorage.setItem(SAVED_FILTERS_KEY, filters)
+    setHasSaved(true)
+  }
+
+  const loadFilters = () => {
+    const saved = localStorage.getItem(SAVED_FILTERS_KEY)
+    if (saved) {
+      startTransition(() => {
+        router.push(`${pathname}?${saved}`, { scroll: false })
+      })
+      const params = new URLSearchParams(saved)
+      if (params.get('state') || params.get('tuition') || params.get('enrollment')) {
+        setShowMore(true)
+      }
+    }
+  }
 
   const clearAdvanced = () => {
     const params = new URLSearchParams(searchParams.toString())
@@ -123,20 +151,36 @@ export function SchoolFilters() {
           </SelectContent>
         </Select>
 
-        <Button
-          variant={showMore || hasAdvancedFilters ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setShowMore(!showMore)}
-          className="gap-2 shrink-0"
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
+        <div className="flex gap-2 shrink-0">
+          <Button
+            variant={showMore || hasAdvancedFilters ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setShowMore(!showMore)}
+            className="gap-2"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters
+            {hasAdvancedFilters && (
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">
+                {[stateFilter, tuition, enrollment].filter((v) => v !== 'All').length}
+              </span>
+            )}
+          </Button>
+
           {hasAdvancedFilters && (
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">
-              {[stateFilter, tuition, enrollment].filter((v) => v !== 'All').length}
-            </span>
+            <Button variant="outline" size="sm" onClick={saveFilters} className="gap-1.5">
+              <Bookmark className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Save</span>
+            </Button>
           )}
-        </Button>
+
+          {hasSaved && (
+            <Button variant="outline" size="sm" onClick={loadFilters} className="gap-1.5">
+              <BookmarkCheck className="h-3.5 w-3.5 text-emerald" />
+              <span className="hidden sm:inline">Saved</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Row 2: Advanced Filters (collapsible) */}
