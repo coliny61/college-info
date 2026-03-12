@@ -22,7 +22,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
-import { RecruitDetailPanel } from '@/components/admin/recruit-detail-panel'
+import { RecruitDetailPanel, getInterestLevel } from '@/components/admin/recruit-detail-panel'
+import { Flame } from 'lucide-react'
 
 interface AnalyticsDashboardProps {
   schoolId: string
@@ -300,7 +301,7 @@ export function AnalyticsDashboard({
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-[10px] uppercase tracking-wider">Name</TableHead>
-                  <TableHead className="text-[10px] uppercase tracking-wider">Sport</TableHead>
+                  <TableHead className="text-[10px] uppercase tracking-wider">Interest</TableHead>
                   <TableHead className="text-[10px] uppercase tracking-wider">Position</TableHead>
                   <TableHead className="text-[10px] uppercase tracking-wider">Class</TableHead>
                   <TableHead className="text-[10px] uppercase tracking-wider">Sections</TableHead>
@@ -322,8 +323,16 @@ export function AnalyticsDashboard({
                         <p className="text-[10px] text-muted-foreground">{recruit.email}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-xs">
-                      {recruit.sport ?? '—'}
+                    <TableCell>
+                      {(() => {
+                        const level = getInterestLevel(recruit)
+                        return (
+                          <span className={`inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] uppercase tracking-wider font-medium ${level.bg} ${level.color}`}>
+                            <Flame className="h-2.5 w-2.5" />
+                            {level.label}
+                          </span>
+                        )
+                      })()}
                     </TableCell>
                     <TableCell className="text-muted-foreground text-xs">
                       {recruit.position ?? '—'}
