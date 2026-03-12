@@ -81,7 +81,7 @@ export function SchoolCard({
       <Link href={`/recruit/school/${slug}`} className="block">
         <CardContent className="relative p-5">
           {/* School name + mascot */}
-          <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
+          <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground truncate">
             {name}
           </h3>
           <p className="mt-0.5 text-sm text-muted-foreground">{mascot}</p>

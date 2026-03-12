@@ -163,7 +163,7 @@ export default function LandingPage() {
 
             {/* Jersey Room — combos left, text right */}
             <div className="grid items-center gap-10 lg:grid-cols-2">
-              <div className="order-2 lg:order-1 flex items-end justify-center gap-6 py-4">
+              <div className="order-2 lg:order-1 flex items-end justify-center gap-2 sm:gap-6 py-4">
                 {[
                   { variant: 'home', opacity: '' },
                   { variant: 'away', opacity: 'opacity-70' },
@@ -268,13 +268,13 @@ export default function LandingPage() {
                 returns twice, you know before you ever pick up the phone.
               </p>
 
-              <div className="mt-10 grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-border">
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-px overflow-hidden rounded-xl border border-border">
                 {[
                   { value: '14:32', label: 'Avg time on page' },
                   { value: '89%', label: 'Return within 7 days' },
                   { value: '4.2', label: 'Sections per visit' },
                 ].map((stat) => (
-                  <div key={stat.label} className="bg-card/50 p-5 text-center">
+                  <div key={stat.label} className="bg-card/50 p-4 sm:p-5 text-center">
                     <p className="text-scoreboard text-2xl font-bold text-foreground sm:text-3xl">
                       {stat.value}
                     </p>

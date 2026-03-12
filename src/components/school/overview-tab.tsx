@@ -125,24 +125,24 @@ export function OverviewTab({
                 border: `1px solid ${colorPrimary}25`,
               }}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl"
+                    className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl"
                     style={{ backgroundColor: colorPrimary + '20' }}
                   >
-                    <Shirt className="h-6 w-6" style={{ color: colorPrimary }} />
+                    <Shirt className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: colorPrimary }} />
                   </div>
-                  <div>
-                    <h3 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
+                  <div className="min-w-0">
+                    <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-wide text-foreground">
                       Jersey Room
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                       Mix and match helmets, jerseys, and pants — download your dream uniform
                     </p>
                   </div>
                 </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-foreground" />
+                <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-foreground" />
               </div>
             </div>
           </Link>

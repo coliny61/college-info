@@ -384,12 +384,12 @@ export function AthleticsTab({
                   <h4 className="text-display text-xs tracking-[0.15em] text-muted-foreground">
                     Roster ({roster.length})
                   </h4>
-                  <div className="flex gap-1.5">
+                  <div className="flex flex-wrap gap-1.5">
                     {['all', 'Offense', 'Defense', 'Special Teams'].map((filter) => (
                       <button
                         key={filter}
                         onClick={() => setRosterFilter(filter)}
-                        className={`rounded-sm px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors ${
+                        className={`rounded-sm px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider transition-colors ${
                           rosterFilter === filter
                             ? 'text-white'
                             : 'bg-white/[0.04] text-muted-foreground hover:text-foreground'
@@ -547,24 +547,24 @@ export function AthleticsTab({
               JERSEY
             </div>
 
-            <div className="flex items-center justify-between relative">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between gap-3 relative">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                 <div
-                  className="flex h-14 w-14 items-center justify-center rounded-xl"
+                  className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ backgroundColor: colorPrimary + '25' }}
                 >
-                  <Shirt className="h-7 w-7" style={{ color: colorPrimary }} />
+                  <Shirt className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: colorPrimary }} />
                 </div>
-                <div>
-                  <h3 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
+                <div className="min-w-0">
+                  <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-wide text-foreground">
                     Jersey Room
                   </h3>
-                  <p className="mt-0.5 text-sm text-muted-foreground">
+                  <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground truncate">
                     Build your dream uniform — mix helmets, jerseys, and pants
                   </p>
                 </div>
               </div>
-              <ArrowRight className="h-5 w-5 text-muted-foreground transition-all group-hover:translate-x-1.5 group-hover:text-foreground" />
+              <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition-all group-hover:translate-x-1.5 group-hover:text-foreground" />
             </div>
           </div>
         </Link>
