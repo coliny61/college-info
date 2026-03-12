@@ -16,6 +16,7 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { updateProfile, updateRecruitProfile, updateNotificationPreferences } from '@/app/(platform)/recruit/actions'
 import { POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
+import { recruitProfileSchema } from '@/lib/validations'
 import { toast } from 'sonner'
 
 interface RecruitProfile {
@@ -95,8 +96,12 @@ export function ProfileForm({ displayName, email, role, profile, notificationPre
     const formData = new FormData()
     formData.set('displayName', name)
     try {
-      await updateProfile(formData)
-      toast.success('Account updated')
+      const result = await updateProfile(formData)
+      if ('error' in result) {
+        toast.error(result.error)
+      } else {
+        toast.success('Account updated')
+      }
     } finally {
       setSaving(false)
     }
@@ -104,31 +109,45 @@ export function ProfileForm({ displayName, email, role, profile, notificationPre
 
   const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const height =
+      heightFeet && heightInches
+        ? `${heightFeet}'${heightInches}"`
+        : heightFeet
+          ? `${heightFeet}'0"`
+          : null
+
+    const data = {
+      sport: sport || null,
+      position: position || null,
+      height,
+      weight: weight ? parseInt(weight) : null,
+      graduationYear: gradYear ? parseInt(gradYear) : null,
+      gpa: gpa ? parseFloat(gpa) : null,
+      satScore: sat ? parseInt(sat) : null,
+      actScore: act ? parseInt(act) : null,
+      highSchool: highSchool || null,
+      city: city || null,
+      state: state || null,
+      bio: bio || null,
+      highlightsUrl: highlightsUrl || null,
+    }
+
+    // Client-side validation
+    const validated = recruitProfileSchema.safeParse(data)
+    if (!validated.success) {
+      toast.error(validated.error.issues[0].message)
+      return
+    }
+
     setSaving(true)
     try {
-      const height =
-        heightFeet && heightInches
-          ? `${heightFeet}'${heightInches}"`
-          : heightFeet
-            ? `${heightFeet}'0"`
-            : null
-
-      await updateRecruitProfile({
-        sport: sport || null,
-        position: position || null,
-        height,
-        weight: weight ? parseInt(weight) : null,
-        graduationYear: gradYear ? parseInt(gradYear) : null,
-        gpa: gpa ? parseFloat(gpa) : null,
-        satScore: sat ? parseInt(sat) : null,
-        actScore: act ? parseInt(act) : null,
-        highSchool: highSchool || null,
-        city: city || null,
-        state: state || null,
-        bio: bio || null,
-        highlightsUrl: highlightsUrl || null,
-      })
-      toast.success('Profile updated')
+      const result = await updateRecruitProfile(data)
+      if ('error' in result) {
+        toast.error(result.error)
+      } else {
+        toast.success('Profile updated')
+      }
     } finally {
       setSaving(false)
     }
@@ -338,13 +357,17 @@ export function ProfileForm({ displayName, email, role, profile, notificationPre
             onClick={async () => {
               setSavingNotif(true)
               try {
-                await updateNotificationPreferences({
+                const result = await updateNotificationPreferences({
                   coachViewedProfile: notifCoach,
                   newSchoolAdded: notifSchool,
                   weeklyDigest: notifDigest,
                   marketingEmails: notifMarketing,
                 })
-                toast.success('Notification preferences saved')
+                if ('error' in result) {
+                  toast.error(result.error)
+                } else {
+                  toast.success('Notification preferences saved')
+                }
               } finally {
                 setSavingNotif(false)
               }

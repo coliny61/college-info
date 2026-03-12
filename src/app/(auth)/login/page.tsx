@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Play, Eye, EyeOff, GraduationCap, UserCheck } from 'lucide-react'
+import { loginSchema } from '@/lib/validations'
 
 const ROLE_ROUTES: Record<string, string> = {
   recruit: '/recruit',
@@ -26,9 +27,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [demoLoading, setDemoLoading] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   const handleLogin = async (loginEmail: string, loginPassword: string, role?: string) => {
     setError(null)
+    setFieldErrors({})
     setLoading(true)
 
     const supabase = createClient()
@@ -57,6 +60,16 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const result = loginSchema.safeParse({ email, password })
+    if (!result.success) {
+      const errors: Record<string, string> = {}
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as string
+        if (!errors[field]) errors[field] = issue.message
+      })
+      setFieldErrors(errors)
+      return
+    }
     await handleLogin(email, password)
   }
 
@@ -124,9 +137,10 @@ export default function LoginPage() {
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: '' })) }}
               required
             />
+            {fieldErrors.email && <p className="mt-1 text-sm text-destructive">{fieldErrors.email}</p>}
           </div>
           <div>
             <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
@@ -149,6 +163,7 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {fieldErrors.password && <p className="mt-1 text-sm text-destructive">{fieldErrors.password}</p>}
           </div>
           <Button
             type="submit"

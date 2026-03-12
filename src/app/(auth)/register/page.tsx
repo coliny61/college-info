@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Eye, EyeOff, GraduationCap, UserCheck } from 'lucide-react'
+import { registerSchema } from '@/lib/validations'
 
 type Role = 'recruit' | 'coach_admin'
 
@@ -40,19 +41,29 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [selectedRole, setSelectedRole] = useState<Role>('recruit')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setFieldErrors({})
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.')
-      return
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+    const result = registerSchema.safeParse({
+      displayName,
+      email,
+      password,
+      confirmPassword,
+      role: selectedRole,
+    })
+    if (!result.success) {
+      const errors: Record<string, string> = {}
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as string
+        if (!errors[field]) errors[field] = issue.message
+      })
+      setFieldErrors(errors)
       return
     }
 
@@ -109,9 +120,10 @@ export default function RegisterPage() {
           <Input
             placeholder="Your name"
             value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
+            onChange={(e) => { setDisplayName(e.target.value); setFieldErrors((p) => ({ ...p, displayName: '' })) }}
             required
           />
+          {fieldErrors.displayName && <p className="mt-1 text-sm text-destructive">{fieldErrors.displayName}</p>}
         </div>
         <div>
           <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
@@ -121,9 +133,10 @@ export default function RegisterPage() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: '' })) }}
             required
           />
+          {fieldErrors.email && <p className="mt-1 text-sm text-destructive">{fieldErrors.email}</p>}
         </div>
         <div>
           <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
@@ -134,7 +147,7 @@ export default function RegisterPage() {
               type={showPassword ? 'text' : 'password'}
               placeholder="At least 6 characters"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: '' })) }}
               className="pr-10"
               required
             />
@@ -146,6 +159,7 @@ export default function RegisterPage() {
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
+          {fieldErrors.password && <p className="mt-1 text-sm text-destructive">{fieldErrors.password}</p>}
         </div>
         <div>
           <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
@@ -155,9 +169,10 @@ export default function RegisterPage() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Re-enter your password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => { setConfirmPassword(e.target.value); setFieldErrors((p) => ({ ...p, confirmPassword: '' })) }}
             required
           />
+          {fieldErrors.confirmPassword && <p className="mt-1 text-sm text-destructive">{fieldErrors.confirmPassword}</p>}
         </div>
 
         {/* Role Selector */}
