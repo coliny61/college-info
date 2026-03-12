@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SchoolCard } from '@/components/school/school-card'
 import { OnboardingWizard } from '@/components/recruit/onboarding-wizard'
 import { ProfileSummaryCard } from '@/components/recruit/profile-summary-card'
+import { RecentlyViewed } from '@/components/recruit/recently-viewed'
 import { Search, Heart, Shirt, ArrowRight } from 'lucide-react'
 
 export default async function RecruitDashboard() {
@@ -150,6 +151,9 @@ export default async function RecruitDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recently viewed */}
+      <RecentlyViewed />
 
       {/* Favorites row — horizontal scroll on mobile */}
       {favoriteSchools.length > 0 && (

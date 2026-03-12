@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { SchoolHeader } from '@/components/school/school-header'
 import { SchoolTabs } from '@/components/school/school-tabs'
+import { TrackSchoolView } from '@/components/school/track-school-view'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -97,6 +98,20 @@ export default async function SchoolDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <TrackSchoolView
+        school={{
+          id: school.id,
+          slug: school.slug,
+          name: school.name,
+          shortName: school.shortName,
+          mascot: school.mascot,
+          conference: school.conference,
+          city: school.city,
+          state: school.state,
+          colorPrimary: school.colorPrimary,
+          colorSecondary: school.colorSecondary,
+        }}
+      />
       <Breadcrumb className="animate-in-fade">
         <BreadcrumbList>
           <BreadcrumbItem>
