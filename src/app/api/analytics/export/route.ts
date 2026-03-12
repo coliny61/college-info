@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,6 +12,18 @@ export async function GET(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Rate limit: 5 requests per minute (CSV export is expensive)
+    const rl = rateLimit(`analytics-export:${user.id}`, {
+      windowMs: 60_000,
+      maxRequests: 5,
+    })
+    if (!rl.success) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': '60' } },
+      )
     }
 
     const { searchParams } = new URL(request.url)
