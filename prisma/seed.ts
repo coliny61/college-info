@@ -8,6 +8,7 @@ import { seedAthletics } from '../src/data/seed-athletics'
 import { seedJerseys } from '../src/data/seed-jerseys'
 import { seedNil } from '../src/data/seed-nil'
 import { seedAlumni } from '../src/data/seed-alumni'
+import { seedRoster } from '../src/data/seed-roster'
 
 async function main() {
   // Use direct connection (not pooler) for seeding
@@ -24,6 +25,7 @@ async function main() {
 
   // Clear existing data in dependency order (children first)
   console.log('  Clearing existing data...')
+  await prisma.rosterPlayer.deleteMany()
   await prisma.recruitProfile.deleteMany()
   await prisma.notableAlumni.deleteMany()
   await prisma.nilProgram.deleteMany()
@@ -51,6 +53,7 @@ async function main() {
   await seedJerseys(prisma, schoolMap)
   await seedNil(prisma, schoolMap)
   await seedAlumni(prisma, schoolMap)
+  await seedRoster(prisma, schoolMap)
 
   console.log('\nSeeding complete!')
   await pool.end()

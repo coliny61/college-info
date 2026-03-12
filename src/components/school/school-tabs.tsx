@@ -130,6 +130,7 @@ export function SchoolTabs({ school, colorPrimary, isPublic = false }: SchoolTab
       <TabsContent value="athletics" className="mt-8 data-[state=active]:animate-in-fade">
         <AthleticsTab
           sports={school.sports}
+          roster={school.rosterPlayers ?? []}
           facilities={school.facilities}
           colorPrimary={colorPrimary}
         />

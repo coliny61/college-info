@@ -90,6 +90,7 @@ model School {
   jerseySelections JerseySelection[]
   nilProgram       NilProgram?
   notableAlumni    NotableAlumni[]
+  rosterPlayers    RosterPlayer[]
 
   @@map("schools")
 }
@@ -174,14 +175,18 @@ model CareerOutcome {
 // ─── Athletics ────────────────────────────────────────────────────────────────
 
 model Sport {
-  id         String  @id @default(uuid())
-  schoolId   String
-  school     School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  name       String
-  conference String
-  headCoach  String
-  record     String?
-  ranking    Int?
+  id                 String  @id @default(uuid())
+  schoolId           String
+  school             School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name               String
+  conference         String
+  headCoach          String
+  record             String?
+  ranking            Int?
+  offensiveScheme    String?
+  defensiveScheme    String?
+  offenseDescription String? @db.Text
+  defenseDescription String? @db.Text
 
   coaches    Coach[]
   facilities Facility[]
@@ -205,6 +210,25 @@ model Coach {
   playersInNfl  Int?
 
   @@map("coaches")
+}
+
+model RosterPlayer {
+  id         String  @id @default(uuid())
+  schoolId   String
+  school     School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name       String
+  number     Int
+  position   String
+  height     String
+  weight     Int
+  year       String
+  hometown   String
+  state      String
+  highSchool String?
+  imageUrl   String?
+  isStarter  Boolean @default(false)
+
+  @@map("roster_players")
 }
 
 // ─── NIL & Alumni ───────────────────────────────────────────────────────────

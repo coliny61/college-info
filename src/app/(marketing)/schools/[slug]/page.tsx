@@ -43,6 +43,9 @@ export default async function PublicSchoolPage({
       notableAlumni: {
         orderBy: { draftYear: 'desc' as const },
       },
+      rosterPlayers: {
+        orderBy: [{ isStarter: 'desc' as const }, { position: 'asc' as const }, { name: 'asc' as const }],
+      },
     },
   })
 
