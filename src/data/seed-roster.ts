@@ -37,7 +37,7 @@ export async function seedRoster(prisma: any, schoolMap: Record<string, any>) {
     // ─── USC Trojans ─────────────────────────────────────────────────────────────
     // Offense
     { slug: 'usc', name: 'Jayden Maiava', number: 14, position: 'QB', height: '6-4', weight: 220, year: 'JR', hometown: 'Honolulu', state: 'HI', highSchool: 'Liberty HS (NV)', isStarter: true },
-    { slug: 'usc', name: 'King Miller', number: 30, position: 'RB', height: '6-0', weight: 210, year: 'FR', hometown: 'Miami', state: 'FL', highSchool: 'Northwestern HS', isStarter: true },
+    { slug: 'usc', name: 'King Miller', number: 30, position: 'RB', height: '6-0', weight: 210, year: 'FR', hometown: 'Calabasas', state: 'CA', highSchool: 'Calabasas HS', isStarter: true },
     { slug: 'usc', name: 'Ja\'Kobi Lane', number: 8, position: 'WR', height: '6-4', weight: 200, year: 'JR', hometown: 'Mesa', state: 'AZ', highSchool: 'Red Mountain HS', isStarter: true },
     { slug: 'usc', name: 'Makai Lemon', number: 6, position: 'WR', height: '5-11', weight: 195, year: 'JR', hometown: 'Los Alamitos', state: 'CA', highSchool: 'Los Alamitos HS', isStarter: true },
     { slug: 'usc', name: 'Tanook Hines', number: 16, position: 'WR', height: '6-0', weight: 195, year: 'FR', hometown: 'Los Angeles', state: 'CA', highSchool: 'Loyola HS', isStarter: true },
