@@ -55,7 +55,7 @@ export default async function FavoritesPage() {
             No favorites yet
           </h3>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-            Browse schools and tap the heart icon to save your favorites. They&apos;ll show up here so you can compare.
+            Browse schools and tap the heart icon to save your favorites. They&apos;ll show up here for easy access.
           </p>
           <Link href="/recruit/schools" className="mt-6 inline-block">
             <Button className="gap-2">

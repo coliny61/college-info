@@ -14,7 +14,6 @@ import {
   Building,
   Menu,
   GraduationCap,
-  GitCompareArrows,
 } from 'lucide-react'
 
 interface NavItem {
@@ -26,7 +25,6 @@ interface NavItem {
 const RECRUIT_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/recruit', icon: Home },
   { label: 'Schools', href: '/recruit/schools', icon: Search },
-  { label: 'Compare', href: '/recruit/compare', icon: GitCompareArrows },
   { label: 'Favorites', href: '/recruit/favorites', icon: Heart },
   { label: 'Profile', href: '/recruit/profile', icon: User },
 ]
