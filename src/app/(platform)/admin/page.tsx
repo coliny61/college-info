@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+
+export const metadata: Metadata = { title: 'Coach Dashboard' }
 import { prisma } from '@/lib/prisma'
 import { Eye, Users, BarChart3, Link2, ArrowRight, Building } from 'lucide-react'
 import { InvitesManager } from './invites-manager'

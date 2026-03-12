@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
@@ -7,6 +8,33 @@ import { Button } from '@/components/ui/button'
 import { GraduationCap, ArrowRight, ArrowLeft } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const school = await prisma.school.findUnique({
+    where: { slug },
+    select: { name: true, mascot: true, description: true, conference: true, city: true, state: true },
+  })
+  if (!school) return { title: 'School Not Found' }
+  return {
+    title: `${school.name} ${school.mascot}`,
+    description: school.description.slice(0, 160),
+    openGraph: {
+      title: `${school.name} ${school.mascot} — Official Virtual Visit`,
+      description: `Explore ${school.name}'s football program: 360° facility tours, jersey room, coaching staff, and academics. ${school.conference} · ${school.city}, ${school.state}`,
+      images: [`/panoramas/${slug}-stadium.jpg`],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${school.name} ${school.mascot} | OVV`,
+      images: [`/panoramas/${slug}-stadium.jpg`],
+    },
+  }
+}
 
 export default async function PublicSchoolPage({
   params,

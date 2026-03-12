@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { GraduationCap } from 'lucide-react'
+
+export const metadata: Metadata = { title: 'Welcome' }
 
 export default function AuthLayout({
   children,

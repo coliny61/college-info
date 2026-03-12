@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+
+export const metadata: Metadata = { title: 'Browse Schools' }
 import { prisma } from '@/lib/prisma'
 import { SchoolGrid } from '@/components/school/school-grid'
 import { SchoolFilters } from '@/components/school/school-filters'

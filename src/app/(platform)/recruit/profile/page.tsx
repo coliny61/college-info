@@ -1,6 +1,9 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { ProfileForm } from './profile-form'
+
+export const metadata: Metadata = { title: 'Profile' }
 
 export default async function ProfilePage() {
   const supabase = await createClient()

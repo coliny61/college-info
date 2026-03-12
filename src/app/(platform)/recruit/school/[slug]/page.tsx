@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -12,6 +13,23 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const school = await prisma.school.findUnique({
+    where: { slug },
+    select: { name: true, mascot: true, conference: true },
+  })
+  if (!school) return { title: 'School Not Found' }
+  return {
+    title: `${school.name} ${school.mascot}`,
+    description: `Explore ${school.name} — ${school.conference}`,
+  }
+}
 
 export default async function SchoolDetailPage({
   params,

@@ -20,9 +20,23 @@ const oswald = Oswald({
 })
 
 export const metadata: Metadata = {
-  title: 'OVV — Official Virtual Visit',
+  metadataBase: new URL('https://college-info-nine.vercel.app'),
+  title: {
+    default: 'OVV — Official Virtual Visit',
+    template: '%s | OVV',
+  },
   description:
     'The recruiting platform that helps coaches showcase their programs and gives recruits the tools to explore schools.',
+  openGraph: {
+    type: 'website',
+    siteName: 'OVV — Official Virtual Visit',
+    title: 'OVV — Official Virtual Visit',
+    description:
+      'The recruiting platform that helps coaches showcase their programs and gives recruits the tools to explore schools.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

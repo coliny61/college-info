@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { AnalyticsDashboard } from './analytics-dashboard'
+
+export const metadata: Metadata = { title: 'Analytics' }
 
 export default async function AdminAnalyticsPage() {
   const school = await prisma.school.findFirst()

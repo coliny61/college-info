@@ -1,6 +1,9 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { ProgramManager } from './program-manager'
+
+export const metadata: Metadata = { title: 'Manage Program' }
 
 export default async function AdminProgramPage() {
   const supabase = await createClient()

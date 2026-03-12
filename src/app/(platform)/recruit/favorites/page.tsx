@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
+
+export const metadata: Metadata = { title: 'Favorites' }
 import { SchoolGrid } from '@/components/school/school-grid'
 import { Heart, Search } from 'lucide-react'
 import Link from 'next/link'
