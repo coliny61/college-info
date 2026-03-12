@@ -94,11 +94,12 @@ export function SchoolTabs({ school, colorPrimary, isPublic = false }: SchoolTab
           <TabsTrigger
             value="jersey"
             asChild
-            className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-foreground"
+            className="relative rounded-none border-b-[3px] border-transparent px-4 py-3 font-display text-xs uppercase tracking-[0.15em] transition-colors hover:text-foreground"
+            style={{ color: colorPrimary }}
           >
             <Link href={isPublic ? '/register' : `/recruit/school/${school.slug}/jersey`}>
-              <Shirt className="mr-1 h-3.5 w-3.5" />
-              Jersey
+              <Shirt className="mr-1.5 h-3.5 w-3.5" />
+              Jersey Room
             </Link>
           </TabsTrigger>
         </TabsList>
@@ -133,6 +134,8 @@ export function SchoolTabs({ school, colorPrimary, isPublic = false }: SchoolTab
           roster={school.rosterPlayers ?? []}
           facilities={school.facilities}
           colorPrimary={colorPrimary}
+          schoolSlug={schoolSlug}
+          isPublic={isPublic}
         />
       </TabsContent>
 

@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Trophy, Users, Building, Award, History, ChevronDown, ChevronUp } from 'lucide-react'
+import { Trophy, Users, Building, Award, History, ChevronDown, ChevronUp, Shirt, ArrowRight } from 'lucide-react'
 
 interface AthleticsTabProps {
   sports: Array<{
@@ -50,6 +51,8 @@ interface AthleticsTabProps {
     panoramaUrl: string | null
   }>
   colorPrimary: string
+  schoolSlug?: string
+  isPublic?: boolean
 }
 
 // Group positions for display
@@ -71,6 +74,8 @@ export function AthleticsTab({
   roster,
   facilities,
   colorPrimary,
+  schoolSlug,
+  isPublic = false,
 }: AthleticsTabProps) {
   const [showAllCoaches, setShowAllCoaches] = useState(false)
   const [rosterFilter, setRosterFilter] = useState<string>('all')
@@ -521,6 +526,49 @@ export function AthleticsTab({
           </div>
         )
       })}
+
+      {/* Jersey Room CTA */}
+      {schoolSlug && (
+        <Link
+          href={isPublic ? '/register' : `/recruit/school/${schoolSlug}/jersey`}
+          className="group block"
+        >
+          <div
+            className="relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20"
+            style={{
+              background: `linear-gradient(135deg, ${colorPrimary}25, ${colorPrimary}08)`,
+              border: `1px solid ${colorPrimary}30`,
+            }}
+          >
+            {/* Watermark */}
+            <div
+              className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none font-display text-[6rem] font-black uppercase leading-none tracking-tighter opacity-[0.04]"
+            >
+              JERSEY
+            </div>
+
+            <div className="flex items-center justify-between relative">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: colorPrimary + '25' }}
+                >
+                  <Shirt className="h-7 w-7" style={{ color: colorPrimary }} />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
+                    Jersey Room
+                  </h3>
+                  <p className="mt-0.5 text-sm text-muted-foreground">
+                    Build your dream uniform — mix helmets, jerseys, and pants
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground transition-all group-hover:translate-x-1.5 group-hover:text-foreground" />
+            </div>
+          </div>
+        </Link>
+      )}
     </div>
   )
 }
