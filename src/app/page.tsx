@@ -424,7 +424,7 @@ export default function LandingPage() {
               &copy; {new Date().getFullYear()} OVV
             </span>
           </div>
-          <div className="flex gap-6 text-xs uppercase tracking-wider text-muted-foreground">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-wider text-muted-foreground">
             <Link href="/login" className="hover:text-foreground transition-colors">
               Log In
             </Link>
@@ -433,6 +433,15 @@ export default function LandingPage() {
             </Link>
             <Link href="/schools/texas-tech" className="hover:text-foreground transition-colors">
               Preview
+            </Link>
+            <Link href="/about" className="hover:text-foreground transition-colors">
+              About
+            </Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">
+              Terms
+            </Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              Privacy
             </Link>
           </div>
         </div>
