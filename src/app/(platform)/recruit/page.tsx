@@ -9,6 +9,8 @@ import { SchoolCard } from '@/components/school/school-card'
 import { OnboardingWizard } from '@/components/recruit/onboarding-wizard'
 import { ProfileSummaryCard } from '@/components/recruit/profile-summary-card'
 import { RecentlyViewed } from '@/components/recruit/recently-viewed'
+import { Recommendations } from '@/components/recruit/recommendations'
+import { getRecommendations } from '@/lib/recommendations'
 import { Search, Heart, Shirt, ArrowRight } from 'lucide-react'
 
 export default async function RecruitDashboard() {
@@ -58,7 +60,7 @@ export default async function RecruitDashboard() {
     favoriteIds = new Set(favoriteSchools.map((s) => s.id))
   }
 
-  // Fetch all schools
+  // Fetch all schools (with sports + academics for recommendations)
   const allSchools = await prisma.school.findMany({
     orderBy: { name: 'asc' },
     select: {
@@ -72,8 +74,15 @@ export default async function RecruitDashboard() {
       state: true,
       colorPrimary: true,
       colorSecondary: true,
+      sports: { select: { name: true } },
+      academics: { select: { satAvg: true, admissionRate: true } },
     },
   })
+
+  // Generate recommendations
+  const recommendedSchools = profile
+    ? getRecommendations(profile, allSchools, favoriteIds)
+    : []
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -154,6 +163,9 @@ export default async function RecruitDashboard() {
 
       {/* Recently viewed */}
       <RecentlyViewed />
+
+      {/* Recommendations */}
+      <Recommendations schools={recommendedSchools} />
 
       {/* Favorites row — horizontal scroll on mobile */}
       {favoriteSchools.length > 0 && (
