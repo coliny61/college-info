@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
+import type { School } from '@/generated/prisma/client'
 import { createClient } from '@/lib/supabase/server'
 import { ProgramManager } from './program-manager'
 
@@ -11,7 +12,7 @@ export default async function AdminProgramPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  let school: any = null
+  let school: School | null = null
   if (user) {
     const dbUser = await prisma.user
       .findUnique({

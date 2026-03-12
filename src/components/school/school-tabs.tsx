@@ -14,8 +14,9 @@ import { Shirt } from 'lucide-react'
 import { useTrackEvent } from '@/hooks/use-analytics'
 import { getTracker } from '@/lib/analytics-tracker'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Full Prisma include shape is deeply nested; typed at each tab component level
 interface SchoolTabsProps {
-  school: any
+  school: Record<string, any>
   colorPrimary: string
   isPublic?: boolean
 }

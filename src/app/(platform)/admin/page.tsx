@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Coach Dashboard' }
 import { prisma } from '@/lib/prisma'
+import type { School } from '@/generated/prisma/client'
 import { Eye, Users, BarChart3, Link2, ArrowRight, Building } from 'lucide-react'
 import { InvitesManager } from './invites-manager'
 
@@ -17,7 +18,7 @@ export default async function AdminDashboard() {
     user?.user_metadata?.display_name ?? user?.email?.split('@')[0] ?? 'Coach'
 
   // Get managed school
-  let school: any = null
+  let school: School | null = null
   if (user) {
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },

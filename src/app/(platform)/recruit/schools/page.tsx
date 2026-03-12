@@ -25,7 +25,8 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
   } = await supabase.auth.getUser()
 
   // Build Prisma where clause
-  const where: any = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic nested relation filters require loose typing
+  const where: Record<string, any> = {}
   if (searchParams.q) {
     where.OR = [
       { name: { contains: searchParams.q, mode: 'insensitive' } },
@@ -68,7 +69,7 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
   }
 
   // Build orderBy
-  let orderBy: any = { name: 'asc' }
+  let orderBy: Record<string, unknown> | Record<string, unknown>[] = { name: 'asc' }
   if (searchParams.sort === 'name-desc') {
     orderBy = { name: 'desc' }
   } else if (searchParams.sort === 'conference') {

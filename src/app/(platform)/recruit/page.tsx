@@ -11,6 +11,7 @@ import { ProfileSummaryCard } from '@/components/recruit/profile-summary-card'
 import { RecentlyViewed } from '@/components/recruit/recently-viewed'
 import { Recommendations } from '@/components/recruit/recommendations'
 import { getRecommendations } from '@/lib/recommendations'
+import type { SchoolSummary } from '@/types/school'
 import { Search, Heart, Shirt, ArrowRight } from 'lucide-react'
 
 export default async function RecruitDashboard() {
@@ -32,7 +33,7 @@ export default async function RecruitDashboard() {
   }
 
   // Fetch favorites
-  let favoriteSchools: any[] = []
+  let favoriteSchools: SchoolSummary[] = []
   let favoriteIds = new Set<string>()
   if (user) {
     const favorites = await prisma.favorite.findMany({
