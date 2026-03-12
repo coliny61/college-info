@@ -120,3 +120,29 @@ export async function updateRecruitProfile(data: RecruitProfileInput) {
   revalidatePath('/recruit/profile')
 }
 
+export interface NotificationPreferenceInput {
+  coachViewedProfile: boolean
+  newSchoolAdded: boolean
+  weeklyDigest: boolean
+  marketingEmails: boolean
+}
+
+export async function updateNotificationPreferences(data: NotificationPreferenceInput) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.notificationPreference.upsert({
+    where: { userId: user.id },
+    create: { userId: user.id, ...data },
+    update: data,
+  })
+
+  revalidatePath('/recruit/profile')
+}
+

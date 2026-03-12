@@ -13,7 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { updateProfile, updateRecruitProfile } from '@/app/(platform)/recruit/actions'
+import { Switch } from '@/components/ui/switch'
+import { updateProfile, updateRecruitProfile, updateNotificationPreferences } from '@/app/(platform)/recruit/actions'
 import { POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
 import { toast } from 'sonner'
 
@@ -33,11 +34,19 @@ interface RecruitProfile {
   highlightsUrl?: string | null
 }
 
+interface NotifPrefs {
+  coachViewedProfile: boolean
+  newSchoolAdded: boolean
+  weeklyDigest: boolean
+  marketingEmails: boolean
+}
+
 interface ProfileFormProps {
   displayName: string
   email: string
   role: string
   profile?: RecruitProfile | null
+  notificationPreferences?: NotifPrefs | null
 }
 
 function parseHeight(h: string | null | undefined): { feet: string; inches: string } {
@@ -46,7 +55,7 @@ function parseHeight(h: string | null | undefined): { feet: string; inches: stri
   return match ? { feet: match[1], inches: match[2] } : { feet: '', inches: '' }
 }
 
-export function ProfileForm({ displayName, email, role, profile }: ProfileFormProps) {
+export function ProfileForm({ displayName, email, role, profile, notificationPreferences }: ProfileFormProps) {
   const [name, setName] = useState(displayName)
   const [saving, setSaving] = useState(false)
 
@@ -66,6 +75,13 @@ export function ProfileForm({ displayName, email, role, profile }: ProfileFormPr
   const [state, setState] = useState(profile?.state ?? '')
   const [bio, setBio] = useState(profile?.bio ?? '')
   const [highlightsUrl, setHighlightsUrl] = useState(profile?.highlightsUrl ?? '')
+
+  // Notification preferences
+  const [notifCoach, setNotifCoach] = useState(notificationPreferences?.coachViewedProfile ?? true)
+  const [notifSchool, setNotifSchool] = useState(notificationPreferences?.newSchoolAdded ?? true)
+  const [notifDigest, setNotifDigest] = useState(notificationPreferences?.weeklyDigest ?? false)
+  const [notifMarketing, setNotifMarketing] = useState(notificationPreferences?.marketingEmails ?? false)
+  const [savingNotif, setSavingNotif] = useState(false)
 
   const positions = sport ? (POSITIONS[sport] ?? []) : []
 
@@ -275,6 +291,69 @@ export function ProfileForm({ displayName, email, role, profile }: ProfileFormPr
           </CardContent>
         </Card>
       )}
+
+      {/* Notification Preferences */}
+      <Card className="animate-in-up delay-2">
+        <CardHeader>
+          <CardTitle className="text-lg">Notification Preferences</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            {
+              label: 'Coach viewed your profile',
+              desc: 'Get notified when a coach views your profile.',
+              checked: notifCoach,
+              onChange: setNotifCoach,
+            },
+            {
+              label: 'New school added',
+              desc: 'Be the first to know when a new program joins OVV.',
+              checked: notifSchool,
+              onChange: setNotifSchool,
+            },
+            {
+              label: 'Weekly digest',
+              desc: 'A summary of your activity and new content each week.',
+              checked: notifDigest,
+              onChange: setNotifDigest,
+            },
+            {
+              label: 'Marketing emails',
+              desc: 'Tips, product updates, and occasional promotions.',
+              checked: notifMarketing,
+              onChange: setNotifMarketing,
+            },
+          ].map((pref) => (
+            <div key={pref.label} className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-foreground">{pref.label}</p>
+                <p className="text-xs text-muted-foreground">{pref.desc}</p>
+              </div>
+              <Switch checked={pref.checked} onCheckedChange={pref.onChange} />
+            </div>
+          ))}
+          <Button
+            size="sm"
+            disabled={savingNotif}
+            onClick={async () => {
+              setSavingNotif(true)
+              try {
+                await updateNotificationPreferences({
+                  coachViewedProfile: notifCoach,
+                  newSchoolAdded: notifSchool,
+                  weeklyDigest: notifDigest,
+                  marketingEmails: notifMarketing,
+                })
+                toast.success('Notification preferences saved')
+              } finally {
+                setSavingNotif(false)
+              }
+            }}
+          >
+            {savingNotif ? 'Saving...' : 'Save Preferences'}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -25,11 +25,12 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  recruitProfile   RecruitProfile?
-  favorites        Favorite[]
-  jerseySelections JerseySelection[]
-  analyticsEvents  AnalyticsEvent[]
-  createdInvites   InviteLink[]
+  recruitProfile          RecruitProfile?
+  notificationPreference  NotificationPreference?
+  favorites               Favorite[]
+  jerseySelections        JerseySelection[]
+  analyticsEvents         AnalyticsEvent[]
+  createdInvites          InviteLink[]
 
   @@map("users")
 }
@@ -373,5 +374,17 @@ model InviteLink {
   createdAt DateTime  @default(now())
 
   @@map("invite_links")
+}
+
+model NotificationPreference {
+  id                 String  @id @default(uuid())
+  userId             String  @unique
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coachViewedProfile Boolean @default(true)
+  newSchoolAdded     Boolean @default(true)
+  weeklyDigest       Boolean @default(false)
+  marketingEmails    Boolean @default(false)
+
+  @@map("notification_preferences")
 }
 

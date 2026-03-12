@@ -16,9 +16,10 @@ export default async function ProfilePage() {
   const displayName =
     user.user_metadata?.display_name ?? user.email?.split('@')[0] ?? ''
 
-  const profile = await prisma.recruitProfile.findUnique({
-    where: { userId: user.id },
-  })
+  const [profile, notifPrefs] = await Promise.all([
+    prisma.recruitProfile.findUnique({ where: { userId: user.id } }),
+    prisma.notificationPreference.findUnique({ where: { userId: user.id } }),
+  ])
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -34,6 +35,7 @@ export default async function ProfilePage() {
         email={user.email ?? ''}
         role={user.user_metadata?.role ?? 'recruit'}
         profile={profile}
+        notificationPreferences={notifPrefs}
       />
     </div>
   )
