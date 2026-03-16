@@ -36,6 +36,7 @@ export function RecentlyViewed() {
               state={school.state}
               colorPrimary={school.colorPrimary}
               colorSecondary={school.colorSecondary}
+              logoUrl={school.logoUrl}
               isFavorited={false}
               showFavorite={false}
             />

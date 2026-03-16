@@ -96,6 +96,7 @@ async function SchoolsList({ searchParams }: { searchParams: SearchParams }) {
       state: true,
       colorPrimary: true,
       colorSecondary: true,
+      logoUrl: true,
     },
   })
 

@@ -14,6 +14,7 @@ export default async function LandingPage() {
       conference: true,
       colorPrimary: true,
       colorSecondary: true,
+      logoUrl: true,
     },
     orderBy: { name: 'asc' },
   })
@@ -116,7 +117,7 @@ export default async function LandingPage() {
             </Link>
             <Link href={`/schools/${featuredSlug}`}>
               <Button size="lg" variant="outline" className="h-13 px-10 text-sm uppercase tracking-wider font-semibold">
-                Preview {featured?.shortName ?? 'Demo'}
+                Preview {featured?.name ?? 'Demo'}
               </Button>
             </Link>
           </div>
@@ -128,14 +129,24 @@ export default async function LandingPage() {
                 key={school.slug}
                 className="flex items-center gap-2.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-4 py-2"
               >
-                <div
-                  className="h-5 w-5 rounded-full"
-                  style={{
-                    background: `linear-gradient(135deg, ${school.colorPrimary}, ${school.colorSecondary})`,
-                  }}
-                />
+                {school.logoUrl ? (
+                  <Image
+                    src={school.logoUrl}
+                    alt={school.name}
+                    width={20}
+                    height={20}
+                    className="h-5 w-5 rounded-sm"
+                  />
+                ) : (
+                  <div
+                    className="h-5 w-5 rounded-full"
+                    style={{
+                      background: `linear-gradient(135deg, ${school.colorPrimary}, ${school.colorSecondary})`,
+                    }}
+                  />
+                )}
                 <span className="text-xs font-display uppercase tracking-wider text-foreground/60">
-                  {school.shortName}
+                  {school.name}
                 </span>
                 <span className="text-[10px] text-muted-foreground/30 hidden sm:inline">
                   {school.conference}

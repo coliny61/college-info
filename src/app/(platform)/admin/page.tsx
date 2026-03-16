@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Coach Dashboard' }
@@ -120,18 +121,34 @@ export default async function AdminDashboard() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-          {/* Watermark */}
-          <div
-            className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-hero text-8xl opacity-[0.08]"
-            style={{ color: school.colorAccent || '#fff' }}
-          >
-            {school.shortName}
+          {/* Watermark — logo or mascot */}
+          <div className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none">
+            {school.logoUrl ? (
+              <Image
+                src={school.logoUrl}
+                alt=""
+                width={200}
+                height={200}
+                className="h-32 w-32 opacity-[0.1]"
+              />
+            ) : (
+              <span
+                className="text-hero text-8xl opacity-[0.08]"
+                style={{ color: school.colorAccent || '#fff' }}
+              >
+                {school.mascot}
+              </span>
+            )}
           </div>
 
           <div className="relative flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                <Building className="h-6 w-6 text-white" />
+                {school.logoUrl ? (
+                  <Image src={school.logoUrl} alt={school.name} width={28} height={28} className="h-7 w-7" />
+                ) : (
+                  <Building className="h-6 w-6 text-white" />
+                )}
               </div>
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-white/60">Managing</p>

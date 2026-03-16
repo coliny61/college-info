@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Oklahoma Interlocking OU Logo -->
+  <rect width="200" height="200" rx="20" fill="#841617"/>
+  <!-- O shape -->
+  <ellipse cx="82" cy="100" rx="42" ry="55" stroke="white" stroke-width="16" fill="none"/>
+  <!-- U shape -->
+  <path d="M108 50 L108 130 C108 155 120 170 140 170 C160 170 172 155 172 130 L172 50" stroke="white" stroke-width="16" fill="none" stroke-linecap="round"/>
+</svg>

@@ -110,6 +110,7 @@ export default async function SchoolDetailPage({
           state: school.state,
           colorPrimary: school.colorPrimary,
           colorSecondary: school.colorSecondary,
+          logoUrl: school.logoUrl,
         }}
       />
       <Breadcrumb className="animate-in-fade">
@@ -138,6 +139,7 @@ export default async function SchoolDetailPage({
         colorPrimary={school.colorPrimary}
         colorSecondary={school.colorSecondary}
         colorAccent={school.colorAccent}
+        logoUrl={school.logoUrl}
         isFavorited={isFavorited}
       />
 

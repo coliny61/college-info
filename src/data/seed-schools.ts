@@ -6,7 +6,7 @@ export async function seedSchools(prisma: any) {
       id: 'texas-tech',
       name: 'Texas Tech University',
       slug: 'texas-tech',
-      shortName: 'TTU',
+      shortName: 'Texas Tech',
       mascot: 'Red Raiders',
       conference: 'Big 12',
       city: 'Lubbock',
@@ -15,6 +15,7 @@ export async function seedSchools(prisma: any) {
       colorPrimary: '#CC0000',
       colorSecondary: '#000000',
       colorAccent: '#FFFFFF',
+      logoUrl: '/logos/texas-tech.svg',
       description:
         'Texas Tech University, founded in 1923, is one of the largest comprehensive higher education institutions in the western two-thirds of Texas. Located in Lubbock, Texas Tech enrolls over 40,000 students and is designated as a Carnegie R1 research university. The Red Raiders compete in the Big 12 Conference and play at Jones AT&T Stadium, where the Fearless Champion statue greets fans. The university is known for strong programs in engineering, business, agriculture, and media & communication.',
     },
@@ -22,7 +23,7 @@ export async function seedSchools(prisma: any) {
       id: 'oklahoma',
       name: 'University of Oklahoma',
       slug: 'oklahoma',
-      shortName: 'OU',
+      shortName: 'Oklahoma',
       mascot: 'Sooners',
       conference: 'SEC',
       city: 'Norman',
@@ -31,6 +32,7 @@ export async function seedSchools(prisma: any) {
       colorPrimary: '#841617',
       colorSecondary: '#FDF9D8',
       colorAccent: '#FFFFFF',
+      logoUrl: '/logos/oklahoma.svg',
       description:
         'The University of Oklahoma, founded in 1890, is the flagship public research university of the state of Oklahoma. Located in Norman, OU enrolls over 32,000 students and is recognized for its programs in meteorology, petroleum engineering, and business. The Sooners are one of the most accomplished programs in college football history with 7 national championships and have joined the SEC as of 2024. Gaylord Family Oklahoma Memorial Stadium, known as "The Palace on the Prairie," seats over 80,000 fans.',
     },

@@ -11,6 +11,7 @@ interface School {
   state: string
   colorPrimary: string
   colorSecondary: string
+  logoUrl?: string | null
 }
 
 interface SchoolGridProps {

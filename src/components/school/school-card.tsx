@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 import { MapPin, ArrowRight } from 'lucide-react'
 import { FavoriteButton } from './favorite-button'
@@ -14,6 +15,7 @@ interface SchoolCardProps {
   state: string
   colorPrimary: string
   colorSecondary: string
+  logoUrl?: string | null
   isFavorited?: boolean
   showFavorite?: boolean
 }
@@ -28,6 +30,7 @@ export function SchoolCard({
   state,
   colorPrimary,
   colorSecondary,
+  logoUrl,
   isFavorited = false,
   showFavorite = true,
 }: SchoolCardProps) {
@@ -43,16 +46,26 @@ export function SchoolCard({
         {/* Noise texture */}
         <div className="absolute inset-0 bg-noise pointer-events-none" />
 
-        {/* School short name in band */}
+        {/* School logo in band */}
         <div
           className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
         >
-          <span
-            className="text-hero text-5xl opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.2] sm:text-6xl"
-            style={{ color: '#FFFFFF' }}
-          >
-            {shortName}
-          </span>
+          {logoUrl ? (
+            <Image
+              src={logoUrl}
+              alt={name}
+              width={72}
+              height={72}
+              className="opacity-20 transition-opacity duration-300 group-hover:opacity-30"
+            />
+          ) : (
+            <span
+              className="text-hero text-5xl opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.2] sm:text-6xl"
+              style={{ color: '#FFFFFF' }}
+            >
+              {mascot}
+            </span>
+          )}
         </div>
 
         {/* Favorite — top right in band */}

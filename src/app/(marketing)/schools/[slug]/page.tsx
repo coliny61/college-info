@@ -114,6 +114,7 @@ export default async function PublicSchoolPage({
           colorPrimary={school.colorPrimary}
           colorSecondary={school.colorSecondary}
           colorAccent={school.colorAccent}
+          logoUrl={school.logoUrl}
           isFavorited={false}
           isPublic
         />

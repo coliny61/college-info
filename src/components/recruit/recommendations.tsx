@@ -12,6 +12,7 @@ interface RecommendedSchool {
   state: string
   colorPrimary: string
   colorSecondary: string
+  logoUrl?: string | null
 }
 
 export function Recommendations({ schools }: { schools: RecommendedSchool[] }) {

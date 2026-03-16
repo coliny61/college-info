@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Texas Tech Double T Logo -->
+  <rect width="200" height="200" rx="20" fill="#CC0000"/>
+  <!-- Left T -->
+  <rect x="30" y="40" width="60" height="16" fill="white"/>
+  <rect x="48" y="40" width="24" height="120" fill="white"/>
+  <!-- Right T -->
+  <rect x="110" y="40" width="60" height="16" fill="white"/>
+  <rect x="128" y="40" width="24" height="120" fill="white"/>
+</svg>

@@ -47,7 +47,7 @@ export default async function JerseyRoomPage({
         <div>
           <h1 className="text-2xl font-bold text-foreground">
             <span style={{ color: school.colorPrimary }}>
-              {school.shortName}
+              {school.name}
             </span>{' '}
             Jersey Room
           </h1>

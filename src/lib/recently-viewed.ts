@@ -12,6 +12,7 @@ export interface RecentSchool {
   state: string
   colorPrimary: string
   colorSecondary: string
+  logoUrl?: string | null
   viewedAt: number
 }
 
