@@ -1,7 +1,7 @@
 // seed-jerseys.ts — Creates 36 JerseyAssets (4 schools x 3 types x 3 colors)
 
 export async function seedJerseys(prisma: any, schoolMap: Record<string, any>) {
-  const schools = ['texas-tech', 'usc', 'baylor', 'oklahoma']
+  const schools = ['texas-tech', 'oklahoma']
   const types = ['helmet', 'jersey', 'pants']
   const colorLabels = ['home', 'away', 'alternate']
 

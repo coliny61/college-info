@@ -12,20 +12,6 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
       defenseDescription: 'A 4-2-5 multiple front that plays fast and aggressive. DC Shiel Wood brings a pressure-heavy philosophy with pattern-matching coverage behind it. The extra defensive back replaces a linebacker to defend the spread-heavy Big 12, while still maintaining gap integrity against the run.',
     },
     {
-      slug: 'usc', name: 'Football', conference: 'Big Ten', headCoach: 'Lincoln Riley', record: '7-6', ranking: null,
-      offensiveScheme: 'Air Raid / Spread',
-      defensiveScheme: '4-2-5 (Patterson)',
-      offenseDescription: 'Lincoln Riley\'s Air Raid system is a quarterback-centric attack built on quick-game passing, mesh concepts, and explosive deep shots. The offense uses condensed splits, bunch formations, and tempo to create mismatches. Riley has produced three Heisman-winning QBs in this system.',
-      defenseDescription: 'Gary Patterson\'s 4-2-5 scheme is a proven system that dominated the Big 12 for two decades at TCU. It uses a "robber" safety to disguise coverages, plays sound gap-assignment run defense, and generates pressure through creative blitz packages rather than relying on raw talent alone.',
-    },
-    {
-      slug: 'baylor', name: 'Football', conference: 'Big 12', headCoach: 'Dave Aranda', record: '4-8', ranking: null,
-      offensiveScheme: 'Spread Multiple',
-      defensiveScheme: '3-3-5 Stack',
-      offenseDescription: 'A versatile spread attack that blends West Coast passing concepts with inside-zone and power run schemes. OC Jake Spavital uses multiple formations and personnel groupings to create favorable matchups and get playmakers in space.',
-      defenseDescription: 'Dave Aranda\'s signature 3-3-5 stack defense is one of the most complex and well-coached schemes in college football. It features stacked linebackers behind the defensive line, pattern-match coverage, and the ability to show multiple fronts out of the same personnel. Aranda ran this system as DC at Wisconsin and LSU\'s 2019 national championship team.',
-    },
-    {
       slug: 'oklahoma', name: 'Football', conference: 'SEC', headCoach: 'Brent Venables', record: '6-7', ranking: null,
       offensiveScheme: 'Air Raid / Tempo',
       defensiveScheme: '4-3 Multiple',
@@ -75,30 +61,6 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
     { slug: 'texas-tech', name: 'Matt Linehan', title: 'Linebackers', bio: 'Former college quarterback turned defensive coach. Brings an offensive perspective to linebacker play, particularly in pass coverage.', yearsAtSchool: 1 },
     { slug: 'texas-tech', name: 'Rusty Whitt', title: 'Director of Strength & Conditioning', bio: 'Oversees the physical development of all football student-athletes. Has built one of the most intense offseason programs in the Big 12.', yearsAtSchool: 3 },
 
-    // ─── USC ─────────────────────────────────────────────────────────────────────
-    { slug: 'usc', name: 'Lincoln Riley', title: 'Head Coach', bio: 'Lincoln Riley, one of the most innovative offensive minds in football, left Oklahoma to lead USC in 2022. A proven quarterback developer who mentored two Heisman Trophy winners (Baker Mayfield and Kyler Murray), Riley is building the Trojans into a national championship contender in the Big Ten.', yearsAtSchool: 3 },
-    { slug: 'usc', name: 'Luke Huard', title: 'Offensive Coordinator / Quarterbacks', bio: 'Promoted to offensive coordinator ahead of the 2026 season, Huard works closely with Lincoln Riley to run one of the most explosive passing attacks in the Big Ten.', yearsAtSchool: 2 },
-    { slug: 'usc', name: 'Gary Patterson', title: 'Defensive Coordinator', bio: 'A 2026 College Football Hall of Fame electee and legendary former TCU head coach (2001-2021), Patterson was hired in January 2026 to overhaul the Trojans\' defense with his renowned 4-2-5 scheme.', yearsAtSchool: 1 },
-    { slug: 'usc', name: 'Dennis Simmons', title: 'Wide Receivers / Passing Game Coordinator', bio: 'Followed Lincoln Riley from Oklahoma. One of the best wide receiver coaches in the country with a track record of producing NFL pass catchers.', yearsAtSchool: 3 },
-    { slug: 'usc', name: 'Josh Henson', title: 'Offensive Line / Run Game Coordinator', bio: 'A veteran offensive line coach who has coached at Texas A&M and Missouri. Focuses on run-game physicality to complement Riley\'s passing attack.', yearsAtSchool: 3 },
-    { slug: 'usc', name: 'Shaun Nua', title: 'Defensive Line', bio: 'Hired from Michigan where he helped develop multiple first-round NFL draft picks along the defensive line. Brings a blue-collar, technique-first approach.', yearsAtSchool: 1 },
-    { slug: 'usc', name: 'Brian Odom', title: 'Linebackers', bio: 'Experienced linebackers coach with stops at multiple Power Five programs. Known for developing instinctive, physical linebackers.', yearsAtSchool: 2 },
-    { slug: 'usc', name: 'Donte Williams', title: 'Cornerbacks', bio: 'One of the premier cornerback coaches and recruiters on the West Coast. Has produced multiple NFL draft picks and is a dominant recruiter in Southern California.', yearsAtSchool: 4 },
-    { slug: 'usc', name: 'Craig Naivar', title: 'Safeties / Special Teams Coordinator', bio: 'A veteran coach who coordinates special teams while coaching safeties. Known for attention to detail and situational football.', yearsAtSchool: 2 },
-    { slug: 'usc', name: 'Kiel McDonald', title: 'Running Backs', bio: 'Develops versatile running backs who can catch passes out of the backfield — a key component of Riley\'s Air Raid system.', yearsAtSchool: 3 },
-    { slug: 'usc', name: 'Ben Sowders', title: 'Director of Strength & Conditioning', bio: 'Followed Riley from Oklahoma. Runs a program focused on explosive power and football-specific conditioning.', yearsAtSchool: 3 },
-
-    // ─── Baylor ──────────────────────────────────────────────────────────────────
-    { slug: 'baylor', name: 'Dave Aranda', title: 'Head Coach', bio: 'Dave Aranda, one of the most respected defensive minds in college football, became Baylor\'s head coach in 2020. He led the Bears to a Big 12 Championship in 2021 and a Sugar Bowl victory, establishing Baylor as a consistent contender.', yearsAtSchool: 5 },
-    { slug: 'baylor', name: 'Jake Spavital', title: 'Offensive Coordinator', bio: 'A former head coach at Texas State and offensive coordinator at West Virginia, Spavital brings a creative spread offense that maximizes playmaker touches.', yearsAtSchool: 2 },
-    { slug: 'baylor', name: 'Joe Klanderman', title: 'Defensive Coordinator / Safeties', bio: 'Hired from Kansas State where he spent seven years, including six as defensive coordinator. Klanderman brings a proven track record of building top-tier Big 12 defenses to Waco.', yearsAtSchool: 1 },
-    { slug: 'baylor', name: 'AJ Blazek', title: 'Offensive Line / Run Game Coordinator', bio: 'A veteran offensive line coach who emphasizes physicality and run-game toughness. Has coached at multiple Power Five programs.', yearsAtSchool: 3 },
-    { slug: 'baylor', name: 'Levi Draper', title: 'Linebackers', bio: 'Former Oklahoma linebacker who transitioned into coaching. Brings Big 12 playing experience and a physical, downhill approach to linebacker play.', yearsAtSchool: 2 },
-    { slug: 'baylor', name: 'Vic Shealy', title: 'Cornerbacks', bio: 'Experienced secondary coach with deep roots in Texas recruiting. Has developed multiple NFL defensive backs throughout his career.', yearsAtSchool: 2 },
-    { slug: 'baylor', name: 'Tony Roberts', title: 'Wide Receivers', bio: 'A dynamic recruiter and wide receiver technician who focuses on route-running precision and contested-catch ability.', yearsAtSchool: 2 },
-    { slug: 'baylor', name: 'Mike Siravo', title: 'Defensive Line', bio: 'Former linebackers coach who moved to the defensive line. Known for developing versatile defensive linemen who can play multiple techniques.', yearsAtSchool: 3 },
-    { slug: 'baylor', name: 'David Wetzel', title: 'Director of Strength & Conditioning', bio: 'Runs Baylor\'s strength program with an emphasis on injury prevention and functional football movements.', yearsAtSchool: 4 },
-
     // ─── Oklahoma ────────────────────────────────────────────────────────────────
     { slug: 'oklahoma', name: 'Brent Venables', title: 'Head Coach', bio: 'Brent Venables, a two-time national championship-winning defensive coordinator at Clemson, returned to his alma mater as head coach in 2022. Now navigating OU\'s transition to the SEC, Venables is building a program rooted in defensive toughness and championship culture.', yearsAtSchool: 3 },
     { slug: 'oklahoma', name: 'Ben Arbuckle', title: 'Offensive Coordinator', bio: 'The young play-caller from Washington State brings an innovative Air Raid system to Norman, giving the Sooners a high-tempo, explosive passing attack.', yearsAtSchool: 1 },
@@ -121,20 +83,6 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
       previousRoles: ['Head Coach, Cedar Hill HS (2003-2016)', 'Associate HC / DL Coach, Baylor (2017-2021)'],
       awards: ['2025 Big 12 Coach of the Year', 'Built Texas Tech into a Big 12 contender in 3 seasons'],
       playersInNfl: 12,
-    },
-    'Lincoln Riley': {
-      careerRecord: '78-22',
-      championships: ['2017 Big 12 Championship', '2018 Big 12 Championship', '2019 Big 12 Championship', '2020 Big 12 Championship'],
-      previousRoles: ['Offensive Coordinator, Oklahoma (2015-2016)', 'Head Coach, Oklahoma (2017-2021)'],
-      awards: ['Mentored 3 Heisman Trophy winners (Mayfield, Murray, Williams)', '2x AP Coach of the Year Finalist'],
-      playersInNfl: 45,
-    },
-    'Dave Aranda': {
-      careerRecord: '30-27',
-      championships: ['2021 Big 12 Championship', '2022 Sugar Bowl Champion'],
-      previousRoles: ['Defensive Coordinator, LSU (2016-2019)', 'Defensive Coordinator, Wisconsin (2013-2015)', 'Defensive Coordinator, Utah State (2012)'],
-      awards: ['2021 AP Big 12 Coach of the Year', '2021 George Munger Coach of the Year Award'],
-      playersInNfl: 15,
     },
     'Brent Venables': {
       careerRecord: '22-17',
@@ -174,16 +122,6 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
     { slug: 'texas-tech', key: 'texas-tech-practice', name: 'Sports Performance Center', type: 'practice', description: 'A $46 million state-of-the-art indoor practice facility with a full-size synthetic turf field, coaches\' offices, meeting rooms, and sports science labs.', panoramaUrl: '/panoramas/texas-tech-practice.jpg' },
     { slug: 'texas-tech', key: 'texas-tech-weight-room', name: 'Strength & Conditioning Center', type: 'weight-room', description: 'A massive 25,000 sq ft training facility with Olympic platforms, custom Red Raider branding, and comprehensive recovery amenities including cold plunge pools and cryotherapy chambers.', panoramaUrl: '/panoramas/texas-tech-weight-room.jpg' },
     { slug: 'texas-tech', key: 'texas-tech-locker-room', name: 'Red Raider Locker Room', type: 'locker-room', description: 'A recently renovated players\' locker room with custom wood-and-leather lockers, LED lighting in scarlet and black, and displays honoring Red Raider legends.', panoramaUrl: '/panoramas/texas-tech-locker-room.jpg' },
-    // USC
-    { slug: 'usc', key: 'usc-stadium', name: 'Los Angeles Memorial Coliseum', type: 'stadium', description: 'The iconic 77,500-seat Coliseum, which has hosted two Olympic Games (1932, 1984) and two Super Bowls. The peristyle end and Olympic torch are among the most recognizable landmarks in sports.', panoramaUrl: '/panoramas/usc-stadium.jpg' },
-    { slug: 'usc', key: 'usc-practice', name: 'Howard Jones Field', type: 'practice', description: 'An outdoor practice complex adjacent to the Coliseum with natural grass and synthetic fields, overlooking the LA skyline. Named after USC\'s legendary 1920s-30s era coach.', panoramaUrl: '/panoramas/usc-practice.jpg' },
-    { slug: 'usc', key: 'usc-weight-room', name: 'McKay Center', type: 'weight-room', description: 'A $70 million athletics facility named after coaching legend John McKay, featuring a 30,000 sq ft strength center, hydrotherapy pools, a nutrition bar, and sport science labs.', panoramaUrl: '/panoramas/usc-weight-room.jpg' },
-    { slug: 'usc', key: 'usc-locker-room', name: 'Heritage Hall Locker Room', type: 'locker-room', description: 'The Trojans\' home base inside the renovated Heritage Hall, featuring 11 national championship trophies, seven Heisman Trophy displays, and custom cardinal-and-gold lockers for every player.', panoramaUrl: '/panoramas/usc-locker-room.jpg' },
-    // Baylor
-    { slug: 'baylor', key: 'baylor-stadium', name: 'McLane Stadium', type: 'stadium', description: 'A stunning 45,140-seat stadium opened in 2014 on the banks of the Brazos River. Its distinctive design features a boat dock for tailgating, a 125-foot video board, and panoramic views of the Waco skyline.', panoramaUrl: '/panoramas/baylor-stadium.jpg' },
-    { slug: 'baylor', key: 'baylor-practice', name: 'Allnex Indoor Practice Facility', type: 'practice', description: 'A 90,000 sq ft indoor practice facility with a full-size synthetic turf field, coaches\' viewing deck, and climate control for year-round preparation.', panoramaUrl: '/panoramas/baylor-practice.jpg' },
-    { slug: 'baylor', key: 'baylor-weight-room', name: 'Hurd Performance Center', type: 'weight-room', description: 'A comprehensive strength and conditioning center with custom Baylor branding, Olympic platforms, nutrition stations, and recovery suites for student-athletes.', panoramaUrl: '/panoramas/baylor-weight-room.jpg' },
-    { slug: 'baylor', key: 'baylor-locker-room', name: 'Bears Championship Locker Room', type: 'locker-room', description: 'A recently upgraded locker room featuring custom green-and-gold lockers, a team meeting area, and displays celebrating Baylor\'s 2021 Big 12 Championship and Sugar Bowl victory.', panoramaUrl: '/panoramas/baylor-locker-room.jpg' },
     // Oklahoma
     { slug: 'oklahoma', key: 'oklahoma-stadium', name: 'Gaylord Family Oklahoma Memorial Stadium', type: 'stadium', description: 'Known as "The Palace on the Prairie," this 80,126-seat stadium has been the home of Sooner football since 1923. The Sooner Schooner charges across the field after every OU score, one of college football\'s most beloved traditions.', panoramaUrl: '/panoramas/oklahoma-stadium.jpg' },
     { slug: 'oklahoma', key: 'oklahoma-practice', name: 'Everest Training Center', type: 'practice', description: 'A world-class indoor practice facility with a full-size synthetic field, connected to the Switzer Center for seamless player preparation and game-planning.', panoramaUrl: '/panoramas/oklahoma-practice.jpg' },
@@ -221,31 +159,6 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
     { facilityKey: 'texas-tech-weight-room', x: 0.7, y: 0.6, label: 'Recovery Suite', description: 'Cold plunge pools, cryotherapy chambers, and NormaTec compression boots for elite recovery.' },
     // Texas Tech Locker Room
     { facilityKey: 'texas-tech-locker-room', x: 0.5, y: 0.5, label: 'Red Raider Legacy Wall', description: 'A wall honoring Texas Tech football legends with career highlights and NFL achievements.' },
-
-    // USC Stadium
-    { facilityKey: 'usc-stadium', x: 0.5, y: 0.2, label: 'Olympic Torch', description: 'The iconic Olympic torch from the 1932 and 1984 Games towers above the peristyle end of the Coliseum.' },
-    { facilityKey: 'usc-stadium', x: 0.3, y: 0.5, label: 'Peristyle', description: 'The famous columned peristyle with the Olympic rings, one of the most recognizable landmarks in American sports.' },
-    { facilityKey: 'usc-stadium', x: 0.7, y: 0.7, label: 'Trojan Tunnel', description: 'Where the team enters to "Conquest" — the iconic fight song — as Traveler the white horse leads them onto the field.' },
-    // USC Practice
-    { facilityKey: 'usc-practice', x: 0.5, y: 0.5, label: 'Practice Fields', description: 'Natural grass and synthetic practice fields with the LA skyline as a dramatic backdrop.' },
-    { facilityKey: 'usc-practice', x: 0.8, y: 0.3, label: 'Film Tower', description: 'A state-of-the-art video tower for coaching analysis with drone-compatible airspace.' },
-    // USC Weight Room
-    { facilityKey: 'usc-weight-room', x: 0.5, y: 0.5, label: 'Trojan Performance Center', description: 'The centerpiece of the McKay Center, with 30,000 sq ft of cutting-edge strength and conditioning equipment.' },
-    { facilityKey: 'usc-weight-room', x: 0.3, y: 0.7, label: 'Hydrotherapy Pools', description: 'Hot and cold therapy pools for recovery, plus an underwater treadmill for low-impact conditioning.' },
-    // USC Locker Room
-    { facilityKey: 'usc-locker-room', x: 0.5, y: 0.3, label: 'Heisman Trophy Display', description: 'Seven Heisman Trophy replicas on display — more than any other program in history.' },
-    { facilityKey: 'usc-locker-room', x: 0.5, y: 0.7, label: 'Championship Wall', description: 'Eleven national championship trophies and decades of Trojan football history.' },
-
-    // Baylor Stadium
-    { facilityKey: 'baylor-stadium', x: 0.5, y: 0.8, label: 'Brazos River Docks', description: 'McLane Stadium is one of the only stadiums in the country accessible by boat — fans dock on the Brazos River and walk straight to their seats.' },
-    { facilityKey: 'baylor-stadium', x: 0.7, y: 0.3, label: 'Brazos Video Board', description: 'A 125-foot-wide high-definition video board that dominates the south end zone.' },
-    { facilityKey: 'baylor-stadium', x: 0.3, y: 0.5, label: 'Bear Habitat', description: 'Joy and Lady, Baylor\'s live bear mascots, reside in a state-of-the-art habitat adjacent to the stadium.' },
-    // Baylor Practice
-    { facilityKey: 'baylor-practice', x: 0.5, y: 0.5, label: 'Indoor Turf Field', description: 'A 90,000 sq ft climate-controlled practice facility for year-round preparation in Central Texas heat.' },
-    // Baylor Weight Room
-    { facilityKey: 'baylor-weight-room', x: 0.5, y: 0.5, label: 'Nutrition Station', description: 'A fueling station with prepared meals, smoothie bar, and sports dietitian consultations for peak performance.' },
-    // Baylor Locker Room
-    { facilityKey: 'baylor-locker-room', x: 0.5, y: 0.5, label: 'Championship Display', description: 'Displays celebrating Baylor\'s 2021 Big 12 Championship season and Sugar Bowl victory over Ole Miss.' },
 
     // Oklahoma Stadium
     { facilityKey: 'oklahoma-stadium', x: 0.4, y: 0.7, label: 'Sooner Schooner', description: 'The iconic covered wagon pulled by ponies Boomer and Sooner, which charges across the field after every Oklahoma score.' },

@@ -34,63 +34,6 @@ export async function seedRoster(prisma: any, schoolMap: Record<string, any>) {
     { slug: 'texas-tech', name: 'Upton Bellenfant', number: 97, position: 'K', height: '6-1', weight: 190, year: 'JR', hometown: 'Ashburn', state: 'VA', highSchool: 'Briar Woods HS', isStarter: true },
     { slug: 'texas-tech', name: 'Jack Burgess', number: 41, position: 'P', height: '6-2', weight: 215, year: 'SO', hometown: 'Bacchus Marsh', state: 'VIC', highSchool: 'Bacchus Marsh Grammar', isStarter: true },
 
-    // ─── USC Trojans ─────────────────────────────────────────────────────────────
-    // Offense
-    { slug: 'usc', name: 'Jayden Maiava', number: 14, position: 'QB', height: '6-4', weight: 220, year: 'JR', hometown: 'Honolulu', state: 'HI', highSchool: 'Liberty HS (NV)', isStarter: true },
-    { slug: 'usc', name: 'King Miller', number: 30, position: 'RB', height: '6-0', weight: 210, year: 'FR', hometown: 'Calabasas', state: 'CA', highSchool: 'Calabasas HS', isStarter: true },
-    { slug: 'usc', name: 'Ja\'Kobi Lane', number: 8, position: 'WR', height: '6-4', weight: 200, year: 'JR', hometown: 'Mesa', state: 'AZ', highSchool: 'Red Mountain HS', isStarter: true },
-    { slug: 'usc', name: 'Makai Lemon', number: 6, position: 'WR', height: '5-11', weight: 195, year: 'JR', hometown: 'Los Alamitos', state: 'CA', highSchool: 'Los Alamitos HS', isStarter: true },
-    { slug: 'usc', name: 'Tanook Hines', number: 16, position: 'WR', height: '6-0', weight: 195, year: 'FR', hometown: 'Los Angeles', state: 'CA', highSchool: 'Loyola HS', isStarter: true },
-    { slug: 'usc', name: 'Lake McRee', number: 87, position: 'TE', height: '6-4', weight: 250, year: 'SR', hometown: 'San Clemente', state: 'CA', highSchool: 'San Clemente HS', isStarter: true },
-    { slug: 'usc', name: 'Elijah Paige', number: 72, position: 'OT', height: '6-7', weight: 325, year: 'SO', hometown: 'Pasadena', state: 'CA', highSchool: 'Muir HS', isStarter: true },
-    { slug: 'usc', name: 'Tobias Raymond', number: 73, position: 'OG', height: '6-6', weight: 315, year: 'SO', hometown: 'Portland', state: 'OR', highSchool: 'Central Catholic HS', isStarter: true },
-    { slug: 'usc', name: 'J\'Onre Reed', number: 50, position: 'C', height: '6-3', weight: 320, year: 'SR', hometown: 'Atlanta', state: 'GA', highSchool: 'Westlake HS', isStarter: true },
-    { slug: 'usc', name: 'Alani Noa', number: 77, position: 'OG', height: '6-3', weight: 315, year: 'JR', hometown: 'Oceanside', state: 'CA', highSchool: 'El Camino HS', isStarter: true },
-    { slug: 'usc', name: 'Justin Tauanuu', number: 74, position: 'OT', height: '6-6', weight: 315, year: 'FR', hometown: 'Provo', state: 'UT', highSchool: 'Timpview HS', isStarter: true },
-    // Defense
-    { slug: 'usc', name: 'Anthony Lucas', number: 6, position: 'DE', height: '6-5', weight: 285, year: 'SR', hometown: 'Scottsdale', state: 'AZ', highSchool: 'Chaparral HS', isStarter: true },
-    { slug: 'usc', name: 'Kameryn Crawford', number: 1, position: 'DE', height: '6-5', weight: 265, year: 'SO', hometown: 'McKinney', state: 'TX', highSchool: 'McKinney HS', isStarter: true },
-    { slug: 'usc', name: 'Devan Thompkins', number: 8, position: 'DT', height: '6-5', weight: 290, year: 'JR', hometown: 'Shreveport', state: 'LA', highSchool: 'Captain Shreve HS', isStarter: true },
-    { slug: 'usc', name: 'Jide Abasiri', number: 97, position: 'DT', height: '6-5', weight: 295, year: 'SO', hometown: 'Houston', state: 'TX', highSchool: 'Westfield HS', isStarter: true },
-    { slug: 'usc', name: 'Eric Gentry', number: 18, position: 'LB', height: '6-6', weight: 225, year: 'SR', hometown: 'Philadelphia', state: 'PA', highSchool: 'Neumann Goretti HS', isStarter: true },
-    { slug: 'usc', name: 'Desman Stephens II', number: 23, position: 'LB', height: '6-3', weight: 235, year: 'SO', hometown: 'Fontana', state: 'CA', highSchool: 'Summit HS', isStarter: true },
-    { slug: 'usc', name: 'Marcelles Williams', number: 25, position: 'CB', height: '5-11', weight: 185, year: 'FR', hometown: 'Long Beach', state: 'CA', highSchool: 'Long Beach Poly HS', isStarter: true },
-    { slug: 'usc', name: 'DeCarlos Nicholson', number: 17, position: 'CB', height: '6-3', weight: 200, year: 'SR', hometown: 'Mobile', state: 'AL', highSchool: 'Davidson HS', isStarter: true },
-    { slug: 'usc', name: 'Kamari Ramsey', number: 7, position: 'S', height: '6-0', weight: 205, year: 'JR', hometown: 'Long Beach', state: 'CA', highSchool: 'St. John Bosco HS', isStarter: true },
-    { slug: 'usc', name: 'Bishop Fitzgerald', number: 19, position: 'S', height: '5-11', weight: 205, year: 'SR', hometown: 'Houston', state: 'TX', highSchool: 'Cy-Fair HS', isStarter: true },
-    // Special Teams
-    { slug: 'usc', name: 'Ryon Sayeri', number: 48, position: 'K', height: '5-11', weight: 180, year: 'FR', hometown: 'Encino', state: 'CA', highSchool: 'Crespi HS', isStarter: true },
-    { slug: 'usc', name: 'Sam Johnson', number: 80, position: 'P', height: '6-3', weight: 225, year: 'SR', hometown: 'Brisbane', state: 'QLD', highSchool: 'ProKick Australia', isStarter: true },
-
-    // ─── Baylor Bears ────────────────────────────────────────────────────────────
-    // Offense
-    { slug: 'baylor', name: 'Sawyer Robertson', number: 13, position: 'QB', height: '6-4', weight: 220, year: 'SR', hometown: 'Lubbock', state: 'TX', highSchool: 'Coronado HS', isStarter: true },
-    { slug: 'baylor', name: 'Bryson Washington', number: 7, position: 'RB', height: '6-0', weight: 203, year: 'SO', hometown: 'Franklin', state: 'TX', highSchool: 'Franklin HS', isStarter: true },
-    { slug: 'baylor', name: 'Josh Cameron', number: 34, position: 'WR', height: '6-1', weight: 224, year: 'SR', hometown: 'Cedar Park', state: 'TX', highSchool: 'Cedar Park HS', isStarter: true },
-    { slug: 'baylor', name: 'Ashtyn Hawkins', number: 6, position: 'WR', height: '5-10', weight: 168, year: 'SR', hometown: 'DeSoto', state: 'TX', highSchool: 'DeSoto HS', isStarter: true },
-    { slug: 'baylor', name: 'Kole Wilson', number: 2, position: 'WR', height: '5-9', weight: 171, year: 'SR', hometown: 'Katy', state: 'TX', highSchool: 'Paetow HS', isStarter: true },
-    { slug: 'baylor', name: 'Michael Trigg', number: 1, position: 'TE', height: '6-4', weight: 240, year: 'SR', hometown: 'Tampa', state: 'FL', highSchool: 'Carrollwood Day School', isStarter: true },
-    { slug: 'baylor', name: 'Sidney Fugar', number: 69, position: 'OT', height: '6-5', weight: 343, year: 'SR', hometown: 'Waldorf', state: 'MD', highSchool: 'St. Thomas More', isStarter: true },
-    { slug: 'baylor', name: 'Ryan Lengyel', number: 62, position: 'OG', height: '6-6', weight: 312, year: 'SR', hometown: 'Dallas', state: 'TX', highSchool: 'Jesuit College Prep', isStarter: true },
-    { slug: 'baylor', name: 'Coleton Price', number: 72, position: 'C', height: '6-2', weight: 318, year: 'JR', hometown: 'Bowie', state: 'TX', highSchool: 'Bowie HS', isStarter: true },
-    { slug: 'baylor', name: 'Omar Aigbedion', number: 68, position: 'OG', height: '6-3', weight: 310, year: 'SR', hometown: 'Katy', state: 'TX', highSchool: 'Katy HS', isStarter: true },
-    { slug: 'baylor', name: 'Kaden Sieracki', number: 74, position: 'OT', height: '6-6', weight: 317, year: 'JR', hometown: 'The Woodlands', state: 'TX', highSchool: 'The Woodlands HS', isStarter: true },
-    // Defense
-    { slug: 'baylor', name: 'Treven Ma\'ae', number: 9, position: 'DE', height: '6-4', weight: 240, year: 'SR', hometown: 'Kapolei', state: 'HI', highSchool: 'Kapolei HS', isStarter: true },
-    { slug: 'baylor', name: 'Jackie Marshall', number: 0, position: 'DT', height: '6-2', weight: 306, year: 'SR', hometown: 'Reserve', state: 'LA', highSchool: 'East St. John HS', isStarter: true },
-    { slug: 'baylor', name: 'Elinus Noel III', number: 98, position: 'DT', height: '6-2', weight: 337, year: 'SR', hometown: 'Houma', state: 'LA', highSchool: 'John Curtis HS', isStarter: true },
-    { slug: 'baylor', name: 'Emar\'rion Winston', number: 32, position: 'EDGE', height: '6-4', weight: 255, year: 'JR', hometown: 'Portland', state: 'OR', highSchool: 'Central Catholic HS', isStarter: true },
-    { slug: 'baylor', name: 'Keaton Thomas', number: 11, position: 'LB', height: '6-2', weight: 229, year: 'JR', hometown: 'Jacksonville', state: 'FL', highSchool: 'Trinity Christian Academy', isStarter: true },
-    { slug: 'baylor', name: 'Travion Barnes', number: 36, position: 'LB', height: '6-0', weight: 243, year: 'SR', hometown: 'Altamonte Springs', state: 'FL', highSchool: 'Lyman HS', isStarter: true },
-    { slug: 'baylor', name: 'Kyland Reed', number: 45, position: 'LB', height: '6-1', weight: 218, year: 'SO', hometown: 'Arlington', state: 'TX', highSchool: 'Mansfield Summit HS', isStarter: false },
-    { slug: 'baylor', name: 'Tevin Williams III', number: 27, position: 'CB', height: '6-1', weight: 199, year: 'SR', hometown: 'Stillwater', state: 'OK', highSchool: 'Stillwater HS', isStarter: true },
-    { slug: 'baylor', name: 'LeVar Thornton Jr.', number: 25, position: 'CB', height: '6-3', weight: 182, year: 'SO', hometown: 'Fort Worth', state: 'TX', highSchool: 'Timber Creek HS', isStarter: true },
-    { slug: 'baylor', name: 'Devyn Bobby', number: 3, position: 'S', height: '5-11', weight: 198, year: 'SR', hometown: 'DeSoto', state: 'TX', highSchool: 'DeSoto HS', isStarter: true },
-    { slug: 'baylor', name: 'Al Walcott', number: 13, position: 'S', height: '6-2', weight: 219, year: 'SR', hometown: 'Wilmington', state: 'NC', highSchool: 'Laney HS', isStarter: true },
-    // Special Teams
-    { slug: 'baylor', name: 'Connor Hawkins', number: 96, position: 'K', height: '6-2', weight: 199, year: 'FR', hometown: 'Liberty Hill', state: 'TX', highSchool: 'Liberty Hill HS', isStarter: true },
-    { slug: 'baylor', name: 'Palmer Williams', number: 94, position: 'P', height: '6-2', weight: 203, year: 'JR', hometown: 'Advance', state: 'NC', highSchool: 'Davie HS', isStarter: true },
-
     // ─── Oklahoma Sooners ────────────────────────────────────────────────────────
     // Offense
     { slug: 'oklahoma', name: 'John Mateer', number: 10, position: 'QB', height: '6-1', weight: 224, year: 'JR', hometown: 'San Antonio', state: 'TX', highSchool: 'Cornerstone Christian', isStarter: true },

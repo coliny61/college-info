@@ -14,22 +14,6 @@ export async function seedAlumni(prisma: any, schoolMap: Record<string, any>) {
     { slug: 'texas-tech', name: 'Dadrion Taylor-Demerson', position: 'S', draftYear: 2024, draftRound: 4, draftPick: 104, nflTeam: 'Arizona Cardinals', careerHighlights: 'Immediate contributor as a rookie. Two-time All-Big 12 selection at Texas Tech.', isFirstRound: false, isActive: true },
     { slug: 'texas-tech', name: 'Tahj Brooks', position: 'RB', draftYear: 2025, draftRound: 6, draftPick: 193, nflTeam: 'Cincinnati Bengals', careerHighlights: 'Texas Tech all-time leading rusher with 4,338 career yards. Two-time First-team All-Big 12.', isFirstRound: false, isActive: true },
 
-    // USC
-    { slug: 'usc', name: 'Caleb Williams', position: 'QB', draftYear: 2024, draftRound: 1, draftPick: 1, nflTeam: 'Chicago Bears', careerHighlights: '2022 Heisman Trophy winner. No. 1 overall pick. Electric playmaker and franchise quarterback.', isFirstRound: true, isActive: true },
-    { slug: 'usc', name: 'Carson Palmer', position: 'QB', draftYear: 2003, draftRound: 1, draftPick: 1, nflTeam: 'Cincinnati Bengals', careerHighlights: '3x Pro Bowl, 2002 Heisman Trophy winner. No. 1 overall pick.', isFirstRound: true, isActive: false },
-    { slug: 'usc', name: 'Troy Polamalu', position: 'S', draftYear: 2003, draftRound: 1, draftPick: 16, nflTeam: 'Pittsburgh Steelers', careerHighlights: '2x Super Bowl Champion, 2010 NFL DPOY, 8x Pro Bowl. Pro Football Hall of Fame (2020).', isFirstRound: true, isActive: false },
-    { slug: 'usc', name: 'Ronnie Lott', position: 'S', draftYear: 1981, draftRound: 1, draftPick: 8, nflTeam: 'San Francisco 49ers', careerHighlights: '4x Super Bowl Champion, 10x Pro Bowl. Pro Football Hall of Fame. Greatest safety of all time.', isFirstRound: true, isActive: false },
-    { slug: 'usc', name: 'Clay Matthews III', position: 'LB', draftYear: 2009, draftRound: 1, draftPick: 26, nflTeam: 'Green Bay Packers', careerHighlights: '6x Pro Bowl, Super Bowl XLV Champion. One of the most feared pass rushers of his era.', isFirstRound: true, isActive: false },
-    { slug: 'usc', name: 'Sam Darnold', position: 'QB', draftYear: 2018, draftRound: 1, draftPick: 3, nflTeam: 'New York Jets', careerHighlights: 'No. 3 overall pick. Led Minnesota Vikings to 14-3 season in 2024.', isFirstRound: true, isActive: true },
-
-    // Baylor
-    { slug: 'baylor', name: 'Robert Griffin III', position: 'QB', draftYear: 2012, draftRound: 1, draftPick: 2, nflTeam: 'Washington Redskins', careerHighlights: '2011 Heisman Trophy winner, NFL Offensive Rookie of the Year. Electrifying dual-threat QB.', isFirstRound: true, isActive: false },
-    { slug: 'baylor', name: 'Mike Singletary', position: 'LB', draftYear: 1981, draftRound: 2, draftPick: 38, nflTeam: 'Chicago Bears', careerHighlights: '10x Pro Bowl, 2x NFL DPOY, Super Bowl XX Champion. Pro Football Hall of Fame (1998).', isFirstRound: false, isActive: false },
-    { slug: 'baylor', name: 'Xavien Howard', position: 'CB', draftYear: 2016, draftRound: 2, draftPick: 38, nflTeam: 'Miami Dolphins', careerHighlights: '4x Pro Bowl, 2x First-team All-Pro, 2020 NFL interception leader.', isFirstRound: false, isActive: true },
-    { slug: 'baylor', name: 'Corey Coleman', position: 'WR', draftYear: 2016, draftRound: 1, draftPick: 15, nflTeam: 'Cleveland Browns', careerHighlights: '2015 Biletnikoff Award winner, Big 12 Offensive Player of the Year.', isFirstRound: true, isActive: false },
-    { slug: 'baylor', name: 'Jalen Pitre', position: 'S', draftYear: 2022, draftRound: 2, draftPick: 37, nflTeam: 'Houston Texans', careerHighlights: 'NFL All-Rookie Team. Big 12 Defensive Player of the Year at Baylor.', isFirstRound: false, isActive: true },
-    { slug: 'baylor', name: 'Thomas Everett', position: 'S', draftYear: 1987, draftRound: 4, draftPick: 99, nflTeam: 'Pittsburgh Steelers', careerHighlights: '2x Super Bowl Champion (with Dallas Cowboys), 19 career interceptions.', isFirstRound: false, isActive: false },
-
     // Oklahoma
     { slug: 'oklahoma', name: 'Baker Mayfield', position: 'QB', draftYear: 2018, draftRound: 1, draftPick: 1, nflTeam: 'Cleveland Browns', careerHighlights: '2017 Heisman Trophy winner. No. 1 overall pick. Most prolific passer in Big 12 history.', isFirstRound: true, isActive: true },
     { slug: 'oklahoma', name: 'Kyler Murray', position: 'QB', draftYear: 2019, draftRound: 1, draftPick: 1, nflTeam: 'Arizona Cardinals', careerHighlights: '2018 Heisman Trophy winner. No. 1 overall pick. NFL Offensive Rookie of the Year.', isFirstRound: true, isActive: true },

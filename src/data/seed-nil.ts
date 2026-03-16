@@ -17,33 +17,6 @@ export async function seedNil(prisma: any, schoolMap: Record<string, any>) {
       ],
     },
     {
-      slug: 'usc',
-      collectiveName: 'House of Victory',
-      totalBudget: 20500000,
-      footballSpend: 14000000,
-      allSportsSpend: 6500000,
-      founded: 2022,
-      description: 'House of Victory is a nonprofit, alumni-led NIL collective and the Official NIL Sponsor of USC Athletics through a partnership with PlayFly Sports. Leveraging USC\'s location in Los Angeles, the collective connects athletes with entertainment, tech, and brand opportunities unique to the LA market. Athletes benefit from proximity to major media companies and agencies.',
-      notableDeals: [
-        { athlete: 'Caleb Williams', sport: 'Football', description: '2022 Heisman Trophy winner, extensive NIL portfolio before 2024 NFL Draft' },
-        { athlete: 'Miller Moss', sport: 'Football', description: 'Starting QB with multi-platform NIL presence' },
-        { athlete: 'Zachariah Branch', sport: 'Football', description: 'Electric return specialist and wide receiver with growing NIL portfolio' },
-      ],
-    },
-    {
-      slug: 'baylor',
-      collectiveName: 'GXG (Green & Gold Collective)',
-      totalBudget: 4200000,
-      footballSpend: 2800000,
-      allSportsSpend: 1400000,
-      founded: 2022,
-      description: 'GXG (Green & Gold) Collective was formed in partnership with Startup Waco. It connects student-athletes with NIL opportunities and helps them treat NIL as their own startup business. The Waco NIL Club provides additional support through local business partnerships and community engagement opportunities.',
-      notableDeals: [
-        { athlete: 'Sawyer Robertson', sport: 'Football', description: 'Transfer QB from Texas Tech with competitive NIL package' },
-        { athlete: 'Josh Cameron', sport: 'Football', description: 'Defensive playmaker with competitive NIL deal to stay in Waco' },
-      ],
-    },
-    {
       slug: 'oklahoma',
       collectiveName: '1Oklahoma',
       totalBudget: 9700000,
