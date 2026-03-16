@@ -317,12 +317,12 @@ export function AcademicsTab({
 
                                 {/* Pathway view */}
                                 {view === 'pathway' && major.pathways.length > 0 && (
-                                  <div className="relative ml-3 border-l border-white/[0.08] pl-5 space-y-4">
+                                  <div className="relative ml-3 border-l border-border pl-5 space-y-4">
                                     {major.pathways.map((pathway) => (
                                       <div key={pathway.id} className="relative">
                                         {/* Timeline dot */}
                                         <div
-                                          className="absolute -left-[23px] top-1 h-2.5 w-2.5 rounded-full border-2"
+                                          className="absolute -left-[1.45rem] top-1 h-2.5 w-2.5 rounded-full border-2"
                                           style={{
                                             borderColor: colorPrimary,
                                             backgroundColor: 'var(--background)',

@@ -51,11 +51,11 @@ export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
     <div className="space-y-10 animate-in-up">
       {/* Hero budget number */}
       <div className="text-center py-8">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Total NIL Budget
         </p>
         <p
-          className="text-scoreboard mt-2 text-[clamp(4rem,8vw,7rem)] font-bold leading-none"
+          className="text-scoreboard mt-2 max-w-full overflow-hidden text-[clamp(4rem,8vw,7rem)] font-bold leading-none"
           style={{ color: colorPrimary }}
         >
           {formatBudget(nilProgram.totalBudget)}
