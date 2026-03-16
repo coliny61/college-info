@@ -2,6 +2,7 @@
 
 import { useTrackDuration } from '@/hooks/use-analytics'
 import { Badge } from '@/components/ui/badge'
+import { Trophy } from 'lucide-react'
 
 interface AlumniTabProps {
   alumni: Array<{
@@ -25,9 +26,17 @@ export function AlumniTab({ alumni, schoolId, colorPrimary }: AlumniTabProps) {
 
   if (alumni.length === 0) {
     return (
-      <p className="py-12 text-center text-muted-foreground">
-        Alumni information is not yet available for this school.
-      </p>
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted/50 mb-4">
+          <Trophy className="h-7 w-7 text-muted-foreground" />
+        </div>
+        <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+          No Alumni Data Yet
+        </h3>
+        <p className="mt-1.5 max-w-xs text-xs text-muted-foreground">
+          Notable alumni information is not yet available for this school.
+        </p>
+      </div>
     )
   }
 
