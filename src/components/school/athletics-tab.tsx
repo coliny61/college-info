@@ -339,7 +339,7 @@ export function AthleticsTab({
               {positionCoaches.length > 0 && (
                 <>
                   {showAllCoaches && (
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-3">
+                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-3">
                       {visibleCoaches.map((coach) => (
                         <div
                           key={coach.id}
@@ -405,6 +405,7 @@ export function AthleticsTab({
                 </div>
 
                 {/* Roster table */}
+                <div className="relative">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs">
                     <thead>
@@ -468,6 +469,9 @@ export function AthleticsTab({
                       ))}
                     </tbody>
                   </table>
+                </div>
+                {/* Scroll fade indicator for mobile */}
+                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent sm:hidden" />
                 </div>
 
                 {/* Legend */}
