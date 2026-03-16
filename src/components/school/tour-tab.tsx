@@ -35,9 +35,15 @@ export function TourTab({ facilities, colorPrimary }: TourTabProps) {
 
   if (tourFacilities.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border p-12 text-center">
-        <p className="text-muted-foreground">
-          No 360° tours available for this school yet.
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted/50 mb-4">
+          <MapPin className="h-7 w-7 text-muted-foreground" />
+        </div>
+        <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+          No Tours Available
+        </h3>
+        <p className="mt-1.5 max-w-xs text-xs text-muted-foreground">
+          360° virtual tours are not yet available for this school.
         </p>
       </div>
     )
@@ -151,7 +157,7 @@ function PanoramaViewer({
         {/* Panorama */}
         <div
           ref={containerRef}
-          className="relative h-[400px] cursor-grab overflow-hidden bg-black active:cursor-grabbing"
+          className="relative h-[280px] cursor-grab overflow-hidden bg-black active:cursor-grabbing sm:h-[400px]"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}

@@ -84,7 +84,7 @@ export function CampusTab({
             <div key={facility.id} className="glass-panel rounded-xl overflow-hidden group">
               {/* Panorama thumbnail */}
               {facility.panoramaUrl && (
-                <div className="relative h-32 overflow-hidden">
+                <div className="relative h-28 overflow-hidden sm:h-32">
                   <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                     style={{ backgroundImage: `url(${facility.panoramaUrl})` }}
@@ -143,7 +143,7 @@ export function CampusTab({
                 <button
                   key={facility.id}
                   onClick={() => setViewerFacility(facility)}
-                  className="relative h-40 w-64 shrink-0 overflow-hidden rounded-xl group"
+                  className="relative h-40 w-56 shrink-0 overflow-hidden rounded-xl group sm:w-64"
                 >
                   <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
