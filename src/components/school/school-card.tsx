@@ -48,7 +48,7 @@ export function SchoolCard({
           className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
         >
           <span
-            className="text-hero text-6xl opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.2]"
+            className="text-hero text-5xl opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.2] sm:text-6xl"
             style={{ color: '#FFFFFF' }}
           >
             {shortName}
