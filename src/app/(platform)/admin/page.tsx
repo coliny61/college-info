@@ -128,9 +128,9 @@ export default async function AdminDashboard() {
             {school.shortName}
           </div>
 
-          <div className="relative flex items-center justify-between p-6">
+          <div className="relative flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
                 <Building className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -138,7 +138,7 @@ export default async function AdminDashboard() {
                 <p className="font-display text-lg font-bold uppercase tracking-wide text-white">{school.name}</p>
               </div>
             </div>
-            <Link href="/admin/program">
+            <Link href="/admin/program" className="shrink-0">
               <span className="glass-panel flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium uppercase tracking-wider text-white transition-colors hover:bg-white/10">
                 Edit Program <ArrowRight className="h-3 w-3" />
               </span>

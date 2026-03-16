@@ -184,7 +184,7 @@ export default async function RecruitDashboard() {
           </div>
           <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
             {favoriteSchools.map((school) => (
-              <div key={school.id} className="min-w-[260px] sm:min-w-0">
+              <div key={school.id} className="min-w-[240px] sm:min-w-0">
                 <SchoolCard
                   {...school}
                   isFavorited
