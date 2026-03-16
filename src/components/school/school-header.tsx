@@ -64,7 +64,7 @@ export function SchoolHeader({
 
       {/* Watermark */}
       <div
-        className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-[14rem] leading-none opacity-[0.05] text-hero sm:text-[18rem]"
+        className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 select-none text-[10rem] leading-none opacity-[0.05] text-hero sm:-right-4 sm:text-[14rem] lg:text-[18rem]"
         style={{ color: colorAccent }}
       >
         {shortName}
