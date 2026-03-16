@@ -2,15 +2,52 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, GraduationCap } from 'lucide-react'
+import { prisma } from '@/lib/prisma'
 
-const SCHOOL_COLORS = [
-  { name: 'Texas Tech', short: 'TTU', conference: 'Big 12', primary: '#CC0000', secondary: '#000000' },
-  { name: 'USC', short: 'USC', conference: 'Big Ten', primary: '#990000', secondary: '#FFC72C' },
-  { name: 'Baylor', short: 'BU', conference: 'Big 12', primary: '#003015', secondary: '#FFB81C' },
-  { name: 'Oklahoma', short: 'OU', conference: 'SEC', primary: '#841617', secondary: '#FDF9D8' },
-]
+export default async function LandingPage() {
+  // Fetch schools and featured school data from DB
+  const schools = await prisma.school.findMany({
+    select: {
+      slug: true,
+      name: true,
+      shortName: true,
+      conference: true,
+      colorPrimary: true,
+      colorSecondary: true,
+    },
+    orderBy: { name: 'asc' },
+  })
 
-export default function LandingPage() {
+  // Pick the first school as the featured preview school
+  const featuredSlug = schools[0]?.slug ?? 'texas-tech'
+  const featured = await prisma.school.findFirst({
+    where: { slug: featuredSlug },
+    include: {
+      academics: { select: { enrollment: true } },
+      nilProgram: { select: { totalBudget: true } },
+      notableAlumni: { select: { id: true } },
+      sports: {
+        take: 1,
+        include: {
+          coaches: {
+            where: { careerRecord: { not: null } },
+            take: 1,
+          },
+        },
+      },
+    },
+  })
+
+  const headCoach = featured?.sports?.[0]?.coaches?.[0]
+  const enrollment = featured?.academics?.enrollment
+  const nilBudget = featured?.nilProgram?.totalBudget
+  const alumniCount = featured?.notableAlumni?.length ?? 0
+
+  function formatBudget(amount: number) {
+    if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`
+    if (amount >= 1000) return `$${(amount / 1000).toFixed(0)}K`
+    return `$${amount}`
+  }
   return (
     <div className="min-h-screen bg-background overflow-hidden scroll-smooth">
       {/* Nav */}
@@ -77,28 +114,28 @@ export default function LandingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/schools/texas-tech">
+            <Link href={`/schools/${featuredSlug}`}>
               <Button size="lg" variant="outline" className="h-13 px-10 text-sm uppercase tracking-wider font-semibold">
-                Preview Texas Tech
+                Preview {featured?.shortName ?? 'Demo'}
               </Button>
             </Link>
           </div>
 
           {/* School badges */}
           <div className="animate-in-up delay-4 mt-20 flex flex-wrap justify-center gap-3">
-            {SCHOOL_COLORS.map((school) => (
+            {schools.map((school) => (
               <div
-                key={school.name}
+                key={school.slug}
                 className="flex items-center gap-2.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-4 py-2"
               >
                 <div
                   className="h-5 w-5 rounded-full"
                   style={{
-                    background: `linear-gradient(135deg, ${school.primary}, ${school.secondary})`,
+                    background: `linear-gradient(135deg, ${school.colorPrimary}, ${school.colorSecondary})`,
                   }}
                 />
                 <span className="text-xs font-display uppercase tracking-wider text-foreground/60">
-                  {school.short}
+                  {school.shortName}
                 </span>
                 <span className="text-[10px] text-muted-foreground/30 hidden sm:inline">
                   {school.conference}
@@ -135,10 +172,10 @@ export default function LandingPage() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { src: '/panoramas/texas-tech-stadium.jpg', label: 'Jones AT&T Stadium' },
-                  { src: '/panoramas/texas-tech-weight-room.jpg', label: 'Weight Room' },
-                  { src: '/panoramas/texas-tech-locker-room.jpg', label: 'Locker Room' },
-                  { src: '/panoramas/texas-tech-practice.jpg', label: 'Practice Facility' },
+                  { src: `/panoramas/${featuredSlug}-stadium.jpg`, label: 'Stadium' },
+                  { src: `/panoramas/${featuredSlug}-weight-room.jpg`, label: 'Weight Room' },
+                  { src: `/panoramas/${featuredSlug}-locker-room.jpg`, label: 'Locker Room' },
+                  { src: `/panoramas/${featuredSlug}-practice.jpg`, label: 'Practice Facility' },
                 ].map((p) => (
                   <div key={p.label} className="group relative aspect-[16/10] overflow-hidden rounded-lg">
                     <Image
@@ -171,13 +208,13 @@ export default function LandingPage() {
                 ].map((combo) => (
                   <div key={combo.variant} className={`flex flex-col items-center ${combo.opacity}`}>
                     <div className="relative h-20 w-20 sm:h-24 sm:w-24">
-                      <Image src={`/jersey/texas-tech/helmet-${combo.variant}.png`} alt="Helmet" fill className="object-contain" />
+                      <Image src={`/jersey/${featuredSlug}/helmet-${combo.variant}.png`} alt="Helmet" fill className="object-contain" />
                     </div>
                     <div className="relative -mt-1 h-28 w-28 sm:h-32 sm:w-32">
-                      <Image src={`/jersey/texas-tech/jersey-${combo.variant}.png`} alt="Jersey" fill className="object-contain" />
+                      <Image src={`/jersey/${featuredSlug}/jersey-${combo.variant}.png`} alt="Jersey" fill className="object-contain" />
                     </div>
                     <div className="relative -mt-1 h-24 w-24 sm:h-28 sm:w-28">
-                      <Image src={`/jersey/texas-tech/pants-${combo.variant}.png`} alt="Pants" fill className="object-contain" />
+                      <Image src={`/jersey/${featuredSlug}/pants-${combo.variant}.png`} alt="Pants" fill className="object-contain" />
                     </div>
                   </div>
                 ))}
@@ -208,36 +245,46 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="space-y-3">
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Head Coach</p>
-                  <p className="mt-1 font-display text-sm font-semibold uppercase tracking-wide text-foreground">
-                    Joey McGuire
-                  </p>
-                  <p className="text-[10px] uppercase tracking-wider" style={{ color: '#CC0000' }}>
-                    Texas Tech &middot; Big 12
-                  </p>
-                  <div className="mt-3 flex items-center gap-4">
-                    <div>
-                      <p className="text-scoreboard text-lg font-bold text-foreground">22-16</p>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Record</p>
-                    </div>
-                    <div className="h-6 w-px bg-border" />
-                    <div>
-                      <p className="text-scoreboard text-lg font-bold text-foreground">12</p>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground">To NFL</p>
-                    </div>
-                    <div className="h-6 w-px bg-border" />
-                    <div>
-                      <p className="text-scoreboard text-lg font-bold text-foreground">3yr</p>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Tenure</p>
+                {headCoach && featured && (
+                  <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Head Coach</p>
+                    <p className="mt-1 font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+                      {headCoach.name}
+                    </p>
+                    <p className="text-[10px] uppercase tracking-wider" style={{ color: featured.colorPrimary }}>
+                      {featured.name} &middot; {featured.conference}
+                    </p>
+                    <div className="mt-3 flex items-center gap-4">
+                      {headCoach.careerRecord && (
+                        <>
+                          <div>
+                            <p className="text-scoreboard text-lg font-bold text-foreground">{headCoach.careerRecord}</p>
+                            <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Record</p>
+                          </div>
+                          <div className="h-6 w-px bg-border" />
+                        </>
+                      )}
+                      {headCoach.playersInNfl != null && headCoach.playersInNfl > 0 && (
+                        <>
+                          <div>
+                            <p className="text-scoreboard text-lg font-bold text-foreground">{headCoach.playersInNfl}</p>
+                            <p className="text-[9px] uppercase tracking-wider text-muted-foreground">To NFL</p>
+                          </div>
+                          <div className="h-6 w-px bg-border" />
+                        </>
+                      )}
+                      <div>
+                        <p className="text-scoreboard text-lg font-bold text-foreground">{headCoach.yearsAtSchool}yr</p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Tenure</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: '40,773', label: 'Enrollment' },
-                    { value: '$4.3M', label: 'NIL Budget' },
-                    { value: '12', label: 'NFL Alumni' },
+                    { value: enrollment ? enrollment.toLocaleString() : '—', label: 'Enrollment' },
+                    { value: nilBudget ? formatBudget(nilBudget) : '—', label: 'NIL Budget' },
+                    { value: String(alumniCount), label: 'NFL Alumni' },
                   ].map((s) => (
                     <div key={s.label} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 text-center">
                       <p className="text-scoreboard text-sm font-bold text-foreground">{s.value}</p>
@@ -431,7 +478,7 @@ export default function LandingPage() {
             <Link href="/register" className="hover:text-foreground transition-colors">
               Sign Up
             </Link>
-            <Link href="/schools/texas-tech" className="hover:text-foreground transition-colors">
+            <Link href={`/schools/${featuredSlug}`} className="hover:text-foreground transition-colors">
               Preview
             </Link>
             <Link href="/about" className="hover:text-foreground transition-colors">
