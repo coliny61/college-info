@@ -1,5 +1,7 @@
 // seed-academics.ts — Creates SchoolAcademics, Colleges, Majors, DegreePathways, CareerOutcomes
 
+import { ttuColleges, type CollegeDef } from './seed-academics-ttu'
+
 export async function seedAcademics(prisma: any, schoolMap: Record<string, any>) {
   // ─── School Academic Stats ──────────────────────────────────────────────────
   const academicStats = [
@@ -16,92 +18,10 @@ export async function seedAcademics(prisma: any, schoolMap: Record<string, any>)
   console.log(`  Created ${academicStats.length} SchoolAcademics`)
 
   // ─── Colleges, Majors, Pathways & Career Outcomes ────────────────────────
-  // Each major now has realistic course sequences and multiple career outcomes
+  // TTU colleges imported from seed-academics-ttu.ts (~65 majors across 10 colleges)
+  // OU colleges defined inline below
 
-  interface MajorDef {
-    name: string
-    degreeType: string
-    description: string
-    pathways: Array<{ year: number; title: string; courses: string[]; description: string }>
-    careers: Array<{ title: string; medianSalary: number; growthRate: number; description: string }>
-  }
-
-  interface CollegeDef {
-    slug: string
-    name: string
-    description: string
-    totalStudents: number
-    majors: MajorDef[]
-  }
-
-  const collegeDefinitions: CollegeDef[] = [
-    // ─── Texas Tech ──────────────────────────────────────────────────────────
-    { slug: 'texas-tech', name: 'Whitacre College of Engineering', description: 'One of the largest engineering colleges in Texas, offering 13 undergraduate degree programs with strong industry ties to the energy, technology, and defense sectors across West Texas and beyond.', totalStudents: 5800, majors: [
-      { name: 'Petroleum Engineering', degreeType: 'B.S.', description: 'Design and optimize extraction of oil and gas resources, with access to the Permian Basin — the most productive oilfield in the United States.', pathways: [
-        { year: 1, title: 'Foundation Year', courses: ['PETR 1305 Intro to Petroleum Engineering', 'MATH 1451 Calculus I', 'CHEM 1307 General Chemistry', 'ENGL 1301 Composition I'], description: 'Build foundations in math, chemistry, and engineering principles.' },
-        { year: 2, title: 'Core Engineering', courses: ['PETR 2304 Drilling Engineering', 'PETR 2306 Reservoir Rock Properties', 'PHYS 2401 Physics I', 'MATH 2450 Calculus III'], description: 'Develop drilling and reservoir fundamentals with applied physics.' },
-        { year: 3, title: 'Specialization', courses: ['PETR 3310 Production Engineering', 'PETR 3315 Well Logging', 'PETR 3320 Reservoir Simulation', 'PETR 3306 Petrophysics'], description: 'Specialize in production, well evaluation, and reservoir modeling.' },
-        { year: 4, title: 'Capstone & Industry Prep', courses: ['PETR 4330 Senior Design Project', 'PETR 4310 Enhanced Oil Recovery', 'PETR 4320 Completions Engineering', 'Professional Elective'], description: 'Apply knowledge in industry capstone project; many students complete Permian Basin internships.' },
-      ], careers: [
-        { title: 'Petroleum Engineer', medianSalary: 131000, growthRate: 0.08, description: 'Design drilling plans, optimize production, and manage reservoir development for oil & gas operators.' },
-        { title: 'Reservoir Engineer', medianSalary: 126000, growthRate: 0.06, description: 'Model subsurface reservoirs and forecast production using simulation software.' },
-        { title: 'Completions Engineer', medianSalary: 118000, growthRate: 0.07, description: 'Design and optimize well completion strategies for maximum hydrocarbon recovery.' },
-      ]},
-      { name: 'Mechanical Engineering', degreeType: 'B.S.', description: 'Design, analyze, and manufacture mechanical systems with hands-on wind energy research and robotics lab experience.', pathways: [
-        { year: 1, title: 'Foundation Year', courses: ['ME 1105 Intro to Mechanical Engineering', 'MATH 1451 Calculus I', 'PHYS 2401 Physics I', 'ENGR 1315 Engineering Graphics'], description: 'Engineering fundamentals, calculus, and hands-on CAD drafting.' },
-        { year: 2, title: 'Core Mechanics', courses: ['ME 2301 Statics', 'ME 2322 Dynamics', 'ME 2330 Thermodynamics I', 'ME 2350 Mechanics of Materials'], description: 'Master classical mechanics, thermodynamics, and material behavior.' },
-        { year: 3, title: 'Design & Systems', courses: ['ME 3360 Machine Design', 'ME 3370 Heat Transfer', 'ME 3341 Fluid Mechanics', 'ME 3380 Control Systems'], description: 'Design machines, analyze thermal-fluid systems, and learn control theory.' },
-        { year: 4, title: 'Senior Design', courses: ['ME 4370 Senior Design I', 'ME 4371 Senior Design II', 'ME Technical Elective', 'ME Technical Elective'], description: 'Year-long capstone design project with industry sponsors; emphasis on wind energy and robotics.' },
-      ], careers: [
-        { title: 'Mechanical Engineer', medianSalary: 95000, growthRate: 0.10, description: 'Design and test mechanical devices, tools, and engines across manufacturing, automotive, and energy sectors.' },
-        { title: 'Wind Energy Engineer', medianSalary: 88000, growthRate: 0.17, description: 'Design and optimize wind turbine systems — Texas Tech is in the heart of US wind energy country.' },
-      ]},
-      { name: 'Computer Science', degreeType: 'B.S.', description: 'Software development, algorithms, cybersecurity, and AI with research opportunities in the Whitacre College computing labs.', pathways: [
-        { year: 1, title: 'Programming Foundations', courses: ['CS 1400 Intro to Computer Science', 'CS 1401 Programming Principles I', 'MATH 1451 Calculus I', 'MATH 2360 Linear Algebra'], description: 'Learn programming in Python and Java, plus the math foundations for computing.' },
-        { year: 2, title: 'Core CS', courses: ['CS 2413 Data Structures', 'CS 2350 Computer Architecture', 'CS 2365 Object-Oriented Programming', 'MATH 3342 Probability & Statistics'], description: 'Data structures, computer organization, and software engineering fundamentals.' },
-        { year: 3, title: 'Specialization', courses: ['CS 3364 Algorithms', 'CS 3375 Operating Systems', 'CS 3365 Software Engineering', 'CS Elective (AI/Security/Data)'], description: 'Choose specialization tracks in AI, cybersecurity, or data science.' },
-        { year: 4, title: 'Capstone & Career Prep', courses: ['CS 4365 Senior Software Project', 'CS Elective', 'CS Elective', 'Professional Development'], description: 'Build production software in a team and prepare for industry or grad school.' },
-      ], careers: [
-        { title: 'Software Engineer', medianSalary: 110000, growthRate: 0.22, description: 'Design, develop, and maintain software systems across web, mobile, and cloud platforms.' },
-        { title: 'Cybersecurity Analyst', medianSalary: 102000, growthRate: 0.32, description: 'Protect systems and networks from cyber threats — one of the fastest-growing fields in tech.' },
-        { title: 'Data Scientist', medianSalary: 108000, growthRate: 0.28, description: 'Extract insights from large datasets using machine learning, statistics, and programming.' },
-      ]},
-    ]},
-    { slug: 'texas-tech', name: 'Rawls College of Business', description: 'An AACSB-accredited business school recognized for energy commerce, entrepreneurship, and personal financial planning programs.', totalStudents: 5200, majors: [
-      { name: 'Energy Commerce', degreeType: 'B.B.A.', description: 'A unique program combining business and energy industry knowledge, preparing students for leadership in the oil, gas, and renewable energy sectors.', pathways: [
-        { year: 1, title: 'Business Foundations', courses: ['ECO 2301 Microeconomics', 'ACCT 2300 Accounting I', 'MATH 1320 Business Math', 'ENGL 1301 Composition I'], description: 'Foundational business, economics, and accounting courses.' },
-        { year: 2, title: 'Energy Industry Core', courses: ['EC 3301 Energy Markets & Policy', 'EC 3310 Oil & Gas Accounting', 'FIN 3320 Corporate Finance', 'MGT 3370 Business Law'], description: 'Study energy markets, commodity trading, and energy-sector finance.' },
-        { year: 3, title: 'Energy Specialization', courses: ['EC 3315 Land Management', 'EC 4320 Energy Trading & Risk', 'EC 4330 Renewable Energy Business', 'MKT 3350 Marketing'], description: 'Deep-dive into land management, energy trading, and renewables.' },
-        { year: 4, title: 'Industry Capstone', courses: ['EC 4340 Energy Commerce Capstone', 'EC 4350 Energy Law & Regulation', 'Business Elective', 'Professional Elective'], description: 'Capstone project with Permian Basin companies; most students intern during senior year.' },
-      ], careers: [
-        { title: 'Energy Trader', medianSalary: 105000, growthRate: 0.09, description: 'Buy and sell energy commodities (oil, gas, electricity) on behalf of trading firms and utilities.' },
-        { title: 'Landman', medianSalary: 78000, growthRate: 0.05, description: 'Negotiate mineral rights leases and manage land acquisition for energy companies.' },
-        { title: 'Energy Consultant', medianSalary: 88000, growthRate: 0.11, description: 'Advise companies on energy strategy, market trends, and regulatory compliance.' },
-      ]},
-      { name: 'Finance', degreeType: 'B.B.A.', description: 'Investment analysis, corporate finance, and financial markets with Bloomberg Terminal access and CFA preparation.', pathways: [
-        { year: 1, title: 'Business Foundations', courses: ['ECO 2301 Microeconomics', 'ACCT 2300 Accounting I', 'MATH 1320 Business Math', 'BLAW 2361 Legal Environment'], description: 'Build knowledge in economics, accounting, and business law.' },
-        { year: 2, title: 'Finance Core', courses: ['FIN 3320 Corporate Finance', 'FIN 3322 Investments', 'ACCT 2301 Accounting II', 'ISQS 2340 Business Statistics'], description: 'Master corporate valuation, investment analysis, and financial statements.' },
-        { year: 3, title: 'Advanced Finance', courses: ['FIN 4325 Financial Modeling', 'FIN 4330 Portfolio Management', 'FIN 4335 Derivatives', 'FIN Elective'], description: 'Bloomberg Terminal work, portfolio construction, and options pricing.' },
-        { year: 4, title: 'Career Preparation', courses: ['FIN 4340 Senior Seminar', 'FIN Elective', 'Business Elective', 'CFA Prep Elective'], description: 'Prepare for CFA Level I, capstone projects, and industry placement.' },
-      ], careers: [
-        { title: 'Financial Analyst', medianSalary: 83000, growthRate: 0.09, description: 'Analyze financial data and create models to guide business investment decisions.' },
-        { title: 'Investment Banking Analyst', medianSalary: 100000, growthRate: 0.07, description: 'Advise companies on mergers, acquisitions, and capital raising at major banks.' },
-      ]},
-    ]},
-    { slug: 'texas-tech', name: 'College of Media & Communication', description: 'A nationally ranked communication school with state-of-the-art broadcast studios and a student-run media network.', totalStudents: 3200, majors: [
-      { name: 'Sports Media & Communication', degreeType: 'B.A.', description: 'Prepare for careers in sports journalism, broadcasting, and PR — covering Big 12 athletics from day one with access to professional-grade studios.', pathways: [
-        { year: 1, title: 'Media Foundations', courses: ['MCOM 1301 Intro to Mass Media', 'MCOM 1300 Media Writing', 'ENGL 1301 Composition I', 'COMM 2300 Public Speaking'], description: 'Develop writing, speaking, and media literacy foundations.' },
-        { year: 2, title: 'Sports Journalism Core', courses: ['MCOM 2310 Sports Reporting', 'MCOM 2330 Broadcast Production', 'MCOM 2340 Digital Content Creation', 'MCOM 2320 Media Ethics'], description: 'Cover Red Raider athletics while learning reporting and production skills.' },
-        { year: 3, title: 'Advanced Production', courses: ['MCOM 3350 TV Sports Production', 'MCOM 3360 Social Media Strategy', 'MCOM 3370 Sports PR & Communications', 'MCOM Elective'], description: 'Produce live sports broadcasts, manage athlete social media, and study sports PR.' },
-        { year: 4, title: 'Industry Capstone', courses: ['MCOM 4380 Senior Practicum', 'MCOM 4370 Sports Media Capstone', 'MCOM Elective', 'Professional Elective'], description: 'Complete a professional internship with ESPN, Fox Sports, or Big 12 Network.' },
-      ], careers: [
-        { title: 'Sports Reporter / Broadcaster', medianSalary: 52000, growthRate: 0.06, description: 'Cover sports for TV, radio, digital, and print media outlets.' },
-        { title: 'Sports PR / Communications Director', medianSalary: 65000, growthRate: 0.08, description: 'Manage media relations and communications for athletic departments or professional teams.' },
-        { title: 'Content Creator / Social Media Manager', medianSalary: 58000, growthRate: 0.15, description: 'Create digital content and manage social media strategy for sports organizations.' },
-      ]},
-    ]},
-
-    // ─── Oklahoma ────────────────────────────────────────────────────────────
+  const ouColleges: CollegeDef[] = [
     { slug: 'oklahoma', name: 'Gallogly College of Engineering', description: 'A top-50 engineering college offering 10 undergraduate programs with particular strength in petroleum, aerospace, and environmental engineering.', totalStudents: 4200, majors: [
       { name: 'Petroleum Engineering', degreeType: 'B.S.', description: 'A top-5 petroleum engineering program in the nation, with industry partnerships throughout Oklahoma\'s energy sector.', pathways: [
         { year: 1, title: 'Engineering Foundations', courses: ['PE 1113 Intro to Petroleum Engineering', 'MATH 1823 Calculus I', 'CHEM 1315 General Chemistry', 'ENGR 1410 Engineering Graphics'], description: 'Math, chemistry, and first look at the petroleum industry.' },
@@ -172,6 +92,8 @@ export async function seedAcademics(prisma: any, schoolMap: Record<string, any>)
       ]},
     ]},
   ]
+
+  const collegeDefinitions: CollegeDef[] = [...ttuColleges, ...ouColleges]
 
   let collegeCount = 0
   let majorCount = 0
