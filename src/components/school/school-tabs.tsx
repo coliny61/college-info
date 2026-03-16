@@ -78,7 +78,7 @@ export function SchoolTabs({ school, colorPrimary, isPublic = false }: SchoolTab
 
   return (
     <Tabs defaultValue="overview" onValueChange={handleTabChange}>
-      <div className="sticky top-16 z-30 -mx-6 border-b border-border bg-background/80 backdrop-blur-xl px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 lg:rounded-none lg:border-none lg:bg-transparent lg:backdrop-blur-none">
+      <div className="sticky top-16 z-30 -mx-6 border-b border-border bg-background px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 lg:rounded-none lg:border-none">
         <TabsList className="h-auto w-full justify-start gap-0 overflow-x-auto rounded-none border-b border-border bg-transparent p-0 lg:border-b">
           {tabs.map((tab) => (
             <TabsTrigger
