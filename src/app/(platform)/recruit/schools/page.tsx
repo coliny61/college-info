@@ -136,6 +136,22 @@ export default async function SchoolsPage({
 }) {
   const params = await searchParams
 
+  // Query distinct conferences and states from DB for dynamic filters
+  const [conferenceRows, stateRows] = await Promise.all([
+    prisma.school.findMany({
+      select: { conference: true },
+      distinct: ['conference'],
+      orderBy: { conference: 'asc' },
+    }),
+    prisma.school.findMany({
+      select: { state: true },
+      distinct: ['state'],
+      orderBy: { state: 'asc' },
+    }),
+  ])
+  const conferences = conferenceRows.map((r) => r.conference)
+  const states = stateRows.map((r) => r.state)
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6 animate-in-up">
@@ -146,7 +162,7 @@ export default async function SchoolsPage({
       </div>
 
       <div className="mb-6">
-        <SchoolFilters />
+        <SchoolFilters conferences={conferences} states={states} />
       </div>
 
       <Suspense fallback={<SchoolsLoading />}>

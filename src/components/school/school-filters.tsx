@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select'
 import { Search, SlidersHorizontal, X, Bookmark, BookmarkCheck } from 'lucide-react'
 
-const CONFERENCES = ['All', 'SEC', 'Big Ten', 'Big 12', 'ACC', 'Pac-12']
 const SORT_OPTIONS = [
   { value: 'name-asc', label: 'A → Z' },
   { value: 'name-desc', label: 'Z → A' },
@@ -24,8 +23,6 @@ const SORT_OPTIONS = [
 ]
 
 const SAVED_FILTERS_KEY = 'ovv_saved_filters'
-
-const STATES = ['All', 'CA', 'OK', 'TX'] // States from seeded data
 const TUITION_OPTIONS = [
   { value: 'All', label: 'Any Tuition' },
   { value: 'under-15k', label: 'Under $15k' },
@@ -40,7 +37,14 @@ const ENROLLMENT_OPTIONS = [
   { value: 'large', label: 'Large (15k+)' },
 ]
 
-export function SchoolFilters() {
+interface SchoolFiltersProps {
+  conferences?: string[]
+  states?: string[]
+}
+
+export function SchoolFilters({ conferences = [], states = [] }: SchoolFiltersProps) {
+  const CONFERENCES = ['All', ...conferences]
+  const STATES = ['All', ...states]
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
