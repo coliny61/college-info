@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, GraduationCap } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 export default async function LandingPage() {
   // Fetch schools and featured school data from DB
   const schools = await prisma.school.findMany({

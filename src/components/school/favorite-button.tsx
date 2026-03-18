@@ -28,6 +28,7 @@ export function FavoriteButton({
         toast.success(!isFavorited ? 'Added to favorites' : 'Removed from favorites')
       } catch {
         setIsFavorited(isFavorited)
+        toast.error('Failed to update favorite')
       }
     })
   }

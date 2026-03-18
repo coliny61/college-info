@@ -31,7 +31,7 @@ export function PlatformTopbar({ userEmail, displayName }: PlatformTopbarProps) 
     : userEmail?.[0]?.toUpperCase() ?? '?'
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl px-6 lg:pl-64">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl pl-16 pr-6 lg:pl-64 lg:pr-6">
       <div />
       <div className="flex items-center gap-4">
         <div className="text-right hidden sm:block">

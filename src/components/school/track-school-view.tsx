@@ -10,7 +10,8 @@ export function TrackSchoolView({
 }) {
   useEffect(() => {
     addRecentlyViewed(school)
-  }, [school])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-run when school changes, not on every render
+  }, [school.id])
 
   return null
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { useCallback, useState, useTransition } from 'react'
+import { useCallback, useRef, useState, useTransition } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -50,6 +50,7 @@ export function SchoolFilters({ conferences = [], states = [] }: SchoolFiltersPr
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
   const [showMore, setShowMore] = useState(false)
+  const searchTimerRef = useRef<NodeJS.Timeout>(undefined)
   const [hasSaved, setHasSaved] = useState(() => {
     if (typeof window === 'undefined') return false
     return !!localStorage.getItem(SAVED_FILTERS_KEY)
@@ -120,10 +121,10 @@ export function SchoolFilters({ conferences = [], states = [] }: SchoolFiltersPr
             placeholder="Search schools..."
             defaultValue={search}
             onChange={(e) => {
-              const timer = setTimeout(() => {
+              clearTimeout(searchTimerRef.current)
+              searchTimerRef.current = setTimeout(() => {
                 updateParams('q', e.target.value)
               }, 300)
-              return () => clearTimeout(timer)
             }}
             className="pl-9"
           />
