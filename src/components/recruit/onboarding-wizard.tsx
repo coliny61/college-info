@@ -110,7 +110,7 @@ export function OnboardingWizard() {
   return (
     <div className="mx-auto max-w-2xl animate-in-up">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">
+        <h1 className="text-display text-3xl text-foreground">
           Set Up Your Profile
         </h1>
         <p className="mt-2 text-muted-foreground">

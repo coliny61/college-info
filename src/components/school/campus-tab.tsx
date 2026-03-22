@@ -66,7 +66,7 @@ export function CampusTab({
               </span>
             )}
           </div>
-          <p className="drop-cap text-base leading-relaxed text-muted-foreground">
+          <p className="text-base leading-relaxed text-muted-foreground">
             {description}
           </p>
         </div>

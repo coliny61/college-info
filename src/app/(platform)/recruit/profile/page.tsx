@@ -24,7 +24,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 animate-in-up">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">Profile</h1>
+        <h1 className="text-display text-3xl text-foreground">Profile</h1>
         <p className="mt-2 text-muted-foreground">
           Manage your account and athletic profile.
         </p>

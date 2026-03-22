@@ -156,7 +156,7 @@ export default async function SchoolsPage({
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6 animate-in-up">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">Browse Schools</h1>
+        <h1 className="text-display text-3xl text-foreground">Browse Schools</h1>
         <p className="mt-2 text-muted-foreground">
           Explore programs across the country.
         </p>

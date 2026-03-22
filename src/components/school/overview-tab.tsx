@@ -50,7 +50,7 @@ export function OverviewTab({
   return (
     <div className="space-y-10 animate-in-up">
       {/* About */}
-      <p className="drop-cap text-base leading-relaxed text-muted-foreground">
+      <p className="text-base leading-relaxed text-muted-foreground">
         {description}
       </p>
 

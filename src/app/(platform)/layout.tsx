@@ -36,7 +36,7 @@ export default async function PlatformLayout({
           userEmail={user?.email ?? 'demo@example.com'}
           displayName={displayName}
         />
-        <main className="p-6">{children}</main>
+        <main className="px-6 py-8 sm:px-8">{children}</main>
       </div>
     </div>
   )

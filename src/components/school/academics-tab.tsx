@@ -129,13 +129,13 @@ export function AcademicsTab({
         <div className="stat-strip flex-wrap gap-y-6 rounded-xl border border-border bg-card/50 py-6 px-4">
           {stats.map((stat) => (
             <div key={stat.label} className="min-w-[100px] py-1">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {stat.label}
-              </p>
               <p
-                className="mt-1 text-scoreboard text-2xl font-bold"
+                className="text-[10px] uppercase tracking-[0.2em]"
                 style={{ color: colorPrimary }}
               >
+                {stat.label}
+              </p>
+              <p className="mt-1 text-scoreboard text-2xl font-bold text-foreground">
                 {stat.value}
               </p>
             </div>

@@ -95,8 +95,6 @@ export default function RegisterPage() {
     router.refresh()
   }
 
-  const selectedColor = ROLE_OPTIONS.find(o => o.role === selectedRole)?.color ?? '#10B981'
-
   return (
     <div className="space-y-6">
       <div>
@@ -238,8 +236,7 @@ export default function RegisterPage() {
 
         <Button
           type="submit"
-          className="w-full text-white uppercase tracking-wider text-xs font-semibold transition-colors"
-          style={{ backgroundColor: selectedColor }}
+          className="w-full bg-emerald hover:bg-emerald-dark text-white uppercase tracking-wider text-xs font-semibold"
           disabled={loading}
         >
           {loading ? 'Creating Account...' : 'Create Account'}
