@@ -1,0 +1,109 @@
+---
+title: OVV — User Flows
+---
+
+%% ============================================
+%% FLOW 1: Recruit Standard Signup
+%% ============================================
+flowchart TD
+    subgraph "Recruit Standard Signup"
+        A1["Visit Landing Page"] --> A2["Click 'Get Started'"]
+        A2 --> A3["Signup Form<br/>(email, password, name)"]
+        A3 --> A4["Supabase Auth<br/>Creates account"]
+        A4 --> A5["Sync user to Prisma<br/>(role: recruit)"]
+        A5 --> A6["Onboarding Wizard"]
+        A6 --> A7{"Required fields<br/>complete?"}
+        A7 -- "No" --> A6
+        A7 -- "Yes" --> A8["Calculate profile<br/>completeness %"]
+        A8 --> A9["Recruit Dashboard"]
+    end
+
+%% ============================================
+%% FLOW 2: Recruit Invite Signup
+%% ============================================
+flowchart TD
+    subgraph "Recruit Invite Flow"
+        B1["Receive invite link<br/>from coach"] --> B2["Visit /invite/CODE"]
+        B2 --> B3["Validate invite code<br/>(exists, not expired)"]
+        B3 --> B4{"Already have<br/>account?"}
+        B4 -- "No" --> B5["Signup Form"]
+        B4 -- "Yes" --> B6["Login"]
+        B5 --> B7["Supabase Auth + Prisma sync"]
+        B6 --> B7
+        B7 --> B8["Tag user with<br/>invite school"]
+        B8 --> B9["Increment invite<br/>usedCount"]
+        B9 --> B10["Onboarding Wizard<br/>(if new user)"]
+        B10 --> B11["Personalized<br/>Welcome Screen"]
+        B11 --> B12["School branding +<br/>coach photo + video"]
+        B12 --> B13["Click 'Start<br/>Your Visit'"]
+        B13 --> B14["School Detail Page<br/>(inviting school)"]
+    end
+
+%% ============================================
+%% FLOW 3: School Virtual Visit
+%% ============================================
+flowchart TD
+    subgraph "Virtual Visit Experience"
+        C1["Enter School Page"] --> C2["Track: page_view event"]
+        C2 --> C3["Full school branding<br/>applied to page"]
+        C3 --> C4["Sticky section nav<br/>visible"]
+
+        C4 --> C5["360° Tour Section"]
+        C4 --> C6["Football Section"]
+        C4 --> C7["Academics Section"]
+        C4 --> C8["NIL Section"]
+        C4 --> C9["Roster Section"]
+        C4 --> C10["Alumni Section"]
+        C4 --> C11["Jersey Room"]
+        C4 --> C12["Video & Media"]
+
+        C5 --> C5a["Spherical panorama<br/>viewer loads"]
+        C5a --> C5b["Navigate via:<br/>hotspots / thumbnails / map"]
+        C5b --> C5c["Track: view_panorama<br/>+ duration per POI"]
+
+        C6 --> C6a["Coaching staff cards"]
+        C6a --> C6b["Scheme breakdowns"]
+        C6b --> C6c["Track: view_coach_bio<br/>+ view_scheme"]
+
+        C11 --> C11a["Select helmet"]
+        C11a --> C11b["Select jersey"]
+        C11b --> C11c["Select pants"]
+        C11c --> C11d["Preview combo"]
+        C11d --> C11e{"Save / Share?"}
+        C11e -- "Save" --> C11f["Save to DB +<br/>track: save_combo"]
+        C11e -- "Share" --> C11g["Generate image +<br/>OG URL"]
+        C11g --> C11h["Download / Twitter /<br/>Instagram / Copy Link"]
+    end
+
+%% ============================================
+%% FLOW 4: Coach Analytics Flow
+%% ============================================
+flowchart TD
+    subgraph "Coach Analytics Flow"
+        D1["Coach logs into<br/>Admin Dashboard"] --> D2["See overview cards:<br/>total recruits, visits,<br/>engagement time"]
+        D2 --> D3["View recent<br/>activity feed"]
+        D3 --> D4["Open Analytics<br/>Dashboard"]
+        D4 --> D5["Engagement table:<br/>all invited recruits<br/>sorted by score"]
+        D5 --> D6["Click recruit name"]
+        D6 --> D7["Recruit Detail Panel"]
+        D7 --> D8["Section time<br/>breakdown chart"]
+        D7 --> D9["Specific content<br/>engaged list"]
+        D7 --> D10["Session timeline"]
+        D7 --> D11["AI-Generated Insight:<br/>'This recruit focused<br/>on NIL + business<br/>majors. Suggest...'"]
+        D7 --> D12["Add tag / note /<br/>update status"]
+    end
+
+%% ============================================
+%% FLOW 5: Analytics Data Pipeline
+%% ============================================
+flowchart LR
+    subgraph "Analytics Pipeline"
+        E1["Client: User<br/>interacts with<br/>school page"] --> E2["Analytics Tracker<br/>queues event"]
+        E2 --> E3{"Queue size >= 50<br/>OR 30s elapsed<br/>OR page unload?"}
+        E3 -- "Yes" --> E4["POST /api/analytics/track<br/>(batch of events)"]
+        E3 -- "No" --> E2
+        E4 --> E5["Server validates +<br/>inserts to DB"]
+        E5 --> E6["Engagement Score<br/>Calculator runs<br/>(on demand)"]
+        E6 --> E7["AI Insight Generator<br/>(on demand)"]
+        E7 --> E8["Coach views in<br/>Analytics Dashboard"]
+    end

@@ -44,10 +44,16 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
+  // Public routes that don't need auth even under /recruit or /admin
+  const isPublic =
+    pathname.startsWith('/jersey/') ||
+    pathname.startsWith('/schools/')
+
   // Protected routes — redirect unauthenticated users to login
   const isProtected =
-    pathname.startsWith('/recruit') ||
-    pathname.startsWith('/admin')
+    !isPublic &&
+    (pathname.startsWith('/recruit') ||
+    pathname.startsWith('/admin'))
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone()

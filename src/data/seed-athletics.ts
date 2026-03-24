@@ -10,6 +10,10 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
       defensiveScheme: '4-2-5 Multiple',
       offenseDescription: 'An up-tempo spread system built around run-pass options and tempo. OC Mack Leftwich averaged 41.8 ppg at his previous stops. The scheme features heavy pre-snap motion, zone-read concepts, and explosive play-action shots off run-game success. Quarterbacks are asked to make quick decisions in a one-read RPO structure.',
       defenseDescription: 'A 4-2-5 multiple front that plays fast and aggressive. DC Shiel Wood brings a pressure-heavy philosophy with pattern-matching coverage behind it. The extra defensive back replaces a linebacker to defend the spread-heavy Big 12, while still maintaining gap integrity against the run.',
+      strengthProgram: 'Under Director of Sports Performance Zac Woodfin, Texas Tech\'s S&C program emphasizes explosive power development and injury prevention. Players undergo GPS-tracked practices with individualized load management. The offseason program features Olympic lifting progressions, plyometric circuits, and sport-specific agility work. Cold plunge pools, cryotherapy chambers, and NormaTec compression boots are available daily for recovery.',
+      nutritionProgram: 'Texas Tech\'s Fuel the Red Raiders nutrition program provides customized meal plans for every player based on position, body composition goals, and training phase. A full-time sports dietitian oversees the nutrition center, which serves pre/post-practice meals, game-day fuel stations, and late-night recovery shakes. Players receive weekly body composition scans to track progress.',
+      recentBowlGames: ['2025 CFP Quarterfinal vs. Penn State', '2024 Independence Bowl vs. Arkansas', '2023 Guaranteed Rate Bowl vs. Cal'],
+      conferenceStanding: '1st (Big 12 Champions)',
     },
     {
       slug: 'oklahoma', name: 'Football', conference: 'SEC', headCoach: 'Brent Venables', record: '10-3', ranking: null,
@@ -17,6 +21,10 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
       defensiveScheme: '4-3 Multiple',
       offenseDescription: 'OC Ben Arbuckle installed his Washington State Air Raid system in 2025, and the results were immediate — OU ranked top-25 nationally in scoring (34.2 PPG) and passing efficiency. The scheme uses four-wide sets extensively with RPO concepts, quick game, and explosive shot plays. Transfer QB John Mateer became one of the SEC\'s most dynamic dual-threat quarterbacks in the system.',
       defenseDescription: 'Brent Venables personally calls the defensive plays, running his trademark 4-3 multiple defense built on man-coverage principles, aggressive pass rushing, and disciplined gap control. The system won two national championships at Clemson and features complex pre-snap movement to confuse offensive lines. In 2025, OU ranked top-20 nationally in total defense and 4th in the SEC in passing defense (195.2 YPG).',
+      strengthProgram: 'Jerry "Big Schmitty" Schmidt runs one of the most demanding S&C programs in college football. His philosophy centers on building championship-level physical toughness through high-volume Olympic lifting, sled work, and competitive team challenges. Players undergo position-specific programming with GPS load monitoring. The program is credited with OU\'s ability to dominate the 4th quarter — the Sooners outscored opponents 105-42 in Q4 during 2025.',
+      nutritionProgram: 'OU\'s Fuel the Future nutrition program operates out of a dedicated athlete dining facility adjacent to the Headington Family Fitness Center. Full-time sports dietitians create individualized meal plans, and the nutrition center serves breakfast, lunch, dinner, and post-workout meals daily. Players receive education on fueling for performance, hydration optimization, and supplements. The program was overhauled during the SEC transition to match conference standards.',
+      recentBowlGames: ['2025 CFP First Round vs. Alabama', '2024 Alamo Bowl vs. Michigan', '2023 Alamo Bowl vs. Arizona'],
+      conferenceStanding: '4th (SEC)',
     },
   ]
 
@@ -35,6 +43,10 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
         defensiveScheme: def.defensiveScheme,
         offenseDescription: def.offenseDescription,
         defenseDescription: def.defenseDescription,
+        strengthProgram: (def as any).strengthProgram ?? null,
+        nutritionProgram: (def as any).nutritionProgram ?? null,
+        recentBowlGames: (def as any).recentBowlGames ?? [],
+        conferenceStanding: (def as any).conferenceStanding ?? null,
       },
     })
     sportMap[`${def.slug}-${def.name}`] = sport
@@ -82,13 +94,14 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
   ]
 
   // Coaching history for head football coaches
-  const coachingHistory: Record<string, { careerRecord: string; championships: string[]; previousRoles: string[]; awards: string[]; playersInNfl: number }> = {
+  const coachingHistory: Record<string, { careerRecord: string; championships: string[]; previousRoles: string[]; awards: string[]; playersInNfl: number; coachingTree: string[] }> = {
     'Joey McGuire': {
       careerRecord: '35-18',
       championships: ['2025 Big 12 Championship'],
       previousRoles: ['Head Coach, Cedar Hill HS (2003-2016) — 141-42, 3 state titles', 'Associate HC / DL Coach, Baylor (2017-2021)'],
       awards: ['2025 AFCA Region 4 Coach of the Year', '2025 Big 12 Coach of the Year', 'Texas High School Football Hall of Fame (2022)', 'Most Big 12 wins of any active conference coach during tenure'],
       playersInNfl: 16,
+      coachingTree: ['Matt Rhule (Baylor HC)', 'Dave Aranda (Baylor HC)', 'Art Briles (Baylor HC)'],
     },
     'Brent Venables': {
       careerRecord: '36-27',
@@ -96,6 +109,7 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
       previousRoles: ['Defensive Coordinator, Clemson (2012-2021) — 2 national titles, 6 CFP appearances', 'Co-Defensive Coordinator / LB Coach, Oklahoma (1999-2011) — 2000 national title', 'Graduate Assistant, Kansas State (1993-95)'],
       awards: ['2016 Broyles Award (Top Assistant Coach in America)', '3x National Championship coach (1x OU DC, 2x Clemson DC)', '2025 College Football Playoff appearance', 'Produced 63 NFL Draft picks including 12 first-rounders', '3 Butkus Award winners coached (Calmus, Lehman, Simmons)'],
       playersInNfl: 63,
+      coachingTree: ['Bob Stoops (OU HC)', 'Bill Snyder (Kansas State HC)', 'Dabo Swinney (Clemson HC)'],
     },
   }
 
@@ -115,7 +129,10 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
           previousRoles: history.previousRoles,
           awards: history.awards,
           playersInNfl: history.playersInNfl,
-        } : {}),
+          coachingTree: history.coachingTree,
+        } : {
+          coachingTree: [],
+        }),
       },
     })
   }
@@ -124,15 +141,15 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
   // ─── Facilities ─────────────────────────────────────────────────────────────
   const facilityDefinitions = [
     // Texas Tech
-    { slug: 'texas-tech', key: 'texas-tech-stadium', name: 'Jones AT&T Stadium', type: 'stadium', description: 'A 60,454-seat stadium in the heart of Lubbock, known for its electric game-day atmosphere and the iconic Fearless Champion statue. The Double T scoreboard lights up red after every Red Raider victory.', panoramaUrl: '/panoramas/texas-tech-stadium.jpg' },
-    { slug: 'texas-tech', key: 'texas-tech-practice', name: 'Sports Performance Center', type: 'practice', description: 'A $46 million state-of-the-art indoor practice facility with a full-size synthetic turf field, coaches\' offices, meeting rooms, and sports science labs.', panoramaUrl: '/panoramas/texas-tech-practice.jpg' },
-    { slug: 'texas-tech', key: 'texas-tech-weight-room', name: 'Strength & Conditioning Center', type: 'weight-room', description: 'A massive 25,000 sq ft training facility with Olympic platforms, custom Red Raider branding, and comprehensive recovery amenities including cold plunge pools and cryotherapy chambers.', panoramaUrl: '/panoramas/texas-tech-weight-room.jpg' },
-    { slug: 'texas-tech', key: 'texas-tech-locker-room', name: 'Red Raider Locker Room', type: 'locker-room', description: 'A recently renovated players\' locker room with custom wood-and-leather lockers, LED lighting in scarlet and black, and displays honoring Red Raider legends.', panoramaUrl: '/panoramas/texas-tech-locker-room.jpg' },
+    { slug: 'texas-tech', key: 'texas-tech-stadium', name: 'Jones AT&T Stadium', type: 'stadium', description: 'A 60,454-seat stadium in the heart of Lubbock, known for its electric game-day atmosphere and the iconic Fearless Champion statue. The Double T scoreboard lights up red after every Red Raider victory.', panoramaUrl: '/panoramas/texas-tech-stadium.jpg', panoramaType: 'photo', sortOrder: 1, isRequired: true },
+    { slug: 'texas-tech', key: 'texas-tech-practice', name: 'Sports Performance Center', type: 'practice', description: 'A $46 million state-of-the-art indoor practice facility with a full-size synthetic turf field, coaches\' offices, meeting rooms, and sports science labs.', panoramaUrl: '/panoramas/texas-tech-practice.jpg', panoramaType: 'photo', sortOrder: 4, isRequired: true },
+    { slug: 'texas-tech', key: 'texas-tech-weight-room', name: 'Strength & Conditioning Center', type: 'weight-room', description: 'A massive 25,000 sq ft training facility with Olympic platforms, custom Red Raider branding, and comprehensive recovery amenities including cold plunge pools and cryotherapy chambers.', panoramaUrl: '/panoramas/texas-tech-weight-room.jpg', panoramaType: 'photo', sortOrder: 3, isRequired: true },
+    { slug: 'texas-tech', key: 'texas-tech-locker-room', name: 'Red Raider Locker Room', type: 'locker-room', description: 'A recently renovated players\' locker room with custom wood-and-leather lockers, LED lighting in scarlet and black, and displays honoring Red Raider legends.', panoramaUrl: '/panoramas/texas-tech-locker-room.jpg', panoramaType: 'photo', sortOrder: 2, isRequired: true },
     // Oklahoma
-    { slug: 'oklahoma', key: 'oklahoma-stadium', name: 'Gaylord Family Oklahoma Memorial Stadium', type: 'stadium', description: 'Known as "The Palace on the Prairie," this 80,126-seat stadium has been the home of Sooner football since 1923. The Sooner Schooner charges across the field after every OU score, one of college football\'s most beloved traditions.', panoramaUrl: '/panoramas/oklahoma-stadium.jpg' },
-    { slug: 'oklahoma', key: 'oklahoma-practice', name: 'Everest Training Center', type: 'practice', description: 'A world-class indoor practice facility with a full-size synthetic field, connected to the Switzer Center for seamless player preparation and game-planning.', panoramaUrl: '/panoramas/oklahoma-practice.jpg' },
-    { slug: 'oklahoma', key: 'oklahoma-weight-room', name: 'Headington Family Fitness Center', type: 'weight-room', description: 'A state-of-the-art 20,000 sq ft strength and conditioning facility with custom equipment, GPS performance tracking, and comprehensive recovery amenities.', panoramaUrl: '/panoramas/oklahoma-weight-room.jpg' },
-    { slug: 'oklahoma', key: 'oklahoma-locker-room', name: 'Sooner Legends Locker Room', type: 'locker-room', description: 'A cathedral-like players\' locker room with custom crimson-and-cream lockers, seven national championship displays, and a tunnel walk through the Barry Switzer Center to the field.', panoramaUrl: '/panoramas/oklahoma-locker-room.jpg' },
+    { slug: 'oklahoma', key: 'oklahoma-stadium', name: 'Gaylord Family Oklahoma Memorial Stadium', type: 'stadium', description: 'Known as "The Palace on the Prairie," this 80,126-seat stadium has been the home of Sooner football since 1923. The Sooner Schooner charges across the field after every OU score, one of college football\'s most beloved traditions.', panoramaUrl: '/panoramas/oklahoma-stadium.jpg', panoramaType: 'photo', sortOrder: 1, isRequired: true },
+    { slug: 'oklahoma', key: 'oklahoma-practice', name: 'Everest Training Center', type: 'practice', description: 'A world-class indoor practice facility with a full-size synthetic field, connected to the Switzer Center for seamless player preparation and game-planning.', panoramaUrl: '/panoramas/oklahoma-practice.jpg', panoramaType: 'photo', sortOrder: 4, isRequired: true },
+    { slug: 'oklahoma', key: 'oklahoma-weight-room', name: 'Headington Family Fitness Center', type: 'weight-room', description: 'A state-of-the-art 20,000 sq ft strength and conditioning facility with custom equipment, GPS performance tracking, and comprehensive recovery amenities.', panoramaUrl: '/panoramas/oklahoma-weight-room.jpg', panoramaType: 'photo', sortOrder: 3, isRequired: true },
+    { slug: 'oklahoma', key: 'oklahoma-locker-room', name: 'Sooner Legends Locker Room', type: 'locker-room', description: 'A cathedral-like players\' locker room with custom crimson-and-cream lockers, seven national championship displays, and a tunnel walk through the Barry Switzer Center to the field.', panoramaUrl: '/panoramas/oklahoma-locker-room.jpg', panoramaType: 'photo', sortOrder: 2, isRequired: true },
   ]
 
   const facilityMap: Record<string, any> = {}
@@ -145,6 +162,9 @@ export async function seedAthletics(prisma: any, schoolMap: Record<string, any>)
         type: def.type,
         description: def.description,
         panoramaUrl: def.panoramaUrl,
+        panoramaType: (def as any).panoramaType ?? 'photo',
+        sortOrder: (def as any).sortOrder ?? 0,
+        isRequired: (def as any).isRequired ?? false,
       },
     })
     facilityMap[def.key] = facility

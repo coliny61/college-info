@@ -1,0 +1,107 @@
+---
+title: OVV (Official Virtual Visit) — System Architecture
+---
+graph TB
+    subgraph "Client Layer"
+        LP["Landing Page<br/>(Marketing)"]
+        RA["Recruit App<br/>(Next.js SSR + Client)"]
+        CA["Coach Admin App<br/>(Next.js SSR + Client)"]
+        PV["360° Panorama Viewer<br/>(Three.js / Photo Sphere)"]
+        JB["Jersey Builder<br/>(Canvas API)"]
+        AT["Analytics Tracker<br/>(Client-side Batch)"]
+    end
+
+    subgraph "Next.js App Router"
+        direction TB
+        MG["(marketing) Group<br/>/, /about, /privacy,<br/>/terms, /schools/[slug]"]
+        AU["(auth) Group<br/>/login, /register,<br/>/invite/[code]"]
+        PL["(platform) Group<br/>/recruit/*, /admin/*"]
+        MW["Middleware<br/>Auth + Role + Rate Limit"]
+    end
+
+    subgraph "API Layer (Route Handlers)"
+        AA["Auth API<br/>/api/auth/*"]
+        SA["Schools API<br/>/api/schools/*"]
+        RE["Recruit API<br/>/api/recruit/*"]
+        AD["Admin API<br/>/api/admin/*"]
+        AN["Analytics API<br/>/api/analytics/*"]
+        JA["Jersey API<br/>/api/jersey/*"]
+        IA["Invite API<br/>/api/invite/*"]
+    end
+
+    subgraph "Business Logic"
+        ES["Engagement Score<br/>Calculator"]
+        AI["AI Insight<br/>Generator"]
+        IC["Image Compositor<br/>(Jersey Share)"]
+        VT["Visit Tracker<br/>(Duration + Heartbeat)"]
+    end
+
+    subgraph "Data Layer"
+        PR["Prisma ORM<br/>v7"]
+        PG[("PostgreSQL<br/>(Supabase)")]
+        SB["Supabase Auth"]
+        S3["File Storage<br/>(Supabase Storage /<br/>S3 + CloudFront)"]
+    end
+
+    subgraph "External"
+        VE["Vercel<br/>(Hosting + Edge)"]
+        EM["Email Service<br/>(Future)"]
+    end
+
+    LP --> MG
+    RA --> PL
+    CA --> PL
+    RA --> PV
+    RA --> JB
+    RA --> AT
+
+    MG --> MW
+    AU --> MW
+    PL --> MW
+
+    MW --> AA
+    MW --> SA
+    MW --> RE
+    MW --> AD
+    MW --> AN
+    MW --> JA
+    MW --> IA
+
+    AA --> SB
+    AA --> PR
+    SA --> PR
+    RE --> PR
+    AD --> PR
+    AN --> PR
+    JA --> PR
+    IA --> PR
+
+    AD --> ES
+    AD --> AI
+    JA --> IC
+    AN --> VT
+
+    PR --> PG
+    SB --> PG
+
+    PV --> S3
+    JB --> S3
+    IC --> S3
+
+    MG --> VE
+    AU --> VE
+    PL --> VE
+
+    classDef client fill:#3B82F6,stroke:#1E40AF,color:#fff
+    classDef router fill:#8B5CF6,stroke:#5B21B6,color:#fff
+    classDef api fill:#10B981,stroke:#047857,color:#fff
+    classDef logic fill:#F59E0B,stroke:#B45309,color:#fff
+    classDef data fill:#EF4444,stroke:#B91C1C,color:#fff
+    classDef external fill:#6B7280,stroke:#374151,color:#fff
+
+    class LP,RA,CA,PV,JB,AT client
+    class MG,AU,PL,MW router
+    class AA,SA,RE,AD,AN,JA,IA api
+    class ES,AI,IC,VT logic
+    class PR,PG,SB,S3 data
+    class VE,EM external

@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import {
   recruitProfileSchema,
   notificationPreferenceSchema,
+  calculateProfileCompleteness,
   type RecruitProfileInput,
   type NotificationPreferenceInput,
 } from '@/lib/validations'
@@ -65,7 +66,7 @@ export async function updateProfile(formData: FormData): Promise<ActionResult> {
   return { success: true }
 }
 
-export async function createRecruitProfile(data: RecruitProfileInput): Promise<ActionResult> {
+export async function createRecruitProfile(data: RecruitProfileInput & { recruitType?: string }): Promise<ActionResult> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -73,21 +74,32 @@ export async function createRecruitProfile(data: RecruitProfileInput): Promise<A
 
   if (!user) return { error: 'Not authenticated' }
 
-  const parsed = recruitProfileSchema.safeParse(data)
+  const { recruitType, ...profileData } = data
+  const parsed = recruitProfileSchema.safeParse(profileData)
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message }
   }
 
+  const profileCompleteness = calculateProfileCompleteness(parsed.data)
+
   await prisma.recruitProfile.create({
-    data: { userId: user.id, ...parsed.data },
+    data: { userId: user.id, ...parsed.data, profileCompleteness },
   })
+
+  // Store recruitType on User record
+  if (recruitType) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { recruitType },
+    })
+  }
 
   revalidatePath('/recruit')
   revalidatePath('/recruit/profile')
   return { success: true }
 }
 
-export async function updateRecruitProfile(data: RecruitProfileInput): Promise<ActionResult> {
+export async function updateRecruitProfile(data: RecruitProfileInput & { recruitType?: string }): Promise<ActionResult> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -95,15 +107,26 @@ export async function updateRecruitProfile(data: RecruitProfileInput): Promise<A
 
   if (!user) return { error: 'Not authenticated' }
 
-  const parsed = recruitProfileSchema.safeParse(data)
+  const { recruitType, ...profileData } = data
+  const parsed = recruitProfileSchema.safeParse(profileData)
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message }
   }
 
+  const profileCompleteness = calculateProfileCompleteness(parsed.data)
+
   await prisma.recruitProfile.update({
     where: { userId: user.id },
-    data: parsed.data,
+    data: { ...parsed.data, profileCompleteness },
   })
+
+  // Update recruitType on User record
+  if (recruitType !== undefined) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { recruitType },
+    })
+  }
 
   revalidatePath('/recruit')
   revalidatePath('/recruit/profile')

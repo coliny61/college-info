@@ -39,9 +39,37 @@ export const recruitProfileSchema = z.object({
   state: z.string().max(50).nullish(),
   bio: z.string().max(2000, 'Max 2000 characters').nullish(),
   highlightsUrl: z.string().url('Invalid URL').or(z.literal('')).nullish(),
+  // Transfer fields
+  currentSchool: z.string().max(200).nullish(),
+  collegeStats: z.string().max(2000).nullish(),
+  eligibilityYears: z.number().int().min(1).max(4).nullish(),
+  transferReason: z.string().max(1000).nullish(),
 })
 
 export type RecruitProfileInput = z.infer<typeof recruitProfileSchema>
+
+// ─── Profile Completeness ───────────────────────────────────────────────────
+
+export function calculateProfileCompleteness(data: RecruitProfileInput): number {
+  let completeness = 0
+  if (data.sport && data.graduationYear) completeness += 15
+  if (data.position) completeness += 10
+  if (data.height || data.weight) completeness += 10
+  if (data.gpa) completeness += 10
+  if (data.satScore || data.actScore) completeness += 10
+  if (data.highSchool || (data.city && data.state)) completeness += 10
+  if (data.bio) completeness += 15
+  if (data.highlightsUrl) completeness += 20
+  return completeness
+}
+
+export function getCompletenessMessage(pct: number): string {
+  if (pct >= 100) return 'Profile complete — you\'re ready'
+  if (pct >= 76) return 'Just a few more details!'
+  if (pct >= 51) return 'Almost done — coaches love seeing highlights'
+  if (pct >= 26) return 'You\'re getting there — add your stats'
+  return 'Complete your profile so coaches can find you'
+}
 
 // ─── Notification Preferences ────────────────────────────────────────────────
 
