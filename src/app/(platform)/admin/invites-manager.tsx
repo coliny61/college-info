@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +17,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Plus, Copy, Trash2, Check } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Plus, Copy, Trash2, Check, Settings2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { generateInviteLink, deleteInviteLink } from '@/app/(platform)/admin/actions'
 
@@ -30,12 +39,44 @@ interface Invite {
 export function InvitesManager({ invites }: { invites: Invite[] }) {
   const [generating, setGenerating] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  // Generate form
+  const [quantity, setQuantity] = useState('1')
+  const [expiresAt, setExpiresAt] = useState('')
+  const [welcomeMessage, setWelcomeMessage] = useState('')
 
   const handleGenerate = async () => {
     setGenerating(true)
-    await generateInviteLink()
-    setGenerating(false)
-    toast.success('Invite link created')
+    try {
+      await generateInviteLink({
+        quantity: parseInt(quantity) || 1,
+        expiresAt: expiresAt || undefined,
+        welcomeMessage: welcomeMessage || undefined,
+      })
+      const count = parseInt(quantity) || 1
+      toast.success(count > 1 ? `${count} invite links created` : 'Invite link created')
+      setDialogOpen(false)
+      setQuantity('1')
+      setExpiresAt('')
+      setWelcomeMessage('')
+    } catch {
+      toast.error('Failed to generate invite link')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
+  const handleQuickGenerate = async () => {
+    setGenerating(true)
+    try {
+      await generateInviteLink()
+      toast.success('Invite link created')
+    } catch {
+      toast.error('Failed to generate invite link')
+    } finally {
+      setGenerating(false)
+    }
   }
 
   const handleCopy = async (code: string, id: string) => {
@@ -54,12 +95,67 @@ export function InvitesManager({ invites }: { invites: Invite[] }) {
   const isExpired = (invite: Invite) =>
     invite.expiresAt ? new Date(invite.expiresAt) < new Date() : false
 
+  // Default expiry date (30 days from now)
+  const defaultExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
   return (
     <div className="space-y-4">
-      <Button onClick={handleGenerate} disabled={generating}>
-        <Plus className="mr-1 h-4 w-4" />
-        {generating ? 'Generating...' : 'Generate New Link'}
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button onClick={handleQuickGenerate} disabled={generating} size="sm">
+          <Plus className="mr-1 h-4 w-4" />
+          {generating ? 'Generating...' : 'Quick Generate'}
+        </Button>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <Settings2 className="mr-1 h-4 w-4" />
+              Advanced
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Generate Invite Links</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Quantity</label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Expires</label>
+                  <Input
+                    type="date"
+                    value={expiresAt}
+                    onChange={(e) => setExpiresAt(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    placeholder={defaultExpiry}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Welcome Message (optional)</label>
+                <Textarea
+                  placeholder="Custom message recruits see when they sign up via this link..."
+                  value={welcomeMessage}
+                  onChange={(e) => setWelcomeMessage(e.target.value)}
+                  rows={3}
+                />
+              </div>
+              <Button onClick={handleGenerate} disabled={generating} className="w-full">
+                {generating ? 'Generating...' : `Generate ${parseInt(quantity) > 1 ? `${quantity} Links` : 'Link'}`}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       {invites.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border p-12 text-center">

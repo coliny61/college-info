@@ -112,26 +112,47 @@ export async function deleteFacility(facilityId: string): Promise<ActionResult> 
   return { success: true }
 }
 
-export async function generateInviteLink() {
+export async function generateInviteLink(opts?: {
+  expiresAt?: string
+  welcomeMessage?: string
+  welcomeVideoUrl?: string
+  quantity?: number
+}) {
   const { user, school } = await getAdminSchool()
+  const count = Math.min(Math.max(1, opts?.quantity ?? 1), 100)
+  const defaultExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
 
-  const code = randomBytes(6).toString('hex')
-
-  const invite = await prisma.inviteLink.create({
-    data: {
-      schoolId: school.id,
-      createdBy: user.id,
-      code,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    },
-  })
+  for (let i = 0; i < count; i++) {
+    const code = randomBytes(6).toString('hex')
+    await prisma.inviteLink.create({
+      data: {
+        schoolId: school.id,
+        createdBy: user.id,
+        code,
+        expiresAt: opts?.expiresAt ? new Date(opts.expiresAt) : defaultExpiry,
+        welcomeMessage: opts?.welcomeMessage || null,
+        welcomeVideoUrl: opts?.welcomeVideoUrl || null,
+      },
+    })
+  }
 
   revalidatePath('/admin')
-  return invite.code
+  return { success: true }
 }
 
 export async function deleteInviteLink(inviteId: string): Promise<ActionResult> {
   await prisma.inviteLink.delete({ where: { id: inviteId } })
   revalidatePath('/admin')
+  return { success: true }
+}
+
+export async function incrementInviteUsedCount(code: string): Promise<ActionResult> {
+  const invite = await prisma.inviteLink.findUnique({ where: { code } })
+  if (!invite) return { error: 'Invite not found' }
+
+  await prisma.inviteLink.update({
+    where: { code },
+    data: { usedCount: { increment: 1 } },
+  })
   return { success: true }
 }

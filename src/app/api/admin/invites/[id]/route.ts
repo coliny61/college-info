@@ -1,0 +1,35 @@
+import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma'
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { id } = await params
+
+  // Verify the invite belongs to the coach's school
+  const invite = await prisma.inviteLink.findUnique({
+    where: { id },
+    select: { schoolId: true },
+  })
+  if (!invite) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { schoolId: true },
+  })
+
+  // Allow if coach manages this school or it's the fallback school
+  if (dbUser?.schoolId && dbUser.schoolId !== invite.schoolId) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  await prisma.inviteLink.delete({ where: { id } })
+
+  return NextResponse.json({ success: true })
+}
