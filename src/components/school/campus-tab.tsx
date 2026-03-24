@@ -178,8 +178,8 @@ export function CampusTab({
           </DialogHeader>
           {viewerFacility && viewerFacility.panoramaUrl && (
             <PanoramaViewer
-              imageUrl={viewerFacility.panoramaUrl}
-              hotspots={viewerFacility.hotspots}
+              panoramaUrl={viewerFacility.panoramaUrl}
+              hotspots={viewerFacility.hotspots.map(h => ({ ...h, z: 0, linkedFacilityId: null }))}
             />
           )}
         </DialogContent>
