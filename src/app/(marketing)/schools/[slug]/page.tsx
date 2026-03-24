@@ -11,6 +11,7 @@ import { AthleticsTab } from '@/components/school/athletics-tab'
 import { AcademicsTab } from '@/components/school/academics-tab'
 import { NilTab } from '@/components/school/nil-tab'
 import { AlumniTab } from '@/components/school/alumni-tab'
+import { RosterSection } from '@/components/school/roster-section'
 import { VideoSection } from '@/components/school/video-section'
 import { JerseySection } from '@/components/school/jersey-section'
 import { Button } from '@/components/ui/button'
@@ -154,10 +155,12 @@ export default async function PublicSchoolPage({
         <section id="football" className="mt-16 scroll-mt-20">
           <SectionDivider title="Football Program" />
           <AthleticsTab
-            sports={school.sports}
-            roster={school.rosterPlayers ?? []}
-            facilities={school.facilities}
+            sports={school.sports as any}
+            stadiumCapacity={school.stadiumCapacity}
+            traditions={school.traditions}
+            gameDayDescription={school.gameDayDescription}
             colorPrimary={school.colorPrimary}
+            schoolId={school.id}
             schoolSlug={school.slug}
             isPublic
           />
@@ -179,7 +182,14 @@ export default async function PublicSchoolPage({
           <NilTab nilProgram={school.nilProgram as any} schoolId={school.id} colorPrimary={school.colorPrimary} />
         </section>
 
-        <section id="roster" className="mt-16 scroll-mt-20" />
+        <section id="roster" className="mt-16 scroll-mt-20">
+          <SectionDivider title="Roster" />
+          <RosterSection
+            roster={school.rosterPlayers ?? []}
+            schoolId={school.id}
+            colorPrimary={school.colorPrimary}
+          />
+        </section>
 
         <section id="alumni" className="mt-16 scroll-mt-20">
           <SectionDivider title="Notable Alumni" />

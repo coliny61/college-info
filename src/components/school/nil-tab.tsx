@@ -13,6 +13,8 @@ interface NilTabProps {
     founded: number
     description: string
     notableDeals: Array<{ athlete: string; sport: string; description: string }> | null
+    averageDealSize?: number | null
+    howToGetInvolved?: string | null
   } | null
   schoolId: string
   colorPrimary: string
@@ -105,6 +107,14 @@ export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
         </div>
       </div>
 
+      {/* Average deal size */}
+      {nilProgram.averageDealSize && (
+        <div className="glass-panel rounded-xl p-5 text-center">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Average Deal Size</p>
+          <p className="text-scoreboard mt-1 text-3xl font-bold text-foreground">{formatBudget(nilProgram.averageDealSize)}</p>
+        </div>
+      )}
+
       <div className="section-divider" />
 
       {/* Collective info */}
@@ -122,6 +132,14 @@ export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
           {nilProgram.description}
         </p>
       </div>
+
+      {/* How to get involved */}
+      {nilProgram.howToGetInvolved && (
+        <div className="glass-panel rounded-xl p-6">
+          <h3 className="text-display text-sm tracking-wide text-foreground mb-2">How to Get Involved</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">{nilProgram.howToGetInvolved}</p>
+        </div>
+      )}
 
       {/* Notable deals */}
       {deals.length > 0 && (

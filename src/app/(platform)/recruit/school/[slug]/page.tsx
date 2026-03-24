@@ -11,6 +11,7 @@ import { AthleticsTab } from '@/components/school/athletics-tab'
 import { AcademicsTab } from '@/components/school/academics-tab'
 import { NilTab } from '@/components/school/nil-tab'
 import { AlumniTab } from '@/components/school/alumni-tab'
+import { RosterSection } from '@/components/school/roster-section'
 import { VideoSection } from '@/components/school/video-section'
 import { JerseySection } from '@/components/school/jersey-section'
 import {
@@ -186,10 +187,12 @@ export default async function SchoolDetailPage({
       <section id="football" className="mt-16 scroll-mt-20">
         <SectionHeading title="Football Program" />
         <AthleticsTab
-          sports={school.sports}
-          roster={school.rosterPlayers ?? []}
-          facilities={school.facilities}
+          sports={school.sports as any}
+          stadiumCapacity={school.stadiumCapacity}
+          traditions={school.traditions}
+          gameDayDescription={school.gameDayDescription}
           colorPrimary={school.colorPrimary}
+          schoolId={school.id}
           schoolSlug={school.slug}
         />
       </section>
@@ -217,7 +220,12 @@ export default async function SchoolDetailPage({
 
       {/* ─── Roster ──────────────────────────────────────────────── */}
       <section id="roster" className="mt-16 scroll-mt-20">
-        {/* Roster is rendered inside AthleticsTab, so we add an anchor only */}
+        <SectionHeading title="Roster" />
+        <RosterSection
+          roster={school.rosterPlayers ?? []}
+          schoolId={school.id}
+          colorPrimary={school.colorPrimary}
+        />
       </section>
 
       {/* ─── Alumni ──────────────────────────────────────────────── */}
