@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { JerseyCanvas, downloadCanvas } from './jersey-canvas'
 import { AssetSelector } from './asset-selector'
 import { Button } from '@/components/ui/button'
-import { Download, Share2 } from 'lucide-react'
+import { Download, Share2, Heart, Copy, Check, Twitter } from 'lucide-react'
 import { useTrackDuration, useTrackEvent } from '@/hooks/use-analytics'
+import { saveJerseyCombo } from '@/app/(platform)/recruit/actions'
+import { toast } from 'sonner'
 
 interface Asset {
   id: string
@@ -38,21 +40,51 @@ export function JerseyBuilder({
   const [jerseyUrl, setJerseyUrl] = useState<string | null>(null)
   const [pantsId, setPantsId] = useState<string | null>(null)
   const [pantsUrl, setPantsUrl] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [savedId, setSavedId] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
 
   const getColorLabel = useCallback((id: string | null) => {
     if (!id) return null
     return assets.find((a) => a.id === id)?.colorLabel ?? null
   }, [assets])
 
+  const canSave = helmetId && jerseyId && pantsId
+
+  const handleSave = async () => {
+    if (!canSave) return
+    setSaving(true)
+    try {
+      const result = await saveJerseyCombo({
+        schoolId,
+        helmetId: helmetId!,
+        jerseyId: jerseyId!,
+        pantsId: pantsId!,
+      })
+      if ('error' in result) {
+        toast.error(result.error)
+      } else {
+        setSavedId(result.id)
+        toast.success('Jersey combo saved!')
+        trackEvent('jersey', 'save_combo', schoolId, {
+          helmetId, jerseyId, pantsId,
+          helmet: getColorLabel(helmetId),
+          jersey: getColorLabel(jerseyId),
+          pants: getColorLabel(pantsId),
+        })
+      }
+    } catch {
+      toast.error('Failed to save')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleDownload = () => {
     const canvas = document.querySelector('canvas')
     if (canvas) {
       downloadCanvas(canvas, `${schoolSlug}-uniform.png`)
-      trackEvent('jersey', 'combination_downloaded', schoolId, {
-        helmet: getColorLabel(helmetId),
-        jersey: getColorLabel(jerseyId),
-        pants: getColorLabel(pantsId),
-      })
+      trackEvent('jersey', 'share_combo', schoolId, { platform: 'download' })
     }
   }
 
@@ -65,19 +97,39 @@ export function JerseyBuilder({
         canvas.toBlob(resolve, 'image/png')
       )
       if (blob && navigator.share) {
-        const file = new File([blob], `${schoolSlug}-uniform.png`, {
-          type: 'image/png',
-        })
+        const file = new File([blob], `${schoolSlug}-uniform.png`, { type: 'image/png' })
         await navigator.share({
           title: `My ${schoolName} Uniform`,
+          text: `Check out my ${schoolName} jersey combo on OVV!`,
           files: [file],
         })
+        trackEvent('jersey', 'share_combo', schoolId, { platform: 'native_share' })
       } else {
         handleDownload()
       }
     } catch {
-      handleDownload()
+      // User cancelled share
     }
+  }
+
+  const handleCopyLink = async () => {
+    if (!savedId) {
+      toast.error('Save your combo first to get a shareable link')
+      return
+    }
+    const url = `${window.location.origin}/jersey/${savedId}`
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    toast.success('Link copied!')
+    trackEvent('jersey', 'share_combo', schoolId, { platform: 'copy_link' })
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleTwitterShare = () => {
+    const url = savedId ? `${window.location.origin}/jersey/${savedId}` : window.location.href
+    const text = `Check out my ${schoolName} jersey combo on @OVV_official! 🏈`
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank')
+    trackEvent('jersey', 'share_combo', schoolId, { platform: 'twitter' })
   }
 
   return (
@@ -91,20 +143,41 @@ export function JerseyBuilder({
           colorPrimary={colorPrimary}
         />
 
-        <div className="flex gap-2">
-          <Button onClick={handleDownload} variant="outline" size="sm">
-            <Download className="mr-1 h-4 w-4" />
-            Download
-          </Button>
+        {/* Action buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Button
-            onClick={handleShare}
+            onClick={handleSave}
+            disabled={!canSave || saving}
             size="sm"
+            className="gap-1.5"
             style={{ backgroundColor: colorPrimary }}
           >
-            <Share2 className="mr-1 h-4 w-4" />
+            <Heart className="h-4 w-4" />
+            {saving ? 'Saving...' : savedId ? 'Saved!' : 'Save Combo'}
+          </Button>
+          <Button onClick={handleDownload} variant="outline" size="sm" className="gap-1.5">
+            <Download className="h-4 w-4" />
+            Download
+          </Button>
+          <Button onClick={handleShare} variant="outline" size="sm" className="gap-1.5">
+            <Share2 className="h-4 w-4" />
             Share
           </Button>
         </div>
+
+        {/* Social share row (visible after save) */}
+        {savedId && (
+          <div className="flex items-center gap-2 animate-in-fade">
+            <Button onClick={handleTwitterShare} variant="ghost" size="sm" className="gap-1.5 text-xs">
+              <Twitter className="h-3.5 w-3.5" />
+              Twitter
+            </Button>
+            <Button onClick={handleCopyLink} variant="ghost" size="sm" className="gap-1.5 text-xs">
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald" /> : <Copy className="h-3.5 w-3.5" />}
+              Copy Link
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Selectors */}
@@ -117,8 +190,8 @@ export function JerseyBuilder({
           onSelect={(id, url) => {
             setHelmetId(id)
             setHelmetUrl(url)
-            const label = assets.find((a) => a.id === id)?.colorLabel
-            trackEvent('jersey', 'asset_selected', schoolId, { type: 'helmet', colorLabel: label })
+            setSavedId(null)
+            trackEvent('jersey', 'select_piece', schoolId, { pieceType: 'helmet', colorLabel: assets.find(a => a.id === id)?.colorLabel })
           }}
           colorPrimary={colorPrimary}
         />
@@ -130,8 +203,8 @@ export function JerseyBuilder({
           onSelect={(id, url) => {
             setJerseyId(id)
             setJerseyUrl(url)
-            const label = assets.find((a) => a.id === id)?.colorLabel
-            trackEvent('jersey', 'asset_selected', schoolId, { type: 'jersey', colorLabel: label })
+            setSavedId(null)
+            trackEvent('jersey', 'select_piece', schoolId, { pieceType: 'jersey', colorLabel: assets.find(a => a.id === id)?.colorLabel })
           }}
           colorPrimary={colorPrimary}
         />
@@ -143,8 +216,8 @@ export function JerseyBuilder({
           onSelect={(id, url) => {
             setPantsId(id)
             setPantsUrl(url)
-            const label = assets.find((a) => a.id === id)?.colorLabel
-            trackEvent('jersey', 'asset_selected', schoolId, { type: 'pants', colorLabel: label })
+            setSavedId(null)
+            trackEvent('jersey', 'select_piece', schoolId, { pieceType: 'pants', colorLabel: assets.find(a => a.id === id)?.colorLabel })
           }}
           colorPrimary={colorPrimary}
         />

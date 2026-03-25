@@ -133,6 +133,30 @@ export async function updateRecruitProfile(data: RecruitProfileInput & { recruit
   return { success: true }
 }
 
+export async function saveJerseyCombo(data: {
+  schoolId: string
+  helmetId: string
+  jerseyId: string
+  pantsId: string
+}): Promise<{ id: string } | { error: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const selection = await prisma.jerseySelection.create({
+    data: {
+      userId: user.id,
+      schoolId: data.schoolId,
+      helmetId: data.helmetId,
+      jerseyId: data.jerseyId,
+      pantsId: data.pantsId,
+    },
+  })
+
+  revalidatePath('/recruit')
+  return { id: selection.id }
+}
+
 export async function updateNotificationPreferences(data: NotificationPreferenceInput): Promise<ActionResult> {
   const supabase = await createClient()
   const {
