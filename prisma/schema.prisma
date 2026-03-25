@@ -158,6 +158,7 @@ model College {
   majors Major[]
 
   @@unique([schoolId, slug])
+  @@index([schoolId])
   @@map("colleges")
 }
 
@@ -172,6 +173,7 @@ model Major {
   pathways       DegreePathway[]
   careerOutcomes CareerOutcome[]
 
+  @@index([collegeId])
   @@map("majors")
 }
 
@@ -184,6 +186,7 @@ model DegreePathway {
   courses     String[]
   description String   @db.Text
 
+  @@index([majorId])
   @@map("degree_pathways")
 }
 
@@ -196,6 +199,7 @@ model CareerOutcome {
   growthRate   Float
   description  String @db.Text
 
+  @@index([majorId])
   @@map("career_outcomes")
 }
 
@@ -222,6 +226,7 @@ model Sport {
   coaches    Coach[]
   facilities Facility[]
 
+  @@index([schoolId])
   @@map("sports")
 }
 
@@ -242,6 +247,9 @@ model Coach {
   videoUrl      String?
   coachingTree  String[]
 
+  videos SchoolVideo[]
+
+  @@index([sportId])
   @@map("coaches")
 }
 
@@ -261,6 +269,7 @@ model RosterPlayer {
   imageUrl   String?
   isStarter  Boolean @default(false)
 
+  @@index([schoolId])
   @@map("roster_players")
 }
 
@@ -297,6 +306,7 @@ model NotableAlumni {
   isFirstRound     Boolean @default(false)
   isActive         Boolean @default(true)
 
+  @@index([schoolId])
   @@map("notable_alumni")
 }
 
@@ -307,7 +317,7 @@ model Facility {
   schoolId     String
   school       School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   sportId      String?
-  sport        Sport?   @relation(fields: [sportId], references: [id])
+  sport        Sport?   @relation(fields: [sportId], references: [id], onDelete: SetNull)
   name         String
   type         String
   description  String   @db.Text
@@ -318,22 +328,27 @@ model Facility {
   sortOrder    Int      @default(0)
   isRequired   Boolean  @default(false)
 
-  hotspots Hotspot[]
+  hotspots       Hotspot[]
+  linkedHotspots Hotspot[] @relation("HotspotLinks")
 
+  @@index([schoolId])
+  @@index([sportId])
   @@map("facilities")
 }
 
 model Hotspot {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   facilityId       String
-  facility         Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  facility         Facility  @relation(fields: [facilityId], references: [id], onDelete: Cascade)
   x                Float
   y                Float
-  z                Float    @default(0)
+  z                Float     @default(0)
   label            String
-  description      String   @db.Text
+  description      String    @db.Text
   linkedFacilityId String?
+  linkedFacility   Facility? @relation("HotspotLinks", fields: [linkedFacilityId], references: [id], onDelete: SetNull)
 
+  @@index([facilityId])
   @@map("hotspots")
 }
 
@@ -347,6 +362,7 @@ model JerseyAsset {
   colorLabel String
   imageUrl   String
 
+  @@index([schoolId])
   @@map("jersey_assets")
 }
 
@@ -361,6 +377,8 @@ model JerseySelection {
   pantsId   String
   createdAt DateTime @default(now())
 
+  @@index([schoolId])
+  @@index([userId])
   @@map("jersey_selections")
 }
 
@@ -407,7 +425,7 @@ model InviteLink {
   schoolId        String
   school          School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   createdBy       String
-  creator         User      @relation(fields: [createdBy], references: [id])
+  creator         User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   code            String    @unique
   expiresAt       DateTime?
   usedCount       Int       @default(0)
@@ -442,10 +460,12 @@ model SchoolVideo {
   videoUrl     String
   thumbnailUrl String?
   coachId      String?
+  coach        Coach?   @relation(fields: [coachId], references: [id], onDelete: SetNull)
   playerName   String?
   sortOrder    Int      @default(0)
   createdAt    DateTime @default(now())
 
+  @@index([schoolId])
   @@map("school_videos")
 }
 
@@ -462,6 +482,9 @@ model RecruitNote {
   content   String   @db.Text
   createdAt DateTime @default(now())
 
+  @@index([recruitId])
+  @@index([schoolId])
+  @@index([coachId])
   @@map("recruit_notes")
 }
 
@@ -484,11 +507,12 @@ model RecruitList {
   school    School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   name      String
   createdBy String
-  creator   User     @relation(fields: [createdBy], references: [id])
+  creator   User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   members RecruitListMember[]
 
+  @@index([schoolId])
   @@map("recruit_lists")
 }
 
@@ -501,6 +525,8 @@ model RecruitListMember {
   addedAt   DateTime    @default(now())
 
   @@unique([listId, recruitId])
+  @@index([listId])
+  @@index([recruitId])
   @@map("recruit_list_members")
 }
 
