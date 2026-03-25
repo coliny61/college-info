@@ -1,4 +1,5 @@
 // Client-side analytics batch tracker with sendBeacon support
+// All duration values are in MILLISECONDS (Date.now() diffs)
 
 interface AnalyticsEvent {
   schoolId?: string

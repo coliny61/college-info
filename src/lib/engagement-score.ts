@@ -50,6 +50,7 @@ export async function calculateEngagementScore(
   }
 
   // Time (30%): total duration normalized (cap at 30 min = 100%)
+  // NOTE: duration is stored in milliseconds (Date.now() diffs from analytics tracker)
   const totalDuration = events.reduce((sum, e) => sum + (e.duration ?? 0), 0)
   const maxDuration = 30 * 60 * 1000 // 30 min in ms
   const timeScore = Math.min(totalDuration / maxDuration, 1) * 100

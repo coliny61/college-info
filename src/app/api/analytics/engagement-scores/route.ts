@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { calculateEngagementScore } from '@/lib/engagement-score'
 
 export async function GET() {
+  try {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -59,4 +60,8 @@ export async function GET() {
   return NextResponse.json({
     scores: scores.filter(Boolean).sort((a, b) => (b?.score ?? 0) - (a?.score ?? 0)),
   })
+  } catch (err) {
+    console.error('GET /api/analytics/engagement-scores error:', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

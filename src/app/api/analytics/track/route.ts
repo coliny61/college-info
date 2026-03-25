@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate each event
-    const events = []
+    let events = []
     for (const raw of rawEvents) {
       const parsed = analyticsEventSchema.safeParse(raw)
       if (!parsed.success) {
@@ -46,6 +46,21 @@ export async function POST(request: NextRequest) {
         )
       }
       events.push(parsed.data)
+    }
+
+    // Validate all schoolIds in the batch exist
+    const schoolIds = [...new Set(events.map(e => e.schoolId).filter(Boolean))] as string[]
+    if (schoolIds.length > 0) {
+      const validSchools = await prisma.school.findMany({
+        where: { id: { in: schoolIds } },
+        select: { id: true },
+      })
+      const validIds = new Set(validSchools.map(s => s.id))
+      events = events.filter(e => !e.schoolId || validIds.has(e.schoolId))
+    }
+
+    if (events.length === 0) {
+      return NextResponse.json({ ok: true, count: 0 })
     }
 
     // Bulk insert

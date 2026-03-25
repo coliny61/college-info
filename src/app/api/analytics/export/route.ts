@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const days = parseInt(searchParams.get('days') ?? '30')
+    const days = Math.min(Math.max(parseInt(searchParams.get('days') ?? '30'), 1), 365)
 
     const since = new Date()
     since.setDate(since.getDate() - days)

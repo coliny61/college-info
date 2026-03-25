@@ -17,6 +17,7 @@ async function getCoachSchoolId() {
 }
 
 export async function GET() {
+  try {
   const schoolId = await getCoachSchoolId()
   if (!schoolId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -62,4 +63,8 @@ export async function GET() {
       createdAt: e.createdAt.toISOString(),
     })),
   })
+  } catch (err) {
+    console.error('GET /api/analytics/dashboard error:', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

@@ -8,6 +8,7 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ userId: string }> }
 ) {
+  try {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -43,4 +44,8 @@ export async function GET(
   const insight = await generateInsight(userId, schoolId, recruit.displayName)
 
   return NextResponse.json({ insight })
+  } catch (err) {
+    console.error('GET /api/analytics/insights/[userId] error:', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
