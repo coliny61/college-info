@@ -21,7 +21,7 @@ const oswald = Oswald({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://college-info-nine.vercel.app'),
+  metadataBase: new URL('https://ovv-dev.vercel.app'),
   title: {
     default: 'OVV — Official Virtual Visit',
     template: '%s | OVV',

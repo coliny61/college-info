@@ -1,8 +1,8 @@
 {
   "name": "OVV — Official Virtual Visit",
   "short_name": "OVV",
-  "description": "The recruiting platform for college athletics",
-  "start_url": "/login",
+  "description": "Experience college football programs through immersive virtual tours",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#10B981",
