@@ -21,6 +21,7 @@ interface SchoolCardProps {
 }
 
 export function SchoolCard({
+  id,
   slug,
   name,
   shortName,
@@ -71,7 +72,7 @@ export function SchoolCard({
         {/* Favorite — top right in band */}
         {showFavorite && (
           <div className="absolute right-2 top-2 z-10">
-            <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+            <FavoriteButton schoolId={id} initialFavorited={isFavorited} />
           </div>
         )}
 
