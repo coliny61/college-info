@@ -21,11 +21,10 @@ export async function DELETE(
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
-    select: { schoolId: true },
+    select: { schoolId: true, role: true },
   })
 
-  // Allow if coach manages this school or it's the fallback school
-  if (dbUser?.schoolId && dbUser.schoolId !== invite.schoolId) {
+  if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId || dbUser.schoolId !== invite.schoolId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

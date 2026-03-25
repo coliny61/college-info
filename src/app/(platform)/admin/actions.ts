@@ -20,10 +20,10 @@ async function getAdminSchool() {
     include: { school: true },
   })
 
-  const school = dbUser?.school ?? await prisma.school.findFirst()
-  if (!school) throw new Error('No school found')
+  if (!dbUser || dbUser.role !== 'coach_admin') throw new Error('Not authorized')
+  if (!dbUser.school) throw new Error('No school assigned')
 
-  return { user, school }
+  return { user, school: dbUser.school }
 }
 
 export async function updateSchoolProfile(formData: FormData): Promise<ActionResult> {

@@ -26,8 +26,23 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Verify coach owns the requested school
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { schoolId: true, role: true },
+    })
+    if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const { searchParams } = new URL(request.url)
-    const schoolId = searchParams.get('schoolId')
+    const schoolId = searchParams.get('schoolId') || dbUser.schoolId
+
+    // Coaches can only export their own school's data
+    if (schoolId !== dbUser.schoolId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const days = parseInt(searchParams.get('days') ?? '30')
 
     const since = new Date()
@@ -35,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     const events = await prisma.analyticsEvent.findMany({
       where: {
-        ...(schoolId && { schoolId }),
+        schoolId,
         createdAt: { gte: since },
       },
       include: {

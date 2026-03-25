@@ -20,6 +20,7 @@ interface SchoolHeaderProps {
 }
 
 export function SchoolHeader({
+  id,
   slug,
   name,
   shortName,
@@ -90,7 +91,7 @@ export function SchoolHeader({
         {!isPublic && (
           <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
             <div className="glass-panel rounded-full p-1">
-              <FavoriteButton schoolId={slug} initialFavorited={isFavorited} />
+              <FavoriteButton schoolId={id} initialFavorited={isFavorited} />
             </div>
           </div>
         )}
