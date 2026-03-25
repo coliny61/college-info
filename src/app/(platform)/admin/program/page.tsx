@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import type { School } from '@/generated/prisma/client'
 import { createClient } from '@/lib/supabase/server'
 import { ProgramManager } from './program-manager'
 
@@ -8,26 +8,20 @@ export const metadata: Metadata = { title: 'Manage Program' }
 
 export default async function AdminProgramPage() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  let school: School | null = null
-  if (user) {
-    const dbUser = await prisma.user
-      .findUnique({
-        where: { id: user.id },
-        select: { schoolId: true },
-      })
-      .catch(() => null)
-    if (dbUser?.schoolId) {
-      school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
-    }
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { schoolId: true, role: true },
+  }).catch(() => null)
+
+  if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId) {
+    redirect('/login?error=no_school_assigned')
   }
-  if (!school) {
-    school = await prisma.school.findFirst()
-  }
-  if (!school) return <p className="text-muted-foreground">No school found.</p>
+
+  const school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
+  if (!school) redirect('/login?error=school_not_found')
 
   // Fetch all program data in parallel
   const [sport, facilities, jerseyAssets] = await Promise.all([

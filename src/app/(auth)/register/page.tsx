@@ -6,32 +6,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Eye, EyeOff, GraduationCap, UserCheck } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { registerSchema } from '@/lib/validations'
-
-type Role = 'recruit' | 'coach_admin'
-
-const ROLE_OPTIONS: { role: Role; label: string; desc: string; icon: React.ComponentType<{ className?: string }>; color: string }[] = [
-  {
-    role: 'recruit',
-    label: 'Recruit',
-    desc: 'I am a prospective student-athlete exploring schools.',
-    icon: GraduationCap,
-    color: '#10B981',
-  },
-  {
-    role: 'coach_admin',
-    label: 'Coach / Admin',
-    desc: 'I manage a school profile and recruiting content.',
-    icon: UserCheck,
-    color: '#3B82F6',
-  },
-]
-
-const ROLE_ROUTES: Record<Role, string> = {
-  recruit: '/recruit',
-  coach_admin: '/admin',
-}
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -39,7 +15,6 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [selectedRole, setSelectedRole] = useState<Role>('recruit')
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
@@ -55,7 +30,7 @@ export default function RegisterPage() {
       email,
       password,
       confirmPassword,
-      role: selectedRole,
+      role: 'recruit',
     })
     if (!result.success) {
       const errors: Record<string, string> = {}
@@ -76,7 +51,7 @@ export default function RegisterPage() {
       options: {
         data: {
           display_name: displayName,
-          role: selectedRole,
+          role: 'recruit',
         },
       },
     })
@@ -91,7 +66,7 @@ export default function RegisterPage() {
       await fetch('/api/auth/sync-user', { method: 'POST' })
     } catch {}
 
-    router.push(ROLE_ROUTES[selectedRole])
+    router.push('/recruit')
     router.refresh()
   }
 
@@ -100,7 +75,7 @@ export default function RegisterPage() {
       <div>
         <h1 className="text-display text-3xl text-foreground">Create Account</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Join OVV to start exploring.
+          Join OVV to start exploring college football programs.
         </p>
       </div>
 
@@ -171,67 +146,6 @@ export default function RegisterPage() {
             required
           />
           {fieldErrors.confirmPassword && <p className="mt-1 text-sm text-destructive">{fieldErrors.confirmPassword}</p>}
-        </div>
-
-        {/* Role Selector */}
-        <div>
-          <label className="mb-3 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">
-            I am a...
-          </label>
-          <div className="space-y-2">
-            {ROLE_OPTIONS.map((option) => {
-              const isSelected = selectedRole === option.role
-              return (
-                <button
-                  type="button"
-                  key={option.role}
-                  onClick={() => setSelectedRole(option.role)}
-                  className="flex w-full items-center gap-3 rounded-xl p-4 text-left transition-all duration-200 glass-panel"
-                  style={{
-                    borderColor: isSelected ? option.color : undefined,
-                    backgroundColor: isSelected ? `${option.color}08` : undefined,
-                    boxShadow: isSelected ? `0 0 20px ${option.color}10` : 'none',
-                  }}
-                >
-                  <div
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors"
-                    style={{
-                      backgroundColor: isSelected ? `${option.color}15` : 'oklch(1 0 0 / 0.04)',
-                    }}
-                  >
-                    <span style={{ color: isSelected ? option.color : 'var(--muted-foreground)' }}>
-                      <option.icon className="h-4 w-4" />
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <p
-                      className="font-display text-sm font-semibold uppercase tracking-wide transition-colors"
-                      style={{ color: isSelected ? option.color : 'var(--foreground)' }}
-                    >
-                      {option.label}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {option.desc}
-                    </p>
-                  </div>
-                  <div
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors"
-                    style={{
-                      borderColor: isSelected ? option.color : 'var(--muted-foreground)',
-                      opacity: isSelected ? 1 : 0.4,
-                    }}
-                  >
-                    {isSelected && (
-                      <div
-                        className="h-2.5 w-2.5 rounded-full"
-                        style={{ backgroundColor: option.color }}
-                      />
-                    )}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
         </div>
 
         <Button

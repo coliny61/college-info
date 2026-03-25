@@ -13,7 +13,7 @@ async function getCoachSchoolId() {
   })
   if (!dbUser || dbUser.role !== 'coach_admin') return null
 
-  return dbUser.schoolId ?? (await prisma.school.findFirst({ select: { id: true } }))?.id ?? null
+  return dbUser.schoolId ?? null
 }
 
 export async function GET() {

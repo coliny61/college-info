@@ -1,12 +1,27 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { AnalyticsDashboard } from './analytics-dashboard'
 
 export const metadata: Metadata = { title: 'Analytics' }
 
 export default async function AdminAnalyticsPage() {
-  const school = await prisma.school.findFirst()
-  if (!school) return <p className="text-muted-foreground">No school found.</p>
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { schoolId: true, role: true },
+  }).catch(() => null)
+
+  if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId) {
+    redirect('/login?error=no_school_assigned')
+  }
+
+  const school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
+  if (!school) redirect('/login?error=school_not_found')
 
   // Get analytics for last 30 days
   const since = new Date()

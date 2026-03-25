@@ -15,8 +15,8 @@ async function getCoachSchool() {
   })
   if (!dbUser || dbUser.role !== 'coach_admin') return null
 
-  const schoolId = dbUser.schoolId ?? (await prisma.school.findFirst({ select: { id: true } }))?.id
-  if (!schoolId) return null
+  if (!dbUser.schoolId) return null
+  const schoolId = dbUser.schoolId
 
   return { userId: dbUser.id, schoolId }
 }

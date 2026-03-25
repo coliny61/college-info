@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Coach Dashboard' }
 import { prisma } from '@/lib/prisma'
-import type { School } from '@/generated/prisma/client'
 import { Eye, Users, BarChart3, Link2, ArrowRight, Building } from 'lucide-react'
 import { InvitesManager } from './invites-manager'
 
@@ -15,22 +15,24 @@ export default async function AdminDashboard() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const displayName =
-    user?.user_metadata?.display_name ?? user?.email?.split('@')[0] ?? 'Coach'
+  if (!user) redirect('/login')
 
-  // Get managed school
-  let school: School | null = null
-  if (user) {
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: { schoolId: true },
-    }).catch(() => null)
-    if (dbUser?.schoolId) {
-      school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
-    }
+  const displayName =
+    user.user_metadata?.display_name ?? user.email?.split('@')[0] ?? 'Coach'
+
+  // Get managed school — strict: no fallback
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { schoolId: true, role: true },
+  }).catch(() => null)
+
+  if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId) {
+    redirect('/login?error=no_school_assigned')
   }
+
+  const school = await prisma.school.findUnique({ where: { id: dbUser.schoolId } })
   if (!school) {
-    school = await prisma.school.findFirst()
+    redirect('/login?error=school_not_found')
   }
 
   // Get stats

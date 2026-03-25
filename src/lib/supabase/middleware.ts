@@ -1,6 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// SECURITY NOTE: Middleware uses user_metadata.role for initial routing only.
+// This is client-modifiable via Supabase, but ALL server components and API routes
+// verify the role from the Prisma database (dbUser.role), which is authoritative.
+// Middleware role checks are a UX convenience (fast redirects), not a security boundary.
+// The actual security enforcement happens in each page/route's server-side auth check.
 const ROLE_ROUTES: Record<string, string> = {
   recruit: '/recruit',
   coach_admin: '/admin',

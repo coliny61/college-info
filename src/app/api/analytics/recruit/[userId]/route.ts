@@ -19,7 +19,7 @@ export async function GET(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const schoolId = dbUser.schoolId ?? (await prisma.school.findFirst({ select: { id: true } }))?.id
+  const schoolId = dbUser.schoolId
   if (!schoolId) return NextResponse.json({ error: 'No school' }, { status: 404 })
 
   const { userId } = await params

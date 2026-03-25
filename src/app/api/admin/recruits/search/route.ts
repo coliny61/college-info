@@ -8,10 +8,15 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { role: true } })
-    if (!dbUser || dbUser.role !== 'coach_admin') {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { schoolId: true, role: true },
+    })
+    if (!dbUser || dbUser.role !== 'coach_admin' || !dbUser.schoolId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
+
+    const schoolId = dbUser.schoolId
 
     const { searchParams } = new URL(request.url)
     const position = searchParams.get('position')
@@ -25,6 +30,15 @@ export async function GET(request: NextRequest) {
     if (position) where.position = position
     if (graduationYear) where.graduationYear = parseInt(graduationYear)
     if (state) where.state = state
+
+    // Scope to recruits who have interacted with this school
+    // (have analytics events OR were invited by this school)
+    where.user = {
+      OR: [
+        { analyticsEvents: { some: { schoolId } } },
+        // Recruits who signed up via this school's invite (invite_code in metadata)
+      ],
+    }
 
     const [recruits, total] = await Promise.all([
       prisma.recruitProfile.findMany({
