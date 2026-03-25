@@ -16,10 +16,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Rate limit: 60 requests per minute
+    // Rate limit: 100 requests per minute
     const rl = rateLimit(`analytics-track:${user.id}`, {
       windowMs: 60_000,
-      maxRequests: 60,
+      maxRequests: 100,
     })
     if (!rl.success) {
       return NextResponse.json(
