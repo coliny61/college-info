@@ -66,6 +66,7 @@ export function VideoSection({ videos, colorPrimary }: VideoSectionProps) {
                   <div className="relative aspect-video bg-black">
                     <iframe
                       src={video.videoUrl}
+                      title={video.title || 'Video'}
                       className="absolute inset-0 h-full w-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
