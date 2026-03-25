@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { GraduationCap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export function MarketingNav() {
   return (
@@ -15,6 +16,7 @@ export function MarketingNav() {
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Link href="/login">
             <Button variant="ghost" size="sm" className="text-xs uppercase tracking-wider">
               Log In

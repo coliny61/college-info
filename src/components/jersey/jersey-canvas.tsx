@@ -30,12 +30,16 @@ export function JerseyCanvas({
     ctx.fillStyle = '#1a1a2e'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    const loadImage = (src: string): Promise<HTMLImageElement> =>
+    const loadImage = (src: string, timeoutMs = 10000): Promise<HTMLImageElement> =>
       new Promise((resolve, reject) => {
         const img = new Image()
+        const timer = setTimeout(() => {
+          img.src = ''
+          reject(new Error(`Image load timeout: ${src}`))
+        }, timeoutMs)
+        img.onload = () => { clearTimeout(timer); resolve(img) }
+        img.onerror = () => { clearTimeout(timer); reject(new Error(`Failed to load: ${src}`)) }
         img.crossOrigin = 'anonymous'
-        img.onload = () => resolve(img)
-        img.onerror = reject
         img.src = src
       })
 

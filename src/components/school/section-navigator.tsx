@@ -56,6 +56,7 @@ export function SectionNavigator() {
             <button
               key={id}
               onClick={() => scrollTo(id)}
+              aria-label={`Navigate to ${label} section`}
               className={`group flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs transition-all duration-200 ${
                 isActive
                   ? 'glass-panel text-[var(--school-primary)]'
@@ -90,6 +91,7 @@ export function SectionNavigator() {
               <button
                 key={id}
                 onClick={() => scrollTo(id)}
+                aria-label={`Navigate to ${label} section`}
                 className={`flex flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 min-w-[48px] transition-colors ${
                   isActive
                     ? 'text-[var(--school-primary)]'

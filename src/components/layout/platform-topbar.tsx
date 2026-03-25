@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { LogOut } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 interface PlatformTopbarProps {
   userEmail?: string
@@ -45,6 +46,7 @@ export function PlatformTopbar({ userEmail, displayName }: PlatformTopbarProps) 
             {initials}
           </AvatarFallback>
         </Avatar>
+        <ThemeToggle />
         <Button
           variant="ghost"
           size="icon"

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { randomBytes } from 'crypto'
+import { z } from 'zod'
 import { schoolProfileSchema, coachSchema, facilitySchema } from '@/lib/validations'
 
 export type ActionResult = { success: true } | { error: string }
@@ -49,6 +50,8 @@ export async function updateSchoolProfile(formData: FormData): Promise<ActionRes
 
   revalidatePath('/admin/program')
   revalidatePath('/recruit')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  revalidatePath(`/schools/${school.slug}`)
   return { success: true }
 }
 
@@ -75,12 +78,15 @@ export async function createCoach(formData: FormData): Promise<ActionResult> {
   })
 
   revalidatePath('/admin/program')
+  revalidatePath(`/recruit/school/${school.slug}`)
   return { success: true }
 }
 
 export async function deleteCoach(coachId: string): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
   await prisma.coach.delete({ where: { id: coachId } })
   revalidatePath('/admin/program')
+  revalidatePath(`/recruit/school/${school.slug}`)
   return { success: true }
 }
 
@@ -103,12 +109,17 @@ export async function createFacility(formData: FormData): Promise<ActionResult> 
   })
 
   revalidatePath('/admin/program')
+  revalidatePath('/admin/program/facilities')
+  revalidatePath(`/recruit/school/${school.slug}`)
   return { success: true }
 }
 
 export async function deleteFacility(facilityId: string): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
   await prisma.facility.delete({ where: { id: facilityId } })
   revalidatePath('/admin/program')
+  revalidatePath('/admin/program/facilities')
+  revalidatePath(`/recruit/school/${school.slug}`)
   return { success: true }
 }
 
@@ -154,5 +165,120 @@ export async function incrementInviteUsedCount(code: string): Promise<ActionResu
     where: { code },
     data: { usedCount: { increment: 1 } },
   })
+  return { success: true }
+}
+
+// ─── Video CRUD ──────────────────────────────────────────────────────────────
+
+export async function createVideo(formData: FormData): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const schema = z.object({
+    title: z.string().min(1).max(200),
+    type: z.enum(['coach_intro', 'highlight', 'day_in_life']),
+    videoUrl: z.string().url(),
+    thumbnailUrl: z.string().url().optional(),
+    description: z.string().max(500).optional(),
+    playerName: z.string().max(100).optional(),
+    sortOrder: z.coerce.number().int().min(0).default(0),
+  })
+  const parsed = schema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  await prisma.schoolVideo.create({ data: { schoolId: school.id, ...parsed.data } })
+  revalidatePath('/admin/program/videos')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  return { success: true }
+}
+
+export async function deleteVideo(videoId: string): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const video = await prisma.schoolVideo.findUnique({ where: { id: videoId }, select: { schoolId: true } })
+  if (!video || video.schoolId !== school.id) return { error: 'Not found' }
+  await prisma.schoolVideo.delete({ where: { id: videoId } })
+  revalidatePath('/admin/program/videos')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  return { success: true }
+}
+
+// ─── Roster CRUD ─────────────────────────────────────────────────────────────
+
+export async function createRosterPlayer(formData: FormData): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const schema = z.object({
+    name: z.string().min(1).max(100),
+    number: z.coerce.number().int().min(0).max(99),
+    position: z.string().min(1).max(20),
+    height: z.string().min(1),
+    weight: z.coerce.number().int().min(50).max(500),
+    year: z.string().min(1),
+    hometown: z.string().min(1),
+    state: z.string().min(1).max(2),
+    highSchool: z.string().optional(),
+    isStarter: z.coerce.boolean().default(false),
+  })
+  const parsed = schema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  await prisma.rosterPlayer.create({ data: { schoolId: school.id, ...parsed.data } })
+  revalidatePath('/admin/program/roster')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  return { success: true }
+}
+
+export async function deleteRosterPlayer(playerId: string): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const player = await prisma.rosterPlayer.findUnique({ where: { id: playerId }, select: { schoolId: true } })
+  if (!player || player.schoolId !== school.id) return { error: 'Not found' }
+  await prisma.rosterPlayer.delete({ where: { id: playerId } })
+  revalidatePath('/admin/program/roster')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  return { success: true }
+}
+
+// ─── NIL Visibility ──────────────────────────────────────────────────────────
+
+export async function updateNilVisibility(formData: FormData): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const schema = z.object({
+    totalBudget: z.enum(['public', 'invite_only', 'hidden']),
+    footballSpend: z.enum(['public', 'invite_only', 'hidden']),
+    allSportsSpend: z.enum(['public', 'invite_only', 'hidden']),
+    averageDealSize: z.enum(['public', 'invite_only', 'hidden']),
+    notableDeals: z.enum(['public', 'invite_only', 'hidden']),
+  })
+  const parsed = schema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  await prisma.nilFieldVisibility.upsert({
+    where: { schoolId: school.id },
+    update: parsed.data,
+    create: { schoolId: school.id, ...parsed.data },
+  })
+  revalidatePath('/admin/program/nil')
+  revalidatePath(`/recruit/school/${school.slug}`)
+  return { success: true }
+}
+
+// ─── Facility Update ─────────────────────────────────────────────────────────
+
+export async function updateFacility(facilityId: string, formData: FormData): Promise<ActionResult> {
+  const { school } = await getAdminSchool()
+  const facility = await prisma.facility.findUnique({ where: { id: facilityId }, select: { schoolId: true } })
+  if (!facility || facility.schoolId !== school.id) return { error: 'Not found' }
+
+  const schema = z.object({
+    name: z.string().min(1).max(200).optional(),
+    type: z.string().min(1).optional(),
+    description: z.string().max(1000).optional(),
+    panoramaUrl: z.string().url().optional(),
+    sortOrder: z.coerce.number().int().min(0).optional(),
+    isRequired: z.coerce.boolean().optional(),
+  })
+  const parsed = schema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  await prisma.facility.update({ where: { id: facilityId }, data: parsed.data })
+  revalidatePath('/admin/program/facilities')
+  revalidatePath(`/recruit/school/${school.slug}`)
   return { success: true }
 }

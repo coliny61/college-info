@@ -49,6 +49,10 @@ class AnalyticsTracker {
   }
 
   track(event: Omit<AnalyticsEvent, 'sessionId'>) {
+    if (this.queue.length >= 1000) {
+      console.warn('Analytics queue full, dropping event')
+      return
+    }
     this.queue.push({ ...event, sessionId: this.sessionId })
     if (this.queue.length >= BATCH_SIZE) {
       this.flush()
