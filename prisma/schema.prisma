@@ -118,6 +118,7 @@ model School {
   recruitLists       RecruitList[]
   recruitStatuses    RecruitStatus[]
   nilFieldVisibility NilFieldVisibility?
+  brandDeals         SchoolBrandDeal[]
 
   @@map("schools")
 }
@@ -214,6 +215,11 @@ model Sport {
   headCoach          String
   record             String?
   ranking            Int?
+  gender             String?
+  season             String?
+  division           String?
+  playStyle          String?  @db.Text
+  programDescription String?  @db.Text
   offensiveScheme    String?
   defensiveScheme    String?
   offenseDescription String?  @db.Text
@@ -223,8 +229,10 @@ model Sport {
   recentBowlGames   String[]
   conferenceStanding String?
 
-  coaches    Coach[]
-  facilities Facility[]
+  coaches        Coach[]
+  facilities     Facility[]
+  rosterPlayers  RosterPlayer[]
+  notableAlumni  NotableAlumni[]
 
   @@index([schoolId])
   @@map("sports")
@@ -257,6 +265,8 @@ model RosterPlayer {
   id         String  @id @default(uuid())
   schoolId   String
   school     School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  sportId    String?
+  sport      Sport?  @relation(fields: [sportId], references: [id], onDelete: SetNull)
   name       String
   number     Int
   position   String
@@ -270,6 +280,7 @@ model RosterPlayer {
   isStarter  Boolean @default(false)
 
   @@index([schoolId])
+  @@index([sportId])
   @@map("roster_players")
 }
 
@@ -287,7 +298,9 @@ model NilProgram {
   description     String  @db.Text
   notableDeals    Json?
   averageDealSize Int?
-  howToGetInvolved String? @db.Text
+  howToGetInvolved  String? @db.Text
+  primarySportSpend Int?
+  primarySportName  String?
 
   @@map("nil_programs")
 }
@@ -296,17 +309,20 @@ model NotableAlumni {
   id               String  @id @default(uuid())
   schoolId         String
   school           School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  sportId          String?
+  sport            Sport?  @relation(fields: [sportId], references: [id], onDelete: SetNull)
   name             String
   position         String
   draftYear        Int
   draftRound       Int
   draftPick        Int
-  nflTeam          String
+  proTeam          String
   careerHighlights String  @db.Text
   isFirstRound     Boolean @default(false)
   isActive         Boolean @default(true)
 
   @@index([schoolId])
+  @@index([sportId])
   @@map("notable_alumni")
 }
 
@@ -557,4 +573,43 @@ model NilFieldVisibility {
   notableDeals    String @default("invite_only")
 
   @@map("nil_field_visibility")
+}
+
+// ─── Brand Partnerships (Influxor) ──────────────────────────────────────────
+
+model BrandPartner {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  logoUrl     String?
+  websiteUrl  String?
+  category    String
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deals SchoolBrandDeal[]
+
+  @@map("brand_partners")
+}
+
+model SchoolBrandDeal {
+  id             String       @id @default(uuid())
+  schoolId       String
+  school         School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  brandPartnerId String
+  brandPartner   BrandPartner @relation(fields: [brandPartnerId], references: [id], onDelete: Cascade)
+  dealText       String
+  promoCode      String?
+  promoUrl       String?
+  isActive       Boolean      @default(true)
+  isFeatured     Boolean      @default(false)
+  sortOrder      Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([schoolId, brandPartnerId])
+  @@index([schoolId])
+  @@index([brandPartnerId])
+  @@map("school_brand_deals")
 }

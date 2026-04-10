@@ -1,13 +1,13 @@
 // seed-academics.ts — Creates SchoolAcademics, Colleges, Majors, DegreePathways, CareerOutcomes
 
-import { ttuColleges, type CollegeDef } from './seed-academics-ttu'
-import { ouColleges } from './seed-academics-ou'
+import { umhbColleges, type CollegeDef } from './seed-academics-umhb'
+import { tamuccColleges } from './seed-academics-tamucc'
 
 export async function seedAcademics(prisma: any, schoolMap: Record<string, any>) {
   // ─── School Academic Stats ──────────────────────────────────────────────────
   const academicStats = [
-    { slug: 'texas-tech', enrollment: 40773, admissionRate: 0.73, satAvg: 1180, actAvg: 25, tuitionInState: 11852, tuitionOutOfState: 24157, graduationRate: 0.67, medianEarnings: 52000, retentionRate: 0.85, studentToFacultyRatio: 21.0, averageClassSize: 35, ranking: 187, athleteGraduationRate: 0.72 },
-    { slug: 'oklahoma', enrollment: 32217, admissionRate: 0.73, satAvg: 1240, actAvg: 27, tuitionInState: 12063, tuitionOutOfState: 29163, graduationRate: 0.71, medianEarnings: 53000, retentionRate: 0.88, studentToFacultyRatio: 18.0, averageClassSize: 32, ranking: 127, athleteGraduationRate: 0.76 },
+    { slug: 'umhb', enrollment: 3800, admissionRate: 0.74, satAvg: 1120, actAvg: 23, tuitionInState: 32430, tuitionOutOfState: 32430, graduationRate: 0.56, medianEarnings: 44000, retentionRate: 0.72, studentToFacultyRatio: 17.0, averageClassSize: 22, ranking: null, athleteGraduationRate: 0.72 },
+    { slug: 'tamucc', enrollment: 11266, admissionRate: 0.91, satAvg: 1080, actAvg: 22, tuitionInState: 10542, tuitionOutOfState: 22050, graduationRate: 0.43, medianEarnings: 42000, retentionRate: 0.65, studentToFacultyRatio: 19.0, averageClassSize: 28, ranking: null, athleteGraduationRate: 0.65 },
   ]
 
   for (const stats of academicStats) {
@@ -19,10 +19,10 @@ export async function seedAcademics(prisma: any, schoolMap: Record<string, any>)
   console.log(`  Created ${academicStats.length} SchoolAcademics`)
 
   // ─── Colleges, Majors, Pathways & Career Outcomes ────────────────────────
-  // TTU colleges imported from seed-academics-ttu.ts (~65 majors across 10 colleges)
-  // OU colleges imported from seed-academics-ou.ts (~55 majors across 10 colleges)
+  // UMHB colleges imported from seed-academics-umhb.ts (6 colleges, ~25 majors)
+  // TAMUCC colleges imported from seed-academics-tamucc.ts (5 colleges, ~25 majors)
 
-  const collegeDefinitions: CollegeDef[] = [...ttuColleges, ...ouColleges]
+  const collegeDefinitions: CollegeDef[] = [...umhbColleges, ...tamuccColleges]
 
   let collegeCount = 0
   let majorCount = 0

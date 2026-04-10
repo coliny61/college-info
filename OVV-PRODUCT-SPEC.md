@@ -9,7 +9,7 @@
 ## 1. Product Overview
 
 ### 1.1 Mission
-OVV replicates the official college visit experience virtually, starting with college football. High school seniors, transfers, and their families can explore any football program at the collegiate level through immersive 360° content, detailed program profiles, and interactive features. For coaches, OVV provides deep behavioral analytics on recruit engagement so they can personalize the real in-person official visit.
+OVV replicates the official college visit experience virtually for ALL college sports. High school seniors, transfers, and their families can explore any athletic program at the collegiate level through immersive 360° content, detailed program profiles, and interactive features. For coaches, OVV provides deep behavioral analytics on recruit engagement so they can personalize the real in-person official visit. Test schools: UMHB (D3, 8 sports) and TAMUCC (D1, 11 sports, no football).
 
 ### 1.2 Core Value Propositions
 - **For Recruits:** Explore any college football program from home — 360° tours, coaching staff intel, NIL details, academics, day-in-the-life content — like being on campus without the plane ticket.

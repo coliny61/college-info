@@ -152,8 +152,8 @@ export default async function PublicSchoolPage({
           <TourTab facilities={school.facilities} colorPrimary={school.colorPrimary} />
         </section>
 
-        <section id="football" className="mt-16 scroll-mt-20">
-          <SectionDivider title="Football Program" />
+        <section id="athletics" className="mt-16 scroll-mt-20">
+          <SectionDivider title="Athletics" />
           <AthleticsTab
             sports={school.sports as any}
             stadiumCapacity={school.stadiumCapacity}

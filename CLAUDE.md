@@ -1,7 +1,14 @@
 # OVV (Official Virtual Visit)
 
 ## Project Overview
-OVV is a virtual college visit platform focused on college football recruiting. It lets high school and transfer portal recruits explore football programs through immersive 360° tours, detailed program profiles, and interactive features. For coaches, it provides deep behavioral analytics and AI-generated insights so they can personalize real in-person official visits.
+OVV is a virtual college visit platform for college athletics recruiting across ALL sports. It lets high school and transfer portal recruits explore athletic programs through immersive 360° tours, detailed program profiles, and interactive features. For coaches, it provides deep behavioral analytics and AI-generated insights so they can personalize real in-person official visits.
+
+### Test Schools
+- **UMHB** (University of Mary Hardin-Baylor) — NCAA D3, ASC, 8 sports including football. Slug: `umhb`
+- **TAMUCC** (Texas A&M University-Corpus Christi) — NCAA D1, Southland Conference, 11 sports, NO football. Slug: `tamucc`
+
+### Brand Deals (Influxor)
+The platform includes an Influxor-powered Brand Deals section on each school page. 9 brand partners (Marucci, DeoBlock, FanSpark, GOAT Coats, Cellev8, HNY+, Revomadic, Dive Coastal Cuisine, Original ChopShop) with school-specific promo codes and deals. Models: `BrandPartner` and `SchoolBrandDeal`.
 
 ## Critical Documentation — READ BEFORE ANY WORK
 Before implementing ANY feature, read the relevant sections of these documents:
@@ -18,7 +25,7 @@ Before implementing ANY feature, read the relevant sections of these documents:
 3. Invite System & Welcome Screen
 4. School Detail Page — Immersive Scroll
 5. 360° Virtual Tour
-6. Content Sections (Football, Academics, NIL, Roster, Alumni, Video)
+6. Content Sections (Athletics, Academics, NIL, Deals, Roster, Alumni, Video)
 7. Jersey Builder (Save + Share + Coach Notification)
 8. Analytics System Enhancement
 9. Coach CRM (Tags, Notes, Lists, Status)

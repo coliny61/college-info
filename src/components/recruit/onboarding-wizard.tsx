@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
+import { SPORTS, POSITIONS, US_STATES, GRADUATION_YEARS, HEIGHT_FEET, HEIGHT_INCHES } from '@/data/sports'
 import { createRecruitProfile } from '@/app/(platform)/recruit/actions'
 import { calculateProfileCompleteness } from '@/lib/validations'
 import { ProfileCompletenessBar } from './profile-completeness-bar'
@@ -205,7 +205,9 @@ export function OnboardingWizard() {
                     <SelectValue placeholder="Select sport" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Football">Football</SelectItem>
+                    {SPORTS.map((sport) => (
+                      <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.sport && <p className="text-xs text-destructive">{errors.sport}</p>}

@@ -3,18 +3,18 @@
 export async function seedNilVisibility(prisma: any, schoolMap: Record<string, any>) {
   const entries = [
     {
-      slug: 'texas-tech',
+      slug: 'umhb',
       totalBudget: 'public',
       footballSpend: 'public',
-      allSportsSpend: 'hidden',
-      averageDealSize: 'invite_only',
-      notableDeals: 'invite_only',
+      allSportsSpend: 'public',
+      averageDealSize: 'public',
+      notableDeals: 'public',
     },
     {
-      slug: 'oklahoma',
+      slug: 'tamucc',
       totalBudget: 'public',
-      footballSpend: 'public',
-      allSportsSpend: 'hidden',
+      footballSpend: 'hidden',
+      allSportsSpend: 'public',
       averageDealSize: 'invite_only',
       notableDeals: 'public',
     },

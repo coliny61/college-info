@@ -15,59 +15,84 @@ interface RosterPlayer {
   state: string
   highSchool: string | null
   isStarter: boolean
+  sportId: string | null
 }
 
 interface RosterSectionProps {
   roster: RosterPlayer[]
   schoolId: string
   colorPrimary: string
+  sportId?: string | null
+  sportName?: string | null
 }
 
-const POSITION_GROUPS: Record<string, string[]> = {
+const FOOTBALL_BASKETBALL_POSITIONS: Record<string, string[]> = {
   'Offense': ['QB', 'RB', 'WR', 'TE', 'OL', 'OT', 'OG', 'C'],
   'Defense': ['DE', 'DT', 'DL', 'LB', 'ILB', 'OLB', 'CB', 'S', 'FS', 'SS', 'EDGE', 'NICK'],
   'Special Teams': ['K', 'P', 'LS'],
 }
 
 function classifyPosition(pos: string): string {
-  for (const [group, positions] of Object.entries(POSITION_GROUPS)) {
+  for (const [group, positions] of Object.entries(FOOTBALL_BASKETBALL_POSITIONS)) {
     if (positions.includes(pos)) return group
   }
-  return 'Offense'
+  return 'Other'
 }
 
-export function RosterSection({ roster, schoolId, colorPrimary }: RosterSectionProps) {
-  useTrackDuration('football.roster', schoolId)
+function isFootball(name: string | null | undefined): boolean {
+  return name?.toLowerCase() === 'football'
+}
+
+export function RosterSection({ roster, schoolId, colorPrimary, sportId, sportName }: RosterSectionProps) {
+  useTrackDuration('roster', schoolId)
   const [filter, setFilter] = useState<string>('all')
 
-  if (roster.length === 0) return null
+  // Filter by sport
+  const sportRoster = sportId
+    ? roster.filter(p => p.sportId === sportId)
+    : roster
 
-  const filtered = filter === 'all'
-    ? roster
-    : roster.filter(p => classifyPosition(p.position) === filter)
+  if (sportRoster.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center animate-in-up">
+        <p className="text-sm text-muted-foreground">No roster available for this sport.</p>
+      </div>
+    )
+  }
+
+  // Only show position group filters for football
+  const showPositionGroups = isFootball(sportName)
+  const filtered = showPositionGroups && filter !== 'all'
+    ? sportRoster.filter(p => classifyPosition(p.position) === filter)
+    : sportRoster
+
+  // Show hometown column for non-football/basketball
+  const showHometown = !['football', 'men\'s basketball', 'women\'s basketball'].includes((sportName || '').toLowerCase())
 
   return (
     <div className="animate-in-up">
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs text-muted-foreground">
-          {roster.length} players
+          {sportRoster.length} players
         </span>
-        <div className="flex flex-wrap gap-1.5">
-          {['all', 'Offense', 'Defense', 'Special Teams'].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`rounded-sm px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider transition-colors ${
-                filter === f
-                  ? 'text-white'
-                  : 'bg-white/[0.04] text-muted-foreground hover:text-foreground'
-              }`}
-              style={filter === f ? { backgroundColor: colorPrimary } : undefined}
-            >
-              {f === 'all' ? 'All' : f}
-            </button>
-          ))}
-        </div>
+        {showPositionGroups && (
+          <div className="flex flex-wrap gap-1.5">
+            {['all', 'Offense', 'Defense', 'Special Teams'].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`rounded-sm px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider transition-colors ${
+                  filter === f
+                    ? 'text-white'
+                    : 'bg-white/[0.04] text-muted-foreground hover:text-foreground'
+                }`}
+                style={filter === f ? { backgroundColor: colorPrimary } : undefined}
+              >
+                {f === 'all' ? 'All' : f}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="relative">

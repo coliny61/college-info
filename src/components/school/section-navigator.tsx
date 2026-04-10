@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Map, Trophy, GraduationCap, DollarSign, Users, Award, Shirt, Play } from 'lucide-react'
+import { Map, Trophy, GraduationCap, DollarSign, Tag, Users, Award, Shirt, Play } from 'lucide-react'
 
 const SECTIONS = [
   { id: 'tour', label: 'Tour', icon: Map },
-  { id: 'football', label: 'Football', icon: Trophy },
+  { id: 'athletics', label: 'Athletics', icon: Trophy },
   { id: 'academics', label: 'Academics', icon: GraduationCap },
   { id: 'nil', label: 'NIL', icon: DollarSign },
+  { id: 'deals', label: 'Deals', icon: Tag },
   { id: 'roster', label: 'Roster', icon: Users },
   { id: 'alumni', label: 'Alumni', icon: Award },
   { id: 'jersey', label: 'Jersey', icon: Shirt },

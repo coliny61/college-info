@@ -1,14 +1,86 @@
 export const SPORTS = [
   'Football',
+  'Men\'s Basketball',
+  'Women\'s Basketball',
+  'Baseball',
+  'Softball',
+  'Men\'s Soccer',
+  'Women\'s Soccer',
+  'Volleyball',
+  'Men\'s Tennis',
+  'Women\'s Tennis',
+  'Track & Field',
+  'Cross Country',
+  'Golf',
+  'Beach Volleyball',
+  'Swimming & Diving',
+  'Wrestling',
+  'Lacrosse',
+  'Field Hockey',
+  'Other',
 ] as const
 
 export type Sport = (typeof SPORTS)[number]
 
 export const POSITIONS: Record<string, string[]> = {
-  Football: [
+  'Football': [
     'Quarterback', 'Running Back', 'Wide Receiver', 'Tight End',
     'Offensive Line', 'Defensive Line', 'Linebacker',
     'Cornerback', 'Safety', 'Kicker', 'Punter',
+  ],
+  'Men\'s Basketball': [
+    'Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center',
+  ],
+  'Women\'s Basketball': [
+    'Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center',
+  ],
+  'Baseball': [
+    'Pitcher', 'Catcher', 'First Base', 'Second Base', 'Shortstop',
+    'Third Base', 'Outfield', 'Designated Hitter', 'Utility',
+  ],
+  'Softball': [
+    'Pitcher', 'Catcher', 'First Base', 'Second Base', 'Shortstop',
+    'Third Base', 'Outfield', 'Utility',
+  ],
+  'Men\'s Soccer': [
+    'Goalkeeper', 'Defender', 'Midfielder', 'Forward',
+  ],
+  'Women\'s Soccer': [
+    'Goalkeeper', 'Defender', 'Midfielder', 'Forward',
+  ],
+  'Volleyball': [
+    'Setter', 'Outside Hitter', 'Middle Blocker', 'Right Side', 'Libero', 'Defensive Specialist',
+  ],
+  'Men\'s Tennis': [
+    'Singles', 'Doubles',
+  ],
+  'Women\'s Tennis': [
+    'Singles', 'Doubles',
+  ],
+  'Track & Field': [
+    'Sprinter', 'Distance', 'Jumper', 'Thrower', 'Hurdler', 'Multi-Event',
+  ],
+  'Cross Country': [
+    'Runner',
+  ],
+  'Golf': [
+    'Golfer',
+  ],
+  'Beach Volleyball': [
+    'Beach Volleyball',
+  ],
+  'Swimming & Diving': [
+    'Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'IM', 'Diver',
+  ],
+  'Wrestling': [
+    '125 lbs', '133 lbs', '141 lbs', '149 lbs', '157 lbs',
+    '165 lbs', '174 lbs', '184 lbs', '197 lbs', '285 lbs',
+  ],
+  'Lacrosse': [
+    'Attack', 'Midfield', 'Defense', 'Goalie',
+  ],
+  'Field Hockey': [
+    'Forward', 'Midfielder', 'Defender', 'Goalkeeper',
   ],
 }
 

@@ -7,13 +7,11 @@ import { SchoolHeader } from '@/components/school/school-header'
 import { SectionNavigator } from '@/components/school/section-navigator'
 import { TrackSchoolView } from '@/components/school/track-school-view'
 import { TourTab } from '@/components/school/tour-tab'
-import { AthleticsTab } from '@/components/school/athletics-tab'
 import { AcademicsTab } from '@/components/school/academics-tab'
 import { NilTab } from '@/components/school/nil-tab'
-import { AlumniTab } from '@/components/school/alumni-tab'
-import { RosterSection } from '@/components/school/roster-section'
 import { VideoSection } from '@/components/school/video-section'
 import { JerseySection } from '@/components/school/jersey-section'
+import { SchoolPageClient } from '@/components/school/school-page-client'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -64,6 +62,7 @@ export default async function SchoolDetailPage({
       sports: {
         include: {
           coaches: true,
+          rosterPlayers: true,
         },
       },
       facilities: {
@@ -75,9 +74,15 @@ export default async function SchoolDetailPage({
       nilProgram: true,
       notableAlumni: {
         orderBy: { draftYear: 'desc' as const },
+        include: { sport: { select: { name: true } } },
       },
       rosterPlayers: {
         orderBy: [{ isStarter: 'desc' as const }, { position: 'asc' as const }, { name: 'asc' as const }],
+      },
+      brandDeals: {
+        where: { isActive: true },
+        orderBy: { sortOrder: 'asc' },
+        include: { brandPartner: true },
       },
       jerseyAssets: { select: { id: true } },
       videos: {
@@ -183,19 +188,19 @@ export default async function SchoolDetailPage({
         />
       </section>
 
-      {/* ─── Football ────────────────────────────────────────────── */}
-      <section id="football" className="mt-16 scroll-mt-20">
-        <SectionHeading title="Football Program" />
-        <AthleticsTab
-          sports={school.sports as any}
-          stadiumCapacity={school.stadiumCapacity}
-          traditions={school.traditions}
-          gameDayDescription={school.gameDayDescription}
-          colorPrimary={school.colorPrimary}
-          schoolId={school.id}
-          schoolSlug={school.slug}
-        />
-      </section>
+      {/* ─── Client-managed sections (Athletics, Deals, Roster, Alumni) ─── */}
+      <SchoolPageClient
+        sports={school.sports as any}
+        rosterPlayers={school.rosterPlayers as any}
+        alumni={school.notableAlumni as any}
+        brandDeals={school.brandDeals as any}
+        stadiumCapacity={school.stadiumCapacity}
+        traditions={school.traditions}
+        gameDayDescription={school.gameDayDescription}
+        colorPrimary={school.colorPrimary}
+        schoolId={school.id}
+        schoolSlug={school.slug}
+      />
 
       {/* ─── Academics ───────────────────────────────────────────── */}
       <section id="academics" className="mt-16 scroll-mt-20">
@@ -213,26 +218,6 @@ export default async function SchoolDetailPage({
         <SectionHeading title="NIL" />
         <NilTab
           nilProgram={school.nilProgram as any}
-          schoolId={school.id}
-          colorPrimary={school.colorPrimary}
-        />
-      </section>
-
-      {/* ─── Roster ──────────────────────────────────────────────── */}
-      <section id="roster" className="mt-16 scroll-mt-20">
-        <SectionHeading title="Roster" />
-        <RosterSection
-          roster={school.rosterPlayers ?? []}
-          schoolId={school.id}
-          colorPrimary={school.colorPrimary}
-        />
-      </section>
-
-      {/* ─── Alumni ──────────────────────────────────────────────── */}
-      <section id="alumni" className="mt-16 scroll-mt-20">
-        <SectionHeading title="Notable Alumni" />
-        <AlumniTab
-          alumni={school.notableAlumni ?? []}
           schoolId={school.id}
           colorPrimary={school.colorPrimary}
         />

@@ -1,7 +1,7 @@
-// seed-jerseys.ts — Creates 36 JerseyAssets (4 schools x 3 types x 3 colors)
+// seed-jerseys.ts — Creates JerseyAssets for UMHB and TAMUCC
 
 export async function seedJerseys(prisma: any, schoolMap: Record<string, any>) {
-  const schools = ['texas-tech', 'oklahoma']
+  const schools = ['umhb', 'tamucc']
   const types = ['helmet', 'jersey', 'pants']
   const colorLabels = ['home', 'away', 'alternate']
 
@@ -14,7 +14,7 @@ export async function seedJerseys(prisma: any, schoolMap: Record<string, any>) {
             schoolId: schoolMap[slug].id,
             type,
             colorLabel,
-            imageUrl: `/jersey/${slug}/${type}-${colorLabel}.png`,
+            imageUrl: `/images/schools/${slug}/jerseys/${type}-${colorLabel}.png`,
           },
         })
         count++
