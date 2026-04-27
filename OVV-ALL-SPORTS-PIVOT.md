@@ -179,7 +179,7 @@ export const seedSchools = [
     colorPrimary: '#492F92',
     colorSecondary: '#FEC324',
     colorAccent: '#FFFFFF',
-    logoUrl: '/images/schools/umhb/logo.png',
+    logoUrl: '/images/schools/umhb/logo.svg',
     heroImageUrl: '/images/schools/umhb/hero.jpg',
     description: `The University of Mary Hardin-Baylor, located in Belton, Texas, is a private Baptist university with a 180-year legacy of academic excellence and championship athletics. Home to the Crusaders, UMHB competes in NCAA Division III as a member of the American Southwest Conference. The football program is one of the most dominant in all of college football — at any level — with two D3 national championships (2018, 2021) and the highest winning percentage of any team in the entire NCAA across all three divisions. Beyond football, the Crusaders field 16 varsity sports and consistently compete for conference titles in basketball, baseball, softball, soccer, volleyball, tennis, and golf. With approximately 3,800 students on a 340-acre campus just 60 miles north of Austin, UMHB offers a tight-knit, Christ-centered community where student-athletes thrive both on the field and in the classroom.`,
     stadiumCapacity: 7671,
@@ -201,7 +201,7 @@ export const seedSchools = [
     colorPrimary: '#0067C5',
     colorSecondary: '#007F3E',
     colorAccent: '#9EA2A4',
-    logoUrl: '/images/schools/tamucc/logo.png',
+    logoUrl: '/images/schools/tamucc/logo.svg',
     heroImageUrl: '/images/schools/tamucc/hero.jpg',
     description: `Texas A&M University-Corpus Christi — "The Island University" — sits on Ward Island overlooking Corpus Christi Bay on the Texas Gulf Coast. As a public research university competing in NCAA Division I as a member of the Southland Conference, TAMUCC fields 14 varsity sports and has built a rapidly rising athletic program. The men's basketball team has captured back-to-back conference tournament championships and NCAA Tournament appearances, while the women's tennis program made the NCAA Championships four consecutive years (2021–2024) — a feat accomplished by only 34 Division I schools. With approximately 11,000 students, TAMUCC is renowned for its marine biology program, nursing school, and stunning island campus. There is no football program — Islanders athletics is powered by basketball, baseball, volleyball, tennis, track & field, soccer, softball, cross country, beach volleyball, and golf.`,
     stadiumCapacity: null,
@@ -720,15 +720,15 @@ New file with Influxor brand partner and deal data:
 
 ```typescript
 export const seedBrandPartners = [
-  { id: 'bp-marucci', slug: 'marucci', name: 'Marucci', category: 'apparel', logoUrl: '/images/brands/marucci.png', websiteUrl: 'https://maruccisports.com', description: 'Premium baseball and softball equipment trusted by elite athletes at every level.' },
-  { id: 'bp-deoblock', slug: 'deoblock', name: 'DeoBlock', category: 'wellness', logoUrl: '/images/brands/deoblock.png', websiteUrl: 'https://deoblock.com', description: 'Natural deodorant and body care products designed for active lifestyles.' },
-  { id: 'bp-fanspark', slug: 'fanspark', name: 'FanSpark', category: 'tech', logoUrl: '/images/brands/fanspark.png', websiteUrl: 'https://fanspark.com', description: 'Fan engagement platform connecting athletes with their audiences.' },
-  { id: 'bp-goat-coats', slug: 'goat-coats', name: 'GOAT Coats', category: 'apparel', logoUrl: '/images/brands/goat-coats.png', websiteUrl: 'https://goatcoats.com', description: 'Premium athletic outerwear for the greatest of all time.' },
-  { id: 'bp-cellev8', slug: 'cellev8', name: 'Cellev8', category: 'nutrition', logoUrl: '/images/brands/cellev8.png', websiteUrl: 'https://cellev8.com', description: 'Cellular-level hydration and recovery supplements for peak performance.' },
-  { id: 'bp-hny-plus', slug: 'hny-plus', name: 'HNY+', category: 'nutrition', logoUrl: '/images/brands/hny-plus.png', websiteUrl: 'https://hnyplus.com', description: 'Honey-based performance nutrition and natural energy products.' },
-  { id: 'bp-revomadic', slug: 'revomadic', name: 'Revomadic', category: 'lifestyle', logoUrl: '/images/brands/revomadic.png', websiteUrl: 'https://revomadic.com', description: 'Modern lifestyle brand for athletes who live on the move.' },
-  { id: 'bp-dive-coastal', slug: 'dive-coastal-cuisine', name: 'Dive Coastal Cuisine', category: 'food', logoUrl: '/images/brands/dive-coastal.png', websiteUrl: 'https://divecoastalcuisine.com', description: 'Fresh coastal cuisine and meal options for athletes.' },
-  { id: 'bp-chopshop', slug: 'original-chopshop', name: 'Original ChopShop', category: 'food', logoUrl: '/images/brands/chopshop.png', websiteUrl: 'https://originalchopshop.com', description: 'Fast-casual restaurant serving protein bowls, juices, and healthy meals designed for active lifestyles.' },
+  { id: 'bp-marucci', slug: 'marucci', name: 'Marucci', category: 'apparel', logoUrl: '/images/brands/marucci.svg', websiteUrl: 'https://maruccisports.com', description: 'Premium baseball and softball equipment trusted by elite athletes at every level.' },
+  { id: 'bp-deoblock', slug: 'deoblock', name: 'DeoBlock', category: 'wellness', logoUrl: '/images/brands/deoblock.svg', websiteUrl: 'https://deoblock.com', description: 'Natural deodorant and body care products designed for active lifestyles.' },
+  { id: 'bp-fanspark', slug: 'fanspark', name: 'FanSpark', category: 'tech', logoUrl: '/images/brands/fanspark.svg', websiteUrl: 'https://fanspark.com', description: 'Fan engagement platform connecting athletes with their audiences.' },
+  { id: 'bp-goat-coats', slug: 'goat-coats', name: 'GOAT Coats', category: 'apparel', logoUrl: '/images/brands/goat-coats.svg', websiteUrl: 'https://goatcoats.com', description: 'Premium athletic outerwear for the greatest of all time.' },
+  { id: 'bp-cellev8', slug: 'cellev8', name: 'Cellev8', category: 'nutrition', logoUrl: '/images/brands/cellev8.svg', websiteUrl: 'https://cellev8.com', description: 'Cellular-level hydration and recovery supplements for peak performance.' },
+  { id: 'bp-hny-plus', slug: 'hny-plus', name: 'HNY+', category: 'nutrition', logoUrl: '/images/brands/hny-plus.svg', websiteUrl: 'https://hnyplus.com', description: 'Honey-based performance nutrition and natural energy products.' },
+  { id: 'bp-revomadic', slug: 'revomadic', name: 'Revomadic', category: 'lifestyle', logoUrl: '/images/brands/revomadic.svg', websiteUrl: 'https://revomadic.com', description: 'Modern lifestyle brand for athletes who live on the move.' },
+  { id: 'bp-dive-coastal', slug: 'dive-coastal-cuisine', name: 'Dive Coastal Cuisine', category: 'food', logoUrl: '/images/brands/dive-coastal.svg', websiteUrl: 'https://divecoastalcuisine.com', description: 'Fresh coastal cuisine and meal options for athletes.' },
+  { id: 'bp-chopshop', slug: 'original-chopshop', name: 'Original ChopShop', category: 'food', logoUrl: '/images/brands/chopshop.svg', websiteUrl: 'https://originalchopshop.com', description: 'Fast-casual restaurant serving protein bowls, juices, and healthy meals designed for active lifestyles.' },
 ];
 
 export const seedSchoolBrandDeals = [

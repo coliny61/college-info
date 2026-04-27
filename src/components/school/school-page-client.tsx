@@ -5,12 +5,14 @@ import { AthleticsTab } from './athletics-tab'
 import { RosterSection } from './roster-section'
 import { AlumniTab } from './alumni-tab'
 import { DealsSection } from './deals-section'
+import { NilTab } from './nil-tab'
 
 interface SchoolPageClientProps {
   sports: any[]
   rosterPlayers: any[]
   alumni: any[]
   brandDeals: any[]
+  nilProgram: any
   stadiumCapacity: number | null
   traditions: string | null
   gameDayDescription: string | null
@@ -24,6 +26,7 @@ export function SchoolPageClient({
   rosterPlayers,
   alumni,
   brandDeals,
+  nilProgram,
   stadiumCapacity,
   traditions,
   gameDayDescription,
@@ -54,6 +57,18 @@ export function SchoolPageClient({
           colorPrimary={colorPrimary}
           schoolId={schoolId}
           schoolSlug={schoolSlug}
+        />
+      </section>
+
+      {/* ─── NIL ──────────────────────────────────────────────── */}
+      <section id="nil" className="mt-16 scroll-mt-20">
+        <SectionHeading title="NIL" />
+        <NilTab
+          nilProgram={nilProgram}
+          brandDeals={brandDeals}
+          schoolId={schoolId}
+          colorPrimary={colorPrimary}
+          selectedSportId={selectedSportId}
         />
       </section>
 

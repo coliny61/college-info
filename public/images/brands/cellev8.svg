@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="16" fill="#1a1a2e"/>
+  <rect x="8" y="8" width="104" height="104" rx="12" fill="none" stroke="#3498DB" stroke-width="2" opacity="0.4"/>
+  <text x="60" y="65" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="11" fill="#3498DB" dominant-baseline="middle">CELLEV8</text>
+</svg>

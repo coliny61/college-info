@@ -1,15 +1,15 @@
 // seed-brand-deals.ts — Creates BrandPartner and SchoolBrandDeal records (Influxor)
 
 export const seedBrandPartners = [
-  { id: 'bp-marucci', slug: 'marucci', name: 'Marucci', category: 'apparel', logoUrl: '/images/brands/marucci.png', websiteUrl: 'https://maruccisports.com', description: 'Premium baseball and softball equipment trusted by elite athletes at every level.' },
-  { id: 'bp-deoblock', slug: 'deoblock', name: 'DeoBlock', category: 'wellness', logoUrl: '/images/brands/deoblock.png', websiteUrl: 'https://deoblock.com', description: 'Natural deodorant and body care products designed for active lifestyles.' },
-  { id: 'bp-fanspark', slug: 'fanspark', name: 'FanSpark', category: 'tech', logoUrl: '/images/brands/fanspark.png', websiteUrl: 'https://fanspark.com', description: 'Fan engagement platform connecting athletes with their audiences.' },
-  { id: 'bp-goat-coats', slug: 'goat-coats', name: 'GOAT Coats', category: 'apparel', logoUrl: '/images/brands/goat-coats.png', websiteUrl: 'https://goatcoats.com', description: 'Premium athletic outerwear for the greatest of all time.' },
-  { id: 'bp-cellev8', slug: 'cellev8', name: 'Cellev8', category: 'nutrition', logoUrl: '/images/brands/cellev8.png', websiteUrl: 'https://cellev8.com', description: 'Cellular-level hydration and recovery supplements for peak performance.' },
-  { id: 'bp-hny-plus', slug: 'hny-plus', name: 'HNY+', category: 'nutrition', logoUrl: '/images/brands/hny-plus.png', websiteUrl: 'https://hnyplus.com', description: 'Honey-based performance nutrition and natural energy products.' },
-  { id: 'bp-revomadic', slug: 'revomadic', name: 'Revomadic', category: 'lifestyle', logoUrl: '/images/brands/revomadic.png', websiteUrl: 'https://revomadic.com', description: 'Modern lifestyle brand for athletes who live on the move.' },
-  { id: 'bp-dive-coastal', slug: 'dive-coastal-cuisine', name: 'Dive Coastal Cuisine', category: 'food', logoUrl: '/images/brands/dive-coastal.png', websiteUrl: 'https://divecoastalcuisine.com', description: 'Fresh coastal cuisine and meal options for athletes.' },
-  { id: 'bp-chopshop', slug: 'original-chopshop', name: 'Original ChopShop', category: 'food', logoUrl: '/images/brands/chopshop.png', websiteUrl: 'https://originalchopshop.com', description: 'Fast-casual restaurant serving protein bowls, juices, and healthy meals designed for active lifestyles.' },
+  { id: 'bp-marucci', slug: 'marucci', name: 'Marucci', category: 'apparel', logoUrl: '/images/brands/marucci.svg', websiteUrl: 'https://maruccisports.com', description: 'Premium baseball and softball equipment trusted by elite athletes at every level.' },
+  { id: 'bp-deoblock', slug: 'deoblock', name: 'DeoBlock', category: 'wellness', logoUrl: '/images/brands/deoblock.svg', websiteUrl: 'https://deoblock.com', description: 'Natural deodorant and body care products designed for active lifestyles.' },
+  { id: 'bp-fanspark', slug: 'fanspark', name: 'FanSpark', category: 'tech', logoUrl: '/images/brands/fanspark.svg', websiteUrl: 'https://fanspark.com', description: 'Fan engagement platform connecting athletes with their audiences.' },
+  { id: 'bp-goat-coats', slug: 'goat-coats', name: 'GOAT Coats', category: 'apparel', logoUrl: '/images/brands/goat-coats.svg', websiteUrl: 'https://goatcoats.com', description: 'Premium athletic outerwear for the greatest of all time.' },
+  { id: 'bp-cellev8', slug: 'cellev8', name: 'Cellev8', category: 'nutrition', logoUrl: '/images/brands/cellev8.svg', websiteUrl: 'https://cellev8.com', description: 'Cellular-level hydration and recovery supplements for peak performance.' },
+  { id: 'bp-hny-plus', slug: 'hny-plus', name: 'HNY+', category: 'nutrition', logoUrl: '/images/brands/hny-plus.svg', websiteUrl: 'https://hnyplus.com', description: 'Honey-based performance nutrition and natural energy products.' },
+  { id: 'bp-revomadic', slug: 'revomadic', name: 'Revomadic', category: 'lifestyle', logoUrl: '/images/brands/revomadic.svg', websiteUrl: 'https://revomadic.com', description: 'Modern lifestyle brand for athletes who live on the move.' },
+  { id: 'bp-dive-coastal', slug: 'dive-coastal-cuisine', name: 'Dive Coastal Cuisine', category: 'food', logoUrl: '/images/brands/dive-coastal.svg', websiteUrl: 'https://divecoastalcuisine.com', description: 'Fresh coastal cuisine and meal options for athletes.' },
+  { id: 'bp-chopshop', slug: 'original-chopshop', name: 'Original ChopShop', category: 'food', logoUrl: '/images/brands/chopshop.svg', websiteUrl: 'https://originalchopshop.com', description: 'Fast-casual restaurant serving protein bowls, juices, and healthy meals designed for active lifestyles.' },
 ]
 
 export const seedSchoolBrandDeals = [

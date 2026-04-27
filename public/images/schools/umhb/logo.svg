@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- UMHB Crusaders Shield Logo -->
+  <!-- Purple: #492F92, Gold: #FEC324 -->
+
+  <!-- Shield shape -->
+  <path d="M100 10 L180 50 L180 120 Q180 170 100 190 Q20 170 20 120 L20 50 Z" fill="#492F92" stroke="#FEC324" stroke-width="4"/>
+
+  <!-- Inner shield border -->
+  <path d="M100 22 L170 56 L170 118 Q170 162 100 180 Q30 162 30 118 L30 56 Z" fill="none" stroke="#FEC324" stroke-width="2"/>
+
+  <!-- Sword/Cross -->
+  <line x1="100" y1="40" x2="100" y2="155" stroke="#FEC324" stroke-width="6" stroke-linecap="round"/>
+  <line x1="70" y1="70" x2="130" y2="70" stroke="#FEC324" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Sword handle -->
+  <rect x="92" y="35" width="16" height="10" rx="2" fill="#FEC324"/>
+
+  <!-- UMHB text -->
+  <text x="100" y="110" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="26" fill="#FEC324" letter-spacing="2">UMHB</text>
+
+  <!-- CRUSADERS text -->
+  <text x="100" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="12" fill="#FFFFFF" letter-spacing="3">CRUSADERS</text>
+</svg>

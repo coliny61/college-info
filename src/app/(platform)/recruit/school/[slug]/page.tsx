@@ -8,7 +8,6 @@ import { SectionNavigator } from '@/components/school/section-navigator'
 import { TrackSchoolView } from '@/components/school/track-school-view'
 import { TourTab } from '@/components/school/tour-tab'
 import { AcademicsTab } from '@/components/school/academics-tab'
-import { NilTab } from '@/components/school/nil-tab'
 import { VideoSection } from '@/components/school/video-section'
 import { JerseySection } from '@/components/school/jersey-section'
 import { SchoolPageClient } from '@/components/school/school-page-client'
@@ -71,7 +70,14 @@ export default async function SchoolDetailPage({
           hotspots: true,
         },
       },
-      nilProgram: true,
+      nilProgram: {
+        include: {
+          sportBreakdowns: {
+            include: { sport: true },
+            orderBy: { budget: 'desc' as const },
+          },
+        },
+      },
       notableAlumni: {
         orderBy: { draftYear: 'desc' as const },
         include: { sport: { select: { name: true } } },
@@ -194,6 +200,7 @@ export default async function SchoolDetailPage({
         rosterPlayers={school.rosterPlayers as any}
         alumni={school.notableAlumni as any}
         brandDeals={school.brandDeals as any}
+        nilProgram={school.nilProgram as any}
         stadiumCapacity={school.stadiumCapacity}
         traditions={school.traditions}
         gameDayDescription={school.gameDayDescription}
@@ -209,16 +216,6 @@ export default async function SchoolDetailPage({
           academics={school.academics}
           colleges={school.colleges}
           schoolSlug={school.slug}
-          colorPrimary={school.colorPrimary}
-        />
-      </section>
-
-      {/* ─── NIL ─────────────────────────────────────────────────── */}
-      <section id="nil" className="mt-16 scroll-mt-20">
-        <SectionHeading title="NIL" />
-        <NilTab
-          nilProgram={school.nilProgram as any}
-          schoolId={school.id}
           colorPrimary={school.colorPrimary}
         />
       </section>

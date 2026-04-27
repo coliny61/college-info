@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- TAMUCC Islanders Logo -->
+  <!-- Island Blue: #0067C5, Island Green: #007F3E, Silver: #9EA2A4 -->
+
+  <!-- Circular background -->
+  <circle cx="100" cy="100" r="90" fill="#0067C5" stroke="#007F3E" stroke-width="4"/>
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#9EA2A4" stroke-width="1.5"/>
+
+  <!-- Stylized "I" with wave -->
+  <rect x="80" y="35" width="40" height="8" rx="2" fill="#FFFFFF"/>
+  <rect x="90" y="43" width="20" height="80" rx="2" fill="#FFFFFF"/>
+  <rect x="80" y="123" width="40" height="8" rx="2" fill="#FFFFFF"/>
+
+  <!-- Wave through the I -->
+  <path d="M60 85 Q75 70 90 85 Q105 100 120 85 Q135 70 150 85" fill="none" stroke="#007F3E" stroke-width="6" stroke-linecap="round"/>
+  <path d="M55 98 Q72 83 90 98 Q108 113 125 98 Q142 83 155 98" fill="none" stroke="#007F3E" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- ISLANDERS text -->
+  <text x="100" y="158" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" letter-spacing="3">ISLANDERS</text>
+
+  <!-- TAMUCC text -->
+  <text x="100" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-weight="600" font-size="10" fill="#9EA2A4" letter-spacing="2">TAMUCC</text>
+</svg>

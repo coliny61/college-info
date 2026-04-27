@@ -233,6 +233,7 @@ model Sport {
   facilities     Facility[]
   rosterPlayers  RosterPlayer[]
   notableAlumni  NotableAlumni[]
+  nilBreakdown   SportNilBreakdown[]
 
   @@index([schoolId])
   @@map("sports")
@@ -299,10 +300,31 @@ model NilProgram {
   notableDeals    Json?
   averageDealSize Int?
   howToGetInvolved  String? @db.Text
-  primarySportSpend Int?
-  primarySportName  String?
+  primarySportSpend  Int?
+  primarySportName   String?
+
+  sportBreakdowns SportNilBreakdown[]
 
   @@map("nil_programs")
+}
+
+model SportNilBreakdown {
+  id              String     @id @default(uuid())
+  nilProgramId    String
+  nilProgram      NilProgram @relation(fields: [nilProgramId], references: [id], onDelete: Cascade)
+  sportId         String
+  sport           Sport      @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  budget          Int
+  averageDealSize Int?
+  athleteCount    Int?
+  topDealValue    Int?
+  description     String?    @db.Text
+  notableDeals    Json?
+
+  @@unique([nilProgramId, sportId])
+  @@index([nilProgramId])
+  @@index([sportId])
+  @@map("sport_nil_breakdowns")
 }
 
 model NotableAlumni {

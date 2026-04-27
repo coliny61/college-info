@@ -1,23 +1,51 @@
 'use client'
 
 import { useTrackDuration } from '@/hooks/use-analytics'
-import { Building2, Handshake } from 'lucide-react'
+import { Building2, Handshake, Package, ExternalLink, TrendingUp, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+
+interface SportBreakdown {
+  id: string
+  sportId: string
+  sport: { id: string; name: string }
+  budget: number
+  averageDealSize: number | null
+  athleteCount: number | null
+  topDealValue: number | null
+  description: string | null
+  notableDeals: Array<{ athlete: string; description: string }> | null
+}
+
+interface BrandDeal {
+  id: string
+  brandPartner: {
+    id: string
+    name: string
+    slug: string
+    logoUrl: string | null
+    category: string
+  }
+  dealText: string
+  promoCode: string | null
+  promoUrl: string | null
+  isFeatured: boolean
+}
 
 interface NilTabProps {
   nilProgram: {
     collectiveName: string
     totalBudget: number
-    footballSpend: number
-    allSportsSpend: number
     founded: number
     description: string
     notableDeals: Array<{ athlete: string; sport: string; description: string }> | null
     averageDealSize?: number | null
     howToGetInvolved?: string | null
+    sportBreakdowns: SportBreakdown[]
   } | null
+  brandDeals?: BrandDeal[]
   schoolId: string
   colorPrimary: string
+  selectedSportId?: string | null
 }
 
 function formatBudget(amount: number) {
@@ -26,7 +54,7 @@ function formatBudget(amount: number) {
   return `$${amount.toLocaleString()}`
 }
 
-export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
+export function NilTab({ nilProgram, brandDeals = [], schoolId, colorPrimary, selectedSportId }: NilTabProps) {
   useTrackDuration('nil', schoolId)
 
   if (!nilProgram) {
@@ -45,13 +73,16 @@ export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
     )
   }
 
-  const deals = (nilProgram.notableDeals ?? []) as Array<{ athlete: string; sport: string; description: string }>
-  const footballPct = Math.round((nilProgram.footballSpend / nilProgram.totalBudget) * 100)
-  const otherPct = Math.round((nilProgram.allSportsSpend / nilProgram.totalBudget) * 100)
+  const breakdowns = nilProgram.sportBreakdowns ?? []
+  // Sort by budget descending
+  const sortedBreakdowns = [...breakdowns].sort((a, b) => b.budget - a.budget)
+  // Selected breakdown — match selectedSportId or default to top budget
+  const activeBreakdown = sortedBreakdowns.find(b => b.sportId === selectedSportId) || sortedBreakdowns[0]
+  const activeDeals = (activeBreakdown?.notableDeals ?? []) as Array<{ athlete: string; description: string }>
 
   return (
     <div className="space-y-10 animate-in-up">
-      {/* Hero budget number */}
+      {/* ─── Hero Budget ────────────────────────────────────────── */}
       <div className="text-center py-8">
         <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Total NIL Budget
@@ -62,118 +93,198 @@ export function NilTab({ nilProgram, schoolId, colorPrimary }: NilTabProps) {
         >
           {formatBudget(nilProgram.totalBudget)}
         </p>
-      </div>
-
-      {/* Budget breakdown — progress bars */}
-      <div className="space-y-4">
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-              Football
-            </span>
-            <span className="text-scoreboard text-sm font-bold text-foreground">
-              {formatBudget(nilProgram.footballSpend)} <span className="text-muted-foreground font-normal">({footballPct}%)</span>
-            </span>
+        <div className="mt-3 flex items-center justify-center gap-4">
+          <div className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" style={{ color: colorPrimary }} />
+            <span className="text-sm text-foreground font-medium">{nilProgram.collectiveName}</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.05]">
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{
-                width: `${footballPct}%`,
-                backgroundColor: colorPrimary,
-              }}
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-              All Other Sports
-            </span>
-            <span className="text-scoreboard text-sm font-bold text-foreground">
-              {formatBudget(nilProgram.allSportsSpend)} <span className="text-muted-foreground font-normal">({otherPct}%)</span>
-            </span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.05]">
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{
-                width: `${otherPct}%`,
-                backgroundColor: colorPrimary + '80',
-              }}
-            />
-          </div>
+          <span className="text-xs text-muted-foreground">Est. {nilProgram.founded}</span>
         </div>
       </div>
 
-      {/* Average deal size */}
-      {nilProgram.averageDealSize && (
-        <div className="glass-panel rounded-xl p-5 text-center">
-          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Average Deal Size</p>
-          <p className="text-scoreboard mt-1 text-3xl font-bold text-foreground">{formatBudget(nilProgram.averageDealSize)}</p>
-        </div>
-      )}
-
-      <div className="section-divider" />
-
-      {/* Collective info */}
+      {/* ─── Collective Description ─────────────────────────────── */}
       <div className="glass-panel rounded-xl p-6">
-        <div className="flex items-center gap-3 mb-3">
-          <Building2 className="h-5 w-5" style={{ color: colorPrimary }} />
-          <h3 className="text-display text-sm tracking-wide text-foreground">
-            {nilProgram.collectiveName}
-          </h3>
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            Est. {nilProgram.founded}
-          </span>
-        </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
           {nilProgram.description}
         </p>
       </div>
 
-      {/* How to get involved */}
+      {/* ─── Per-Sport Breakdown Cards ──────────────────────────── */}
+      {sortedBreakdowns.length > 0 && (
+        <div>
+          <h3 className="text-display text-xs tracking-[0.15em] text-muted-foreground mb-4">
+            NIL by Sport
+          </h3>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+            {sortedBreakdowns.map((bd) => {
+              const isActive = bd.sportId === activeBreakdown?.sportId
+              const pct = Math.round((bd.budget / nilProgram.totalBudget) * 100)
+              return (
+                <div
+                  key={bd.id}
+                  className={`shrink-0 glass-panel rounded-xl p-4 w-[180px] transition-all cursor-default ${
+                    isActive ? 'ring-1' : ''
+                  }`}
+                  style={isActive ? { borderColor: colorPrimary + '60', boxShadow: `inset 0 0 0 1px ${colorPrimary}40` } : undefined}
+                >
+                  <p className="font-display text-xs font-semibold uppercase tracking-wide text-foreground truncate">
+                    {bd.sport.name}
+                  </p>
+                  <p className="text-scoreboard text-xl font-bold mt-1" style={{ color: colorPrimary }}>
+                    {formatBudget(bd.budget)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{pct}% of total</p>
+                  <div className="mt-2 flex items-center gap-2 text-[10px] text-muted-foreground">
+                    {bd.athleteCount != null && (
+                      <span className="flex items-center gap-0.5">
+                        <Users className="h-3 w-3" />
+                        {bd.athleteCount}
+                      </span>
+                    )}
+                    {bd.averageDealSize != null && (
+                      <span>avg {formatBudget(bd.averageDealSize)}</span>
+                    )}
+                  </div>
+                  {/* Budget bar */}
+                  <div className="h-1 w-full mt-2 rounded-full bg-white/[0.05] overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${pct}%`, backgroundColor: colorPrimary }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Selected Sport Detail ──────────────────────────────── */}
+      {activeBreakdown && (
+        <div className="glass-panel rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" style={{ color: colorPrimary }} />
+              <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
+                {activeBreakdown.sport.name} NIL
+              </h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-scoreboard text-lg font-bold" style={{ color: colorPrimary }}>
+                {formatBudget(activeBreakdown.budget)}
+              </span>
+            </div>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-4">
+            {activeBreakdown.averageDealSize != null && (
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Avg Deal</p>
+                <p className="text-scoreboard text-sm font-bold text-foreground">{formatBudget(activeBreakdown.averageDealSize)}</p>
+              </div>
+            )}
+            {activeBreakdown.topDealValue != null && (
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Top Deal</p>
+                <p className="text-scoreboard text-sm font-bold text-foreground">{formatBudget(activeBreakdown.topDealValue)}</p>
+              </div>
+            )}
+            {activeBreakdown.athleteCount != null && (
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Athletes w/ Deals</p>
+                <p className="text-scoreboard text-sm font-bold text-foreground">{activeBreakdown.athleteCount}</p>
+              </div>
+            )}
+          </div>
+
+          {activeBreakdown.description && (
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {activeBreakdown.description}
+            </p>
+          )}
+
+          {/* Sport-specific notable deals */}
+          {activeDeals.length > 0 && (
+            <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+              <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">Notable Deals</p>
+              {activeDeals.map((deal, i) => (
+                <div key={i} className="glass-panel rounded-lg p-3">
+                  <p className="font-display text-xs font-semibold uppercase tracking-wide text-foreground">{deal.athlete}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{deal.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="section-divider" />
+
+      {/* ─── Brand Partnerships & Discounts (Influxor) ──────────── */}
+      {brandDeals.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="flex items-center gap-2 text-display text-xs tracking-[0.15em] text-muted-foreground">
+              <Handshake className="h-4 w-4" style={{ color: colorPrimary }} />
+              Brand Partnerships & Discounts
+            </h3>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60">
+              Powered by Influxor
+            </span>
+          </div>
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+            {brandDeals.map((deal) => (
+              <div
+                key={deal.id}
+                className="glass-panel rounded-xl p-4 flex items-start gap-3"
+                style={deal.isFeatured ? { boxShadow: `inset 0 0 0 1px ${colorPrimary}40` } : undefined}
+              >
+                <div
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+                  style={{ backgroundColor: colorPrimary + '15' }}
+                >
+                  <Package className="h-4 w-4" style={{ color: colorPrimary }} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-display text-xs font-semibold uppercase tracking-wide text-foreground truncate">
+                      {deal.brandPartner.name}
+                    </p>
+                    <Badge variant="outline" className="text-[8px] uppercase tracking-wider shrink-0">
+                      {deal.brandPartner.category}
+                    </Badge>
+                  </div>
+                  <p className="text-xs font-bold uppercase tracking-wide mt-1" style={{ color: colorPrimary }}>
+                    {deal.dealText}
+                  </p>
+                  {deal.promoCode && (
+                    <span className="inline-block mt-1 rounded-sm bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-mono font-bold text-foreground">
+                      {deal.promoCode}
+                    </span>
+                  )}
+                </div>
+                {deal.promoUrl && (
+                  <a
+                    href={deal.promoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 mt-1"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─── How to Get Involved ─────────────────────────────────── */}
       {nilProgram.howToGetInvolved && (
         <div className="glass-panel rounded-xl p-6">
           <h3 className="text-display text-sm tracking-wide text-foreground mb-2">How to Get Involved</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">{nilProgram.howToGetInvolved}</p>
-        </div>
-      )}
-
-      {/* Notable deals */}
-      {deals.length > 0 && (
-        <div>
-          <h3 className="flex items-center gap-2 text-display text-xs tracking-[0.15em] text-muted-foreground mb-4">
-            <Handshake className="h-4 w-4" style={{ color: colorPrimary }} />
-            Notable Deals
-          </h3>
-          <div className="space-y-3">
-            {deals.map((deal, i) => (
-              <div
-                key={i}
-                className="glass-panel rounded-xl p-4"
-              >
-                <div className="flex items-center gap-2">
-                  <p className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
-                    {deal.athlete}
-                  </p>
-                  <Badge
-                    style={{
-                      backgroundColor: colorPrimary + '15',
-                      color: colorPrimary,
-                    }}
-                    className="text-[10px] uppercase tracking-wider"
-                  >
-                    {deal.sport}
-                  </Badge>
-                </div>
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  {deal.description}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </div>

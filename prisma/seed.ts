@@ -43,6 +43,7 @@ async function main() {
   await prisma.rosterPlayer.deleteMany()
   await prisma.recruitProfile.deleteMany()
   await prisma.notableAlumni.deleteMany()
+  await prisma.sportNilBreakdown.deleteMany()
   await prisma.nilProgram.deleteMany()
   await prisma.hotspot.deleteMany()
   await prisma.facility.deleteMany()
